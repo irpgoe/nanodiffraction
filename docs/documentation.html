@@ -1,0 +1,54 @@
+<html>
+<head>
+<link rel="stylesheet" href="layout.css"> 
+</head>
+<body>
+<header>
+<div id="wrap">Nanodiffraction Toolbox:
+<ul>
+    <li><a href="index.html"><img src="Breezeicons-places-16-user-home.svg" alt="Home" width="40px" /></a></li>
+    <li><a href="download.html">Download</a></li>
+    <li><a href="documentation.html">Documentation</a></li>
+    <li><a href="examples.html">Examples</a></li>
+</ul>
+</div>
+<!-- LOGOS -->
+<div id="logos">
+<img src="logos/sfb-logo.png" alt="">
+<img src="logos/ugoe-logo.png" alt="">
+</div>
+
+</header>
+<div></div>
+
+<section>
+<h3>Key functionality</h3>
+<p>
+The nanodiffraction toolbox should provide the following functionality:
+<ul style = "list-style-type: square;padding-left:30px;">
+<li>Sequential file reading and processing
+<li>Data masking
+<li>Data selection
+<li>Standalone functions for single-frame data analysis
+<li>Data regridding
+<li>Angular and azimuthal integration (with or without data selection)
+<li>Standard visualizations with proper choice of color and scaling
+<li>Principal component analysis
+<li>Rotational symmetry detection
+<li>Background modeling
+</ul>
+
+
+Hence, data should be properly reduced to a finite set of meaningful structural parameters. Some functionality is either built from scratch, or, built upon other work. In order to avoid duplication of code, other software packages are used, such as pyFAI for fast azimuthal integration. In other cases, functions have been written, based on other publications, that are listed below.</p>
+
+<p>To increase usage, important functions are re-written in the C programming language to be more easily linked to other toolboxes or software packages.</p>
+
+
+
+<h3>Syntax and proper usage</h3>
+<p>
+Currently, documentation is provided solely from within the Matlab package by using the <a href="https://de.mathworks.com/help/matlab/ref/doc.html" >doc</a> or <a href="https://de.mathworks.com/help/matlab/ref/help.html" >help</a> function of Matlab.
+</p>
+</section>
+</body>
+</html>
