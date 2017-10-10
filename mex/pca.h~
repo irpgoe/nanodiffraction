@@ -1,0 +1,1 @@
+void pca(double *x, double *mask, double *qx, double *qy, double *w, double *phi, int m, int n);
