@@ -20,22 +20,12 @@
 classdef spec<handle
     properties
         prepath;
-        suffix;
-        beamline;
+        c;
     end
     methods
-        function obj = spec(beamline,specpath,specfile,slash)
-            obj.suffix = '.dat';
-            obj.beamline = beamline;
-            switch beamline
-                case 'id13'        
-                    obj.prepath = [slash specpath...
-                                slash specfile...
-                                slash specfile obj.suffix];
-                case 'p10'
-                    obj.prepath = [slash specpath...
-                        slash specfile];
-            end        
+        function obj = spec(config)
+            obj.c = config;
+            obj.prepath = config.path;
         end
         
         function [data,header,scaninfo] = read(obj,specNr,varargin)
