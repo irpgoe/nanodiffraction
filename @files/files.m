@@ -17,12 +17,7 @@ classdef files<handle
     %
     %   prepath:: [homegroups/Labdata-Archive/AG_Salditt/Messzeiten_Rohdaten/2016/extern/ESRF_ID13_SC4304/id13/inhouse/DATA/AUTO-TRANSFER/eiger1] 
     %     path to folder where the data is stored. The prepath depends 
-    %     wether you choose p10 or id13 as beamline. 
-    %       id13: it is the path right before the data directory, hence
-    %       prepath/data_???_master.h5, usually ending with
-    %       .../DATA/AUTO-TRANSFER/eiger1
-    %       p10: it is the path before the /detectors/ directory, hence
-    %       prepath/detectors/<detector>/<newfile>/data_???_master.h5
+    %     on the beamline you choose. Check files.path_by_beamline for help
     %
     %   beamline:: [id13]
     %     Beamline, where data was recorded. Currently, only 'id13' and
@@ -35,39 +30,24 @@ classdef files<handle
     %     Type of detector used in the experiment.
     %     currently, only 'eiger' and 'pilatus' are supported
     %
-    %   specNr:: [1]
-    %      Number of the scan as marked in the spec file.
-    %
-    %   fluoNr:: [1]
-    %     suffix of fluorescence data usually stored in .dat files
-    %
     %   fn:: [1]
     %     file (frame) number
     %
-    %   fluoNewfile:: []
-    %     the fluorescence detector might have its own file naming 
-    %     convention
-    %
-    %   fluoDetector:: [xia]
-    %     currently only 'xia' (ID13) is supported
-    %
-    %   fluoFramesPerFile:: [101]
+    %   fpf:: [101]
     %     usually the number of scan points along the fast axis are given
     %
-    %   eigerNr:: [210]
-    %     Number of the master file (usually ending with _master.h5)
+    %   scan:: [210]
+    %     Number of the scan.
     %
     %   Example::
     %     fp = files( 'beamline','id13',...
     %       'prepath',[prepath 'Labdata-Archive/AG_Salditt/Messzeiten_Rohdaten/2016/extern/ESRF_ID13_SC4304/id13/inhouse/DATA/AUTO-TRANSFER/eiger1'],...
     %       'newfile','herz2_roi2',...
     %       'detector','eiger',...
-    %       'eigerNr',201);
+    %       'scan',201);
     %
     %   Properties::
-    %      <data> - p (holds all the necessary parameters)
-    %             - specpath (path to spec files)
-    %             - fluopath (path to fluorescence data)
+    %      <data> - ...
     %             - debug (debug level) [0]
     %
     %   Methods::
@@ -94,17 +74,19 @@ classdef files<handle
     % OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     properties
-        p = struct('fnConvention',5,'fileFormat','cbf'); % parameter definitions
-        specpath;
-        fluopath;
+        
+        prepath;
+        newfile;
+        beamline;
+        detector;
+        scan;
+        fn;
+        fpf;
+        slash;
+        firstFile;
+        
         detectors = struct();
         debug = 0;
-        
-%         % eigerspecific file reading, 
-%         % expects str1 : _master.h5 file
-%         %         str2 : /entry/data/data_%f6.0 file number
-%         eiger_read_total = @(str1,str2) double(h5read( str1, str2 ));
-%         eiger_read_single = @(str1,str2,vec1,vec2) double(h5read( str1, str2, vec1, vec2 ));
             
     end
     methods
@@ -117,53 +99,118 @@ classdef files<handle
             addOptional(p,'newfile','detdistcalib');
             addOptional(p,'detector','eiger');
             addOptional(p,'beamline','id13');
-            addOptional(p,'eigerNr',210);
-            addOptional(p,'specNr',1);
-            addOptional(p,'fluoNr',1);
+            addOptional(p,'scan',210);
             addOptional(p,'fn',1);
-            addOptional(p,'fluoNewfile','');
-            addOptional(p,'fluoDetector','xia');
-            addOptional(p,'fluoFramesPerFile',101);
-            addOptional(p,'framesPerFile',1);
-            addOptional(p,'fluopath','');
-            addOptional(p,'specpath','');
+            addOptional(p,'fpf',101);
             
             % parse arguments
             parse(p,varargin{:});
             % copy p.Results to obj.p
             names = fieldnames(p.Results);
             for ii = 1:numel(names)
-                obj.p.(names{ii}) = p.Results.(names{ii});
+                obj.(names{ii}) = p.Results.(names{ii});
             end
             
             % check path
-            [obj.p.prepath,obj.p.slash] = obj.which_slash(obj.p.prepath);
-            obj.p.prepath = obj.remove_leading_trailing_slashes(obj.p.prepath);
+            [obj.prepath,obj.slash] = obj.which_slash(obj.prepath);
+            obj.prepath = obj.remove_leading_trailing_slashes(obj.prepath);
+
             
-            
+            % get file information by beamline and detector
+            config = obj.path_by_beamline(obj.beamline,p.Results.detector,obj.prepath,obj.newfile,obj.scan);
+
             
             if contains(p.Results.detector,'eiger')
-                obj.detectors.eiger = eiger(obj.p.beamline,obj.p.prepath,obj.p.newfile,obj.p.eigerNr,obj.p.framesPerFile,obj.p.slash);
-%                 obj.set_eiger_scan(obj.p.newfile,obj.p.eigerNr);
+                obj.detectors.eiger = eiger(config,obj.fpf);
                 obj.repair_frames_per_file();
             end
             
             if contains(p.Results.detector,'rayonix')
-                obj.detectors.rayonix = rayonix(obj.p.beamline,obj.p.prepath,obj.p.newfile,obj.p.slash);            
+                obj.detectors.rayonix = rayonix(config);            
             end
             
             if contains(p.Results.detector,'pilatus')
-                obj.detectors.pilatus = pilatus(obj.p.beamline,obj.p.prepath,obj.p.newfile,obj.p.slash);            
+                obj.detectors.pilatus = pilatus(config);            
             end
             
             if contains(p.Results.detector,'xia')
-                obj.detectors.xia = xia(obj.p.beamline,obj.p.fluopath,obj.p.fluoNewfile,obj.p.fluoNr,obj.p.fluoFramesPerFile,obj.p.slash);
+                obj.detectors.xia = xia(config,obj.fpf);
             end            
             
             if contains(p.Results.detector,'spec')
-                obj.detectors.spec = spec(obj.p.beamline,obj.p.prepath,obj.p.newfile,obj.p.slash);
+                obj.detectors.spec = spec(config);
             end
         end
+        
+        
+        function [config] = path_by_beamline(obj,beamline,detector,prepath,newfile,scannr)
+            %       id13: it is the path right before the data directory, hence
+            %       prepath/data_???_master.h5, usually ending with
+            %       .../DATA/AUTO-TRANSFER/eiger1
+            %       p10: it is the path before the /detectors/ directory, hence
+            %       prepath/detectors/<detector>/<newfile>/data_???_master.h5
+    
+            % shorthand
+            sl = obj.slash;
+
+            setting = [detector '_' beamline];
+            config = struct();
+            switch setting
+                case 'eiger_p10'
+                    config.path = [sl prepath...
+                        sl 'detectors'...
+                        sl 'eiger'...
+                        sl newfile...
+                        sl newfile '_'...
+                        sprintf('%05i',scannr) '_master.h5'];
+                case 'eiger_id13'
+                    config.path = [sl prepath...
+                        sl newfile '_'...
+                        num2str(scannr) '_master.h5'];
+                case 'eiger_none'
+                    config.path = [sl prepath...
+                        sl newfile '_'...
+                        sprintf('%05i',scannr) '_master.h5'];
+                case 'pilatus_p10'
+                    if ~ispc
+                        prepath = [sl prepath];
+                    end
+                    config.path = [prepath...
+                        sl 'detectors'...
+                        sl 'p300'...
+                        sl newfile...
+                        sl newfile '_'];
+                    config.filename = @(pre,n) [pre sprintf('%05i',n) '.cbf'];
+                case 'rayonix_id02'
+                    config.path = [sl prepath...
+                        sl newfile '_'];        
+                    config.filename = @(pre,n) [pre sprintf('%05i',n) '_raw.edf'];
+                    config.N = 960;
+                case 'rayonix_bessy'
+                    config.path = [sl prepath...
+                        sl newfile '_' sprintf('%05i',scannr) '_'];        
+                    config.filename = @(pre,n) [pre sprintf('%05i',n) '.mccd'];
+                    config.N = 3072;
+                case 'spec_id13'        
+                    config.path = [sl prepath...
+                        sl newfile...
+                        sl newfile '.dat'];     
+                    config.beamline = 'id13';
+                case 'spec_p10'
+                    config.path = [sl prepath...
+                        sl newfile];   
+                    config.beamline = 'p10';
+                case 'xia_id13'        
+                    config.path = [sl prepath...
+                        sl newfile...
+                        '_xia01_' sprintf('%04i',scannr) '_0000_'];     
+                    config.filename = @(pre,n) [pre sprintf('%04i',n) '.edf'];
+                case 'default'
+                    config.path = [sl prepath...
+                        sl newfile '_'...
+                        sprintf('%05i',scannr) '_master.h5'];                    
+            end            
+        end          
         
         
         function set_frames_per_file(obj,fpf)
@@ -176,27 +223,30 @@ classdef files<handle
             %
             %     fpf:: []
             %       Frames per file.
-            obj.detectors.eiger.framesPerFile = fpf;
+            obj.detectors.eiger.fpf = fpf;
         end
         
         
-        function set_eiger_scan(obj,newfile,eigerNr)
+        function set_eiger_scan(obj,newfile,scan)
             % SET_EIGER_SCAN  updates the eiger module,
             %   and automatically determines the frames per file.
             %   
-            %   SET_EIGER_SCAN(newfile, eigerNr) 
+            %   SET_EIGER_SCAN(newfile, scan) 
             %
             %   The following options are supported:
             %
             %     newfile:: []
             %       Scan name.
             %
-            %     eigerNr:: []
+            %     scan:: []
             %       Scan number.
-            obj.p.newfile = newfile;
-            obj.p.eigerNr = eigerNr;
+            
+            obj.newfile = newfile;
+            obj.scan = scan;
             obj.repair_frames_per_file();
-            obj.detectors.eiger = eiger(obj.p.beamline,obj.p.prepath,newfile,eigerNr,obj.p.framesPerFile,obj.p.slash);
+            
+            config = obj.path_by_beamline(obj.beamline,'eiger',obj.prepath,obj.newfile,obj.scan);
+            obj.detectors.eiger = eiger(config,obj.fpf);
         end
         
         
@@ -209,30 +259,36 @@ classdef files<handle
             %
             %     newfile:: []
             %       Scan name.
-            obj.p.newfile = newfile;
-            obj.detectors.pilatus = pilatus(obj.p.beamline,obj.p.prepath,newfile,obj.p.slash);
+            
+            obj.newfile = newfile;
+            
+            config = obj.path_by_beamline(obj.beamline,'pilatus',obj.prepath,obj.newfile,obj.scan);
+            obj.detectors.pilatus = pilatus(config);
         end
         
         
-        function set_xia_scan(obj,fluoNewfile,fluoNr,fluoFramesPerFile)
+        function set_xia_scan(obj,newfile,scan,fpf)
             % SET_XIA_SCAN  updates the xia module.
             %   
-            %   SET_XIA_SCAN(newfile, fluoNr, fpf) 
+            %   SET_XIA_SCAN(newfile, scan, fpf) 
             %
             %   The following options are supported:
             %
             %     newfile:: []
             %       Scan name.
             %
-            %     fluoNr:: []
+            %     scan:: []
             %       Scan number.
             %
             %     fpf:: []
             %       Scan number.
-            obj.p.fluoNewfile = fluoNewfile;
-            obj.p.fluoNr = fluoNr;
-            obj.p.fluoFramesPerFile = fluoFramesPerFile;
-            obj.detectors.eiger = eiger(obj.p.beamline,obj.p.fluopath,fluoNewfile,fluoNr,fluoFramesPerFile,obj.p.slash);
+            
+            obj.newfile = newfile;
+            obj.scan = scan;
+            obj.fpf = fpf;
+            
+            config = obj.path_by_beamline(obj.beamline,'xia',obj.prepath,obj.newfile,obj.scan);
+            obj.detectors.eiger = xia(config,fpf);
         end
         
         
@@ -245,12 +301,15 @@ classdef files<handle
             %
             %     newfile:: []
             %       Scan name.
-            obj.p.newfile = newfile;
-            obj.detectors.spec = spec(obj.p.beamline,obj.p.prepath,newfile,obj.p.slash);
+            
+            obj.newfile = newfile;
+            
+            config = obj.path_by_beamline(obj.beamline,'spec',obj.prepath,obj.newfile,obj.scan);
+            obj.detectors.spec = spec(config);
         end
         
 
-        function [out_string] = remove_leading_trailing_slashes(obj,string)
+        function [out_string] = remove_leading_trailing_slashes(~,string)
             % REMOVE_LEADING_TRAILING_SLASHES  removes any leading or
             % trailing slashes from a given string.
             %   
@@ -310,11 +369,11 @@ classdef files<handle
                 n = n + m;
                 
             end
-            obj.p.framesPerFile = fpf;
+            obj.fpf = fpf;
             obj.set_frames_per_file(fpf);
             
             % debugging
-            % fprintf(1,'Frames per file and file number: %d, %d\n',obj.p.framesPerFile,obj.p.fn);
+            % fprintf(1,'Frames per file and file number: %d, %d\n',obj.fpf,obj.fn);
         end
         
         
@@ -330,21 +389,21 @@ classdef files<handle
             %   The following options are supported:
             %
             %     Argument 1::
-            %       Frame number. If frame number is not given, obj.p.fn
+            %       Frame number. If frame number is not given, obj.fn
             %       will be used
             
             
             % if filenumber is provided, use it
             if nargin >= 2
-                obj.p.fn = varargin{1};
+                obj.fn = varargin{1};
             end
                 
             % remove leading or trailing slashes
-            if ~isempty(obj.p.prepath) && ~isempty(obj.p.newfile) && ~isempty(obj.p.detector) && obj.p.fn >= 0
-                if strcmp(obj.p.prepath(1),'/') || strcmp(obj.p.prepath(1),'\')
-                    obj.p.prepath(1) = []; 
-                elseif strcmp(obj.p.prepath(end),'/') || strcmp(obj.p.prepath(end),'\')
-                    obj.p.prepath(end) = []; 
+            if ~isempty(obj.prepath) && ~isempty(obj.newfile) && ~isempty(obj.detector) && obj.fn >= 0
+                if strcmp(obj.prepath(1),'/') || strcmp(obj.prepath(1),'\')
+                    obj.prepath(1) = []; 
+                elseif strcmp(obj.prepath(end),'/') || strcmp(obj.prepath(end),'\')
+                    obj.prepath(end) = []; 
                 end
             else
                 % return error
@@ -353,36 +412,36 @@ classdef files<handle
             end
             
             % slash
-            [obj.p.prepath, sl] = obj.which_slash(obj.p.prepath);            
+            [obj.prepath, sl] = obj.which_slash(obj.prepath);            
             
             % beamline-specific naming conventions
-            switch obj.p.beamline
+            switch obj.beamline
                 case 'p10'
-                    switch obj.p.detector
+                    switch obj.detector
                         case 'eiger'
-                            compiledPath{1} = [sl obj.p.prepath sl 'detectors' sl 'eiger' sl obj.p.newfile sl obj.p.newfile '_' sprintf('%05i',obj.p.eigerNr) '_' 'master.h5'];
+                            compiledPath{1} = [sl obj.prepath sl 'detectors' sl 'eiger' sl obj.newfile sl obj.newfile '_' sprintf('%05i',obj.scan) '_' 'master.h5'];
                         case 'pilatus'
-                            compiledPath{1} = [sl obj.p.prepath sl 'detectors' sl 'p300' sl obj.p.newfile sl obj.p.newfile '_' sprintf('%05i',obj.p.fn) '.cbf'];
+                            compiledPath{1} = [sl obj.prepath sl 'detectors' sl 'p300' sl obj.newfile sl obj.newfile '_' sprintf('%05i',obj.fn) '.cbf'];
                     end
                 case 'id13'
-                    switch obj.p.detector
+                    switch obj.detector
                         case 'eiger'
-                            compiledPath{1} = [sl obj.p.prepath sl obj.p.newfile '_' num2str(obj.p.eigerNr) '_' 'master.h5'];
+                            compiledPath{1} = [sl obj.prepath sl obj.newfile '_' num2str(obj.scan) '_' 'master.h5'];
                     end
                 case 'id02'
-                    compiledPath{1} = [sl obj.p.prepath sl obj.p.newfile '_' sprintf('%05i',obj.p.fn) '_raw.edf'];
+                    compiledPath{1} = [sl obj.prepath sl obj.newfile '_' sprintf('%05i',obj.fn) '_raw.edf'];
                 case 'none'
-                    switch obj.p.detector
+                    switch obj.detector
                         case 'eiger'
-%                             compiledPath{1} = [sl obj.p.prepath sl obj.p.newfile '_' num2str(obj.p.eigerNr) '_' 'master.h5'];
-                            compiledPath{1} = [sl obj.p.prepath sl obj.p.newfile '_' sprintf('%05i',obj.p.eigerNr) '_' 'master.h5'];
+%                             compiledPath{1} = [sl obj.prepath sl obj.newfile '_' num2str(obj.scan) '_' 'master.h5'];
+                            compiledPath{1} = [sl obj.prepath sl obj.newfile '_' sprintf('%05i',obj.scan) '_' 'master.h5'];
                     end
             end
             
             % detector-specific
-            if strcmp(obj.p.detector,'eiger')
-                index = floor(double(obj.p.fn-1)/double(obj.p.framesPerFile))+1;
-                remainder = mod(double(obj.p.fn-1),double(obj.p.framesPerFile))+1;
+            if strcmp(obj.detector,'eiger')
+                index = floor(double(obj.fn-1)/double(obj.fpf))+1;
+                remainder = mod(double(obj.fn-1),double(obj.fpf))+1;
                 compiledPath{2} = ['/entry/data/data_' sprintf('%06i',index)];
                 compiledPath{3} = double(remainder);
             end
@@ -401,10 +460,10 @@ classdef files<handle
             
             % if frame number is given
             if nargin > 1
-                data = obj.detectors.(obj.p.detector).read(varargin{:});
+                data = obj.detectors.(obj.detector).read(varargin{:});
             else
                 % otherwise, use last frame number that was in use.
-                data = obj.detectors.(obj.p.detector).read(obj.p.fn);
+                data = obj.detectors.(obj.detector).read(obj.fn);
             end
         end
             
@@ -426,11 +485,11 @@ classdef files<handle
             lengthx = 2167;
                 
             % remove leading or trailing slashes
-            if ~isempty(obj.p.prepath) && ~isempty(obj.p.newfile) && ~isempty(obj.p.detector) && obj.p.fn >= 0
-                if strcmp(obj.p.prepath(1),'/') || strcmp(obj.p.prepath(1),'\')
-                    obj.p.prepath(1) = []; 
-                elseif strcmp(obj.p.prepath(end),'/') || strcmp(obj.p.prepath(end),'\')
-                    obj.p.prepath(end) = []; 
+            if ~isempty(obj.prepath) && ~isempty(obj.newfile) && ~isempty(obj.detector) && obj.fn >= 0
+                if strcmp(obj.prepath(1),'/') || strcmp(obj.prepath(1),'\')
+                    obj.prepath(1) = []; 
+                elseif strcmp(obj.prepath(end),'/') || strcmp(obj.prepath(end),'\')
+                    obj.prepath(end) = []; 
                 end
                 
             else
@@ -440,31 +499,30 @@ classdef files<handle
             end
             
             % slash
-            [obj.p.prepath, sl] = obj.which_slash(obj.p.prepath);            
+            [obj.prepath, sl] = obj.which_slash(obj.prepath);            
             
             % slice variables
-            fpf = obj.p.framesPerFile;
-            fileFormat = obj.p.fileFormat;
+            fpf = obj.fpf;
             
             % then compile function
-            switch obj.p.beamline
+            switch obj.beamline
                 case 'p10'
-                    switch obj.p.detector
+                    switch obj.detector
                         case 'eiger'
-                            staticPath = [sl obj.p.prepath sl 'detectors' sl 'eiger' sl obj.p.newfile sl obj.p.newfile '_' sprintf('%05i',obj.p.eigerNr) '_master.h5'];
+                            staticPath = [sl obj.prepath sl 'detectors' sl 'eiger' sl obj.newfile sl obj.newfile '_' sprintf('%05i',obj.scan) '_master.h5'];
                             
                             f = @(fn) flipud(rot90(double(h5read(staticPath,...
                                 ['/entry/data/data_' sprintf('%06i',floor(double(fn-1)/double(fpf))+1)],...
                                 [starty startx double(mod(double(fn-1),double(fpf))+1)],...
                                 [lengthy lengthx 1]))));
                         case 'pilatus'
-                            staticPath = [sl obj.p.prepath sl 'detectors' sl 'p300' sl obj.p.newfile sl obj.p.newfile '_'];
+                            staticPath = [sl obj.prepath sl 'detectors' sl 'p300' sl obj.newfile sl obj.newfile '_'];
                             f = @(fn) flipud(imagereader_P10([staticPath sprintf('%05i',fn) '.cbf' ],'p300'));
                     end
                 case 'id13'
-                    switch obj.p.detector
+                    switch obj.detector
                         case 'eiger'
-                            staticPath = [sl obj.p.prepath sl obj.p.newfile '_' num2str(obj.p.eigerNr) '_master.h5'];
+                            staticPath = [sl obj.prepath sl obj.newfile '_' num2str(obj.scan) '_master.h5'];
 
                             f = @(fn) flipud(rot90(double(h5read(staticPath,...
                                 ['/entry/data/data_' sprintf('%06i',floor(double(fn-1)/double(fpf))+1)],...
@@ -609,7 +667,7 @@ classdef files<handle
             %
             
             if nargin == 2
-                obj.p.firstFile = varargin{1};
+                obj.firstFile = varargin{1};
             else
             
                 % parse input
@@ -621,18 +679,18 @@ classdef files<handle
                 switch pin.Results.beamline
                     case 'p10'
                         % scan details
-                        scan_details = spec_get_scan_info(pin.Results.scanNo, obj.p.newfile,obj.specpath);
+                        scan_details = spec_get_scan_info(pin.Results.scanNo, obj.newfile,obj.specpath);
 
                         % file numbers for each scanpoint
                         firstFile  =  scan_details.first_file;
-                        obj.p.firstFile = firstFile;
+                        obj.firstFile = firstFile;
 
                     case 'id13'
                         % file numbers for each scanpoint
                         firstFile = 1;
 
                         % save to object
-                        obj.p.firstFile = firstFile;                       
+                        obj.firstFile = firstFile;                       
 
                 end
             end
