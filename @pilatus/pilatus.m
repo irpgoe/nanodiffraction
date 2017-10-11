@@ -19,31 +19,28 @@
 % OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 classdef pilatus<handle
+    % PILATUS  Class for reading data from the pilatus detector.
+    %
+    %   p = pilatus(beamline,prepath,newfile,slash)
+    %
+    %   Arguments that are accepted:
+    %
+    %       beamline: []
+    %           Either 'p10','id13' or 'id02' are currently accepted.
+    %
+    %   Note, that read_pilatus is an external function that is not part of the toolbox since it is currently not licensed under MIT.
+    
     properties
-        static_path;
-        suffix;
+        c;
     end
     methods
-        function obj = pilatus(beamline,prepath,newfile,slash)
-            
-            obj.suffix = '.cbf';            
-            if ~ispc
-                prepath = [slash prepath];
-            end
-            
-            switch beamline
-                case 'p10'
-                    obj.static_path = [prepath...
-                        slash 'detectors'...
-                        slash 'p300'...
-                        slash newfile...
-                        slash newfile '_'];
-            end
+        function obj = pilatus(config)
+            obj.c = config;
         end
         function data = read(obj,fn)
         
-            filepath = [obj.static_path sprintf('%05i',fn) obj.suffix];
-        		
+            filepath = obj.c.filename(obj.c.path,fn);
+        	
             % read data
             try
                 data = flipud(read_pilatus(filepath,'p300')); 

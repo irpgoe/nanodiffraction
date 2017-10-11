@@ -19,27 +19,20 @@
 % OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 classdef xia<handle
     properties
-        prepath;
-        suffix;
         fpf;
+        c;
     end
     methods
-        function obj = xia(beamline,fluopath,fluoNewfile,fluoNr,fluoFramesPerFile,slash)
-            obj.fpf = fluoFramesPerFile;
-            obj.suffix = '.edf';
-            switch beamline
-                case 'id13'        
-                         obj.prepath = [slash fluopath...
-                                slash fluoNewfile...
-                                '_xia01_' sprintf('%04i',fluoNr) '_0000_'];
-            end        
+        function obj = xia(config,fpf)
+            obj.fpf = fpf;
+            obj.c = config;
         end
         
         function data = read(obj,fn)
 
-	        index = floor(double(fn-1)/double(obj.fpf)); % xia starts its file numbers with 0!
+	        % file numbers start with 0
 	        remainder = mod(double(fn-1),double(obj.fpf))+1;
-	        filename = [obj.prepath sprintf('%04i',fn) obj.suffix];
+	        filename = obj.c.filename(obj.c.path, fn);
 
             % read data
             try

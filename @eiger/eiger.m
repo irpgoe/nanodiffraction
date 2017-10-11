@@ -17,45 +17,30 @@
 % DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
 % TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
 % OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 classdef eiger<handle
     properties
         eiger_read = @(str1,str2,vec1,vec2) double(h5read( str1, str2, vec1, vec2 ));
-        static_path;
-        framesPerFile;
+        c;
+        fpf;
     end
     methods
-        function obj = eiger(beamline,prepath,newfile,eigerNr,framesPerFile,slash)
-            obj.framesPerFile = framesPerFile;
-            switch beamline
-                case 'p10'
-                    obj.static_path = [slash prepath...
-                        slash 'detectors'...
-                        slash 'eiger'...
-                        slash newfile...
-                        slash newfile '_'...
-                        sprintf('%05i',eigerNr) '_master.h5'];
-                case 'id13'
-                    obj.static_path = [slash prepath...
-                        slash newfile '_'...
-                        num2str(eigerNr) '_master.h5'];
-                case 'none'
-                    obj.static_path = [slash prepath...
-                        slash newfile '_'...
-                        sprintf('%05i',eigerNr) '_master.h5'];
-            end
+        function obj = eiger(config,fpf)
+            obj.fpf = fpf;
+            obj.c = config;
         end
         function data = read(obj,fn)
-            index = floor(double(fn-1)/double(obj.framesPerFile))+1;
-            remainder = mod(double(fn-1),double(obj.framesPerFile))+1;
+            index = floor(double(fn-1)/double(obj.fpf))+1;
+            remainder = mod(double(fn-1),double(obj.fpf))+1;
             data_entry = ['/entry/data/data_' sprintf('%06i',index)];
             file_in_data_entry = double(remainder);
             % read data
             try
-                data = flipud(permute(flip(obj.eiger_read(obj.static_path,data_entry,[1 1 file_in_data_entry],[2070 2167 1]),2),[2 1 []])); 
+                data = flipud(permute(flip(obj.eiger_read(obj.c.path,data_entry,[1 1 file_in_data_entry],[2070 2167 1]),2),[2 1 []])); 
             catch e
                 warning(e.message);
                 fprintf(1,'Debug information: \n');
-                fprintf(1,'Static path: %s\nData Entry:%s\nFile in data entry:%d\nFrames per file:%d\n',obj.static_path,data_entry,file_in_data_entry,obj.framesPerFile);
+                fprintf(1,'Static path: %s\nData Entry:%s\nFile in data entry:%d\nFrames per file:%d\n',obj.c.path,data_entry,file_in_data_entry,obj.fpf);
                 rethrow(e)
             end
         end

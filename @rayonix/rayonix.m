@@ -19,33 +19,28 @@
 % OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 classdef rayonix<handle
     properties
-        prepath;
-        suffix;
+        c;
     end
     methods
-        function obj = rayonix(beamline,prepath,newfile,slash)
-				obj.suffix = '_raw.edf';            
-            switch beamline
-                case 'id02'
-                    obj.prepath = [slash prepath...
-                        slash newfile '_'];
-            end
+        function obj = rayonix(config)
+            % get configuration
+            obj.c = config;
         end
         function data = read(obj,fn)
-        
-            filepath = [obj.prepath sprintf('%05i',fn) obj.suffix];	
-%                     fprintf(1,'argument 1: %s\n',filepath{1});
+            % compile filepath
+            filepath = obj.c.filename(obj.c.path,fn);
+            
+            % open file
             fid = fopen(filepath);
             fseek(fid, 8*512,'bof');
-            data = flipud(rot90(reshape(fread(fid,960*960, 'uint16',0,'l'),960,960)));
+            data = flipud(rot90(reshape(fread(fid,obj.N*obj.N, 'uint16',0,'l'),obj.N,obj.N)));
             fclose(fid);
-                    
                     
             % read data
             try
 	            fid = fopen(filepath);
                fseek(fid, 8*512,'bof');
-               data = flipud(rot90(reshape(fread(fid,960*960, 'uint16',0,'l'),960,960)));
+               data = flipud(rot90(reshape(fread(fid,obj.c.N*obj.c.N, 'uint16',0,'l'),obj.c.N,obj.c.N)));
                fclose(fid); 
             catch e
                 warning(e.message);

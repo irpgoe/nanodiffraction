@@ -1694,13 +1694,6 @@ classdef nanodiffraction < handle
         end
         
         
-        function mask = pca_init(obj,varargin)
-            % PCA_INIT  see RADIAL_MASK for information.
-            mask = obj.radial_mask(varargin{:});
-            obj.sels = mask;
-        end
-        
-        
         function mask = radial_mask(obj,varargin)
             % RADIAL_MASK  defines a radial mask (e.g. necessary for pca)
             %
