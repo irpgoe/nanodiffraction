@@ -17,6 +17,7 @@
 % DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
 % TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
 % OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 classdef pilatus<handle
     properties
         static_path;
@@ -45,7 +46,7 @@ classdef pilatus<handle
         		
             % read data
             try
-                data = flipud(imagereader_P10(filepath,'p300')); 
+                data = flipud(read_pilatus(filepath,'p300')); 
             catch e
                 warning(e.message);
                 fprintf(1,'Debug information: \n');
