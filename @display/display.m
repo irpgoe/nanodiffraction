@@ -1,12 +1,12 @@
 classdef display<handle
-    % DISPLAY  Class for displaying standard STXM and XRF data that can
-    % be converted to SVG and edited by standard routines available at the
-    % IRP.
+    % DISPLAY  Class for displaying standard STXM and XRF maps.
     %
-    %   ds = display()
+    %   d = display()
     %
-    % Note, that displaySAXS should be connected to the experiment by:
-    %   ds.exp = <nanodiffraction Class>;
+    % Note, that the display class should be linked to an instance of the
+    % nanodiffraction class either through
+    %   d.exp = (handle to nanodiffraction class);
+    % or by using the link() function (see help link for usage information)
     %
     % The following arguments are accepted:
     %   axis:: [image]
@@ -100,6 +100,16 @@ classdef display<handle
         end
         
         function add_line(obj,qr_values)
+            % ADD_LINE  plots a vertical line at a specific qr value or
+            % values.
+            %   
+            %   ADD_LINE(QR_VALUES) 
+            %
+            %   The following options are supported:
+            %
+            %     QR_VALUES:: []
+            %       A single qr value or a 1d vector of values.
+            %
             
             y_limits = ylim(gca);
             y = linspace(y_limits(1),y_limits(2),2);
@@ -112,67 +122,51 @@ classdef display<handle
             hold off;
         end
         
-%         function figureHandle = cluster(obj,exp_obj,varargin)
-%             if nargin == 3
-%                 coeffNr = varargin{1};
-%             else
-%                 coeffNr = 4;
-%             end
-%             f7 = figure(7);
-%             set(f7,'Units','centimeters','Position',[0 0 26 26]);clf;
-%             colormap([flipud(gray(512));jet(exp_obj.scan.cluster.k)]);
-%             % show object
-%             ax1 = subplot(2,2,1);imagesc(exp_obj.scan.robustFit.c(:,:,coeffNr));title('single cluster c_i');colormap(gray);colormap(flipud(colormap));%caxis([0 0.15]);cb=colorbar('northoutside');cb.Label.String = 'lin. intensity';
-%             colormap(ax1,flipud(gray(255)));
-%             % show darkfield
-%             ax2 = subplot(2,2,2);imagesc(log10(abs(exp_obj.scan.stxm.df)));axis ij;title('darkfield (log. intensity)');colormap(gray);colormap(flipud(colormap));%cb=colorbar('northoutside');cb.Label.String = 'log. intensity';
-%             colormap(ax2,flipud(gray(255)));
-%             % show cluster in darkfield
-%             ax3 = subplot(2,2,3);
-%             imagesc(exp_obj.scan.cluster.clusters);cb = colorbar('eastoutside');set(cb,'position',[0.07 0.17 0.03 0.2]);title('cluster segmentation');
-%             colormap(ax3,pink(exp_obj.scan.cluster.k));
-%             % show result as bar plot
-%             ax4 = subplot(2,2,4);
-%             colormap(ax4,gray(size(exp_obj.scan.cluster.c,1)));
-%             b = bar(exp_obj.scan.cluster.means,'stacked');
-%             l = legend({'c_0','c_1','c_2','c_3','c_4','c_5','c_6','c_7','c_8'});
-%             set(l,'Location','EastOutside');
-%             ylim([0 1]);
-%             xlim([0 exp_obj.scan.cluster.k+1]);
-%             title('contribution of coeff. to clusters');xlabel('cluster k');ylabel('percentage'); 
-%         end
-        
-        % shows fluo scan results
-        function figure_handle = show_fluo(obj, ex_obj, fluoCounter, exportFilename)
-           
-            % Show the results all together
-            figure_handle = figure('Name','Fluo result');clf;
-            if nargin > 2
-                imagesc(ex_obj.scan.y,ex_obj.scan.z,(abs(ex_obj.scan.fluo.(fluoCounter))));
-            else
-                imagesc(ex_obj.scan.y,ex_obj.scan.z,(abs(ex_obj.scan.fluo.('total'))));
-            end
-            caxis(obj.p.caxis);
-            % label
-            xlabel('y');
-            ylabel('z');
-            % colorbar
-            if strcmp(obj.p.colorbar,'on')
-                c = colorbar;
-                ylabel(c,obj.p.zlabel)
-            end
-            axis(obj.p.axis);
-            % title
-            if nargin > 2
-                title(['(' fluoCounter ') fluorescence']);
-            else
-                title(['(' 'total' ') fluorescence']);
+        function cluster(obj,cluster_data,varargin)
+            % CLUSTER  plots cluster map with relative contributions.
+            %   
+            %   CLUSTER(CLUSTER_DATA, MEANS) 
+            %
+            %   The following options are supported:
+            %
+            %     CLUSTER_DATA:: []
+            %       Cluster map.
+            %
+            %     MEANS:: []
+            %       Means of each cluster.
+            %
+
+            if nargin == 3
+                means = varargin{1};
             end
             
-            if nargin == 4
-                % export figure
-                save_fig(figure_handle,['results/' exportFilename]);
+            % number of clusters
+            n_clusters = max(cluster_data(:));
+            
+            % show cluster as map
+            subplot(1,2,1);
+            imagesc(clusterres.clusters);
+            colormap(pmkmp(n_clusters));
+            axis image; 
+            c=colorbar;
+            ylabel(c,'cluster label');
+
+            % show result as bar plot
+            ax2 = subplot(1,2,2);
+            colormap(ax2,gray(n_clusters));
+            b = bar(means,'stacked');
+            ylim([0 1]);
+            xlim([0 n_clusters+1]);
+            title('contribution of coefficients to clusters');xlabel('cluster label');ylabel('percentage'); 
+            
+            % calculate legend
+            l_content = cell(1,n_clusters);
+            for ii = 1:n_clusters
+                l_content(ii) = sprintf('c_%d',ii-1);
             end
+            l = legend(l_content);
+            set(l,'Location','EastOutside');
+            
         end
         
         
@@ -251,74 +245,6 @@ classdef display<handle
                 yticks([1:sampl:size(data,1)]);
                 yticklabels(([1:sampl:size(data,1)] - 1)*scy);
                 
-            
-            % Show the results all together
-%             figure_handle = figure('Name','STXM result','Position',[5 105   1105   855]);clf;
-
-%             sp = subplot('Position',[.55 .05 .4 .4]);
-%             imagesc(obj.exp.scan.y,obj.exp.scan.z,(abs(data.df)));
-%             axis image;
-%             c = colorbar;
-%             ylabel(c,'intensity [counts]');
-%             obj.autoc(abs(data.df));
-%             % label
-%             xlabel('y [\mum]');
-%             ylabel('z [\mum]');
-%             % colorbar
-%             if strcmp(obj.p.colorbar,'on')
-%                 c = colorbar;
-%                 ylabel(c,obj.p.zlabel)
-%             end
-%             axis(obj.p.axis);
-%             title('darkfield');
-
-%             sp = subplot('Position',[.05 .05 .4 .4]);
-%             imagesc(ex_obj.scan.y,ex_obj.scan.z,log10(abs(ex_obj.scan.tr)));
-%             caxis(obj.p.caxis);
-%             % label
-%             xlabel('y');
-%             ylabel('z');
-%             % colorbar
-%             if strcmp(obj.p.colorbar,'on')
-%                 c = colorbar;
-%                 ylabel(c,obj.p.zlabel)
-%             end
-%             axis(obj.p.axis);
-%             title('transmission');
-% 
-%             sp = subplot('Position',[.05 .55 .4 .4]);
-%             imagesc(ex_obj.scan.y,ex_obj.scan.z,ex_obj.scan.stxm.dpcx);
-%             % label
-%             xlabel('y');
-%             ylabel('z');
-%             % colorbar
-%             if strcmp(obj.p.colorbar,'on')
-%                 c = colorbar;
-%                 ylabel(c,obj.p.zlabel)
-%             end
-%             axis(obj.p.axis);
-%             title('DPCx');
-% 
-%             sp = subplot('Position',[.55 .55 .4 .4]);
-%             imagesc(ex_obj.scan.y,ex_obj.scan.z,ex_obj.scan.stxm.dpcy);
-%             % label
-%             xlabel('y');
-%             ylabel('z');
-%             % colorbar
-%             if strcmp(obj.p.colorbar,'on')
-%                 c = colorbar;
-%                 ylabel(c,obj.p.zlabel)
-%             end
-%             axis(obj.p.axis);
-%             title('DPCy');
-% 
-% 
-%             if (numel(obj.p.cmap) > 1)
-%                 colormap(flipud(obj.p.cmap{1}));
-%             else
-%                 colormap(obj.p.cmap{1});
-%             end
-
         end
         
         function add_quiver(obj,orientation,varargin)
