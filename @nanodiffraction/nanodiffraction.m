@@ -1391,7 +1391,7 @@ classdef nanodiffraction < handle
             
             % combination of masks, only applicable on logical masks
             mask = zeros(size(varargin{1}));
-            for ii = 1:(nargin-2)
+            for ii = 1:(nargin-1)
                 mask = mask + varargin{ii};
             end
             mask = min(mask,1); % clip to 1
@@ -1451,7 +1451,7 @@ classdef nanodiffraction < handle
             
             % combined selections, only applicable on logical masks
             sel = zeros(size(varargin{1}));
-            for ii = 1:(nargin-2)
+            for ii = 1:(nargin-1)
                 sel = sel + varargin{ii};
             end
             sel = min(sel,1); % clip to 1
@@ -2614,9 +2614,38 @@ classdef nanodiffraction < handle
             %           of the scattering pattern. 
             %           Example: [100 900 100 900]
             
+            defaults = struct('win',[],'append',0,'prepend',0);
+            fields = fieldnames(defaults);
+            if nargin > 2
+                opts = varargin{1};
+                for f = 1:numel(fields)
+                    if ~isfield(opts,fields{f})
+                        opts.(fields{f}) = defaults.(fields{f});
+                    end
+                end
+            else
+                opts = defaults;
+            end
+            
+            prepend = @(cellArr) [ {zeros(size(cellArr{1}))},cellArr];
+            append = @(cellArr) [ cellArr, {zeros(size(cellArr{1}))}];
+            
+            if opts.append > 0
+                for ii = 1:opts.append;data = append(data);end
+            end
+            if opts.prepend > 0
+                for ii = 1:opts.prepend;data = prepend(data);end
+            end
+            
+            if numel(data) ~= stitchy*stitchz
+                [m,n] = size(data);
+                warning('data matrix (%d x %d) does not match stitch size (%d x %d)\n Zeros will be added.',m,n,stitchz,stitchy);
+                for ii = 1:(stitchy*stitchz - m*n);data = append(data);end
+            end
+            
             usewin = 0;
-            if nargin == 5
-                win = varargin{1};
+            if ~isempty(opts.win)
+                win = opts.win;
                 yl = win(1);
                 yu = win(2);
                 zl = win(3);

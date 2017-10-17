@@ -328,7 +328,6 @@ classdef display<handle
             %       p is obtained as a second argument from
             %       e.calculate_composite().
             
-            figure(1); 
             imla(comp); 
             colormap(flipud(hot));
             c=colorbar;
@@ -772,7 +771,7 @@ classdef display<handle
 
             % add quiver lines
             if doQuiver
-                obj.add_quiver(angle,struct('sampling',3,'scale',0.3));
+                obj.add_quiver(angle,struct('sampling',1,'scale',0.3));
             end
         end
         
