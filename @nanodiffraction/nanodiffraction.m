@@ -143,6 +143,9 @@ classdef nanodiffraction < handle
         sels_orig = [];
         corr_orig = [];
         
+        % empty
+        empty = [];
+        
         % roi and binning
         detectorRoi = 'off';
         binning = 'off';
@@ -296,7 +299,7 @@ classdef nanodiffraction < handle
             obj.mask_orig = zeros(obj.Nz,obj.Ny);
             
             % empty
-            obj.scan.empty = zeros(obj.Nz,obj.Ny);
+            obj.empty = zeros(obj.Nz,obj.Ny);
             
             % detector roi and binning off
             obj.detectorRoi = 'off';
@@ -619,6 +622,7 @@ classdef nanodiffraction < handle
             % general parameters
             addOptional(pin,'method','none',@ischar);
             addOptional(pin,'emptySub','off',@ischar);
+            addOptional(pin,'empty',[]);
             addOptional(pin,'correction','off',@ischar);
             addOptional(pin,'parallel','off',@ischar);
             % stxm, crystal, b1d and symmetry
@@ -644,9 +648,26 @@ classdef nanodiffraction < handle
             scanmode = pin.Results.scanmode;
             
             % Process empty and masks
-            empty = (obj.scan.empty);
+            emptyYes = 0;
+            if strcmp(pin.Results.emptySub,'on')
+                emptyYes = 1;
+                if ~isempty(pin.Results.empty)
+                    empty = pin.Results.empty;
+                else
+                    empty = (obj.empty);
+                end
+                
+                if min(size(empty) ~= [obj.Nz,obj.Ny])
+                    warning('Empty size does not match detector size');
+                    try
+                        empty = obj.process(empty);
+                    catch err
+                        error(err);
+                    end
+                end
+            end
             if min(size(obj.mask) ~= [obj.Nz,obj.Ny])
-                error('Detector mask size does not match detector size');
+                warning('Detector mask size does not match detector size');
                 try
                     mask = obj.process_mask(obj.mask);
                 catch err
@@ -875,7 +896,7 @@ classdef nanodiffraction < handle
                         dat = obj.process(obj.data.read(fn));
 %                         dat = obj.read_wait(fn);
                         
-                        if strcmp(pin.Results.emptySub,'on')
+                        if emptyYes
                             dat = dat - empty;
                         end
                         
@@ -898,7 +919,8 @@ classdef nanodiffraction < handle
                         drawnow;
                     end
                     if dataYes
-                        dataStorage{jj} = (~obj.mask).*dat;
+                        dataStorage{jj} = dat;
+%                         dataStorage{jj} = (~obj.mask).*dat;
                     end
                     if fluoYes
                         fluoData = obj.data.read_fluorescence(index);
@@ -1143,7 +1165,7 @@ classdef nanodiffraction < handle
             %           in combination with (display_class).composite. See
             %           help display.composite for more information
                         
-            defaults = struct('yCrop',[1 obj.scan.SNy],'zCrop',[1 obj.scan.SNz],'ySkip',1,'zSkip',1);
+            defaults = struct('yCrop',[1 obj.scan.SNy],'zCrop',[1 obj.scan.SNz],'ySkip',1,'zSkip',1,'correction','off','emptySub','off','empty',[],'heal','off','healmask',[]);
             fields = fieldnames(defaults);
             if nargin > 1
                 opts = varargin{1};
@@ -1161,7 +1183,11 @@ classdef nanodiffraction < handle
             Nz = obj.Nz;
 
             % get data stack
-            result = obj.analyze_scan('method','data','yCrop',opts.yCrop,'zCrop',opts.zCrop,'ySkip',opts.ySkip,'zSkip',opts.zSkip);
+%             if strcmp(opts.heal,'off')
+%                 result = obj.analyze_scan('method','data','yCrop',opts.yCrop,'zCrop',opts.zCrop,'ySkip',opts.ySkip,'zSkip',opts.zSkip,'emptySub',opts.emptySub,'correction',opts.correction);
+%             else
+                result = obj.analyze_scan('method','data+heal','yCrop',opts.yCrop,'zCrop',opts.zCrop,'ySkip',opts.ySkip,'zSkip',opts.zSkip,'emptySub',opts.emptySub,'empty',opts.empty,'correction',opts.correction,'healmask',opts.healmask);
+%             end
             
             % yCrop and zCrop, ySkip and zSkip are the important parameters
             imsY = numel(opts.yCrop(1):opts.ySkip:opts.yCrop(2));
@@ -1223,17 +1249,18 @@ classdef nanodiffraction < handle
             % http://de.mathworks.com/help/curvefit/least-squares-fitting.html
             % http://www.dsplog.com/2012/02/05/weighted-least-squares-and-locally-weighted-linear-regression/
             % 
-            %   [ROBUST_FIT] = ROBUST_FITTING(DATA,NCOEFF)
+            %   [ROBUST_FIT] = ROBUST_FITTING(DATA,OPTS)
             %
             %   The following options are supported:
             %
             %     DATA:: []
-            %       An n x m - data matrix.
+            %       A struct containing the fields 'dat_1d' and 'qr' is
+            %       required.
             %
-            %     NCOEFF:: [9] (optional)
-            %
-            %     WIN:: [[1 end]] (optional)
-            %       Window for data selection.
+            %     OPTS:: [] (optional)
+            %       structure that can contain the following fields:
+            %           - 'ncoeff': number of coefficients
+            %           - 'win': Window for data selection, a 2-element vector.
             %
             %   Output arguments:
             %    
@@ -1244,7 +1271,7 @@ classdef nanodiffraction < handle
             %           - c: fitted coefficients
             
             % parse variable arguments
-            defaults = struct('ncoeff',9,'win',[1 numel(dat.qr)]);
+            defaults = struct('ncoeff',9,'win',[1 numel(dat.qr)],'coeff_start',0);
             fields = fieldnames(defaults);
             if nargin > 2
                 opts = varargin{1};
@@ -1265,7 +1292,7 @@ classdef nanodiffraction < handle
             y = dat.dat_1d(win(1):win(2));
             
             % fit
-            [f,c] = lin_fit(x,y, n_coeff, @(y) 1./y.^2);
+            [f,c] = lin_fit(x,y, n_coeff, @(y) 1./y.^2, opts.coeff_start);
 
             % save
             robustFit.f = f;

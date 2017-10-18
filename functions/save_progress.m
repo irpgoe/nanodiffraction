@@ -31,21 +31,25 @@ function save_progress(script_fn,location,desc)
     syscall = ['cp ./experiments/' script_fn '.m ' location '/' timestamp '.m'];
     expression = ['save(''', [location '/' timestamp '.mat'], ''',','''-v7.3'')'];
 
+    fprintf(1,'\n');
+    disp('You are currently in the following directory:')
+    disp(pwd)
+    fprintf(1,'\n');
     disp('Workspace saving:')
     disp(expression);
-    disp('')
+    fprintf(1,'\n');
     disp('Script backup:')
     disp(syscall);
-    disp('')
+    fprintf(1,'\n');
     disp('Appending logbook: ');
-    disp([script_fn '.dat']);
-    disp('')    
-    answer = input('Do you wish to proceed? (y|n)','s');
+    disp(['./logs/' script_fn '.dat']);
+    fprintf(1,'\n');
+    answer = input('Do you wish to proceed? (y|n) ','s');
     
     if strcmp(answer,'y')
         disp('executing...')
     
-        fid = fopen([script_fn '.dat'],'a');
+        fid = fopen(['./logs/' script_fn '.dat'],'a');
         fprintf(fid,'Current time: %s\n%s\n\n',timestamp,desc);
         fclose(fid);
         
