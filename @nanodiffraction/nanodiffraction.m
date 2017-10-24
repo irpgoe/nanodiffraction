@@ -606,6 +606,26 @@ classdef nanodiffraction < handle
             %       Result:: 
             %           struct containing the results for each method.
             %           Syntax: struct_name.method_name.method_results
+            %
+            %       Current options:
+            %           struct_name.
+            %               data
+            %               maxProjection
+            %               crystal
+            %               crystalBgr
+            %               devel
+            %               dpc - dpcx, dpcy
+            %               stxm - df
+            %               pca - w, angle
+            %               fluo
+            %               avg
+            %               sum
+            %               rotate
+            %               symmetry - Ln
+            %               b1d - dat_1d, error, qr
+            %               pyfai - dat_1d, error, r
+
+            
             
             % make checks on input
             checkroi = @(x) isvector(x) && length(x) == 2;

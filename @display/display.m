@@ -99,6 +99,29 @@ classdef display<handle
             end
         end
         
+        function new = copy(obj)
+            % COPY  Makes a copy of a handle object. This keeps track of 
+            % all the given parameters so that multiple instances of a 
+            % display module can be used.
+            %
+            %   NEW_INSTANCE = COPY(DISPLAY_OBJECT)
+            %
+            %   EXAMPLE::
+            %       d = copy(generic_display)
+            
+            
+            % Instantiate new object of the same class.
+%             fprintf(1,'/* (ignore) ');
+            new = feval(class(obj));
+%             fprintf(1,'\b */\n');
+            
+            % Copy all non-hidden properties.
+            prop = properties(obj);
+            for i = 1:length(prop)
+                new.(prop{i}) = obj.(prop{i});
+            end
+        end
+        
         function add_line(obj,qr_values)
             % ADD_LINE  plots a vertical line at a specific qr value or
             % values.

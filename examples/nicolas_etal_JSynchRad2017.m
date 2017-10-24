@@ -3,11 +3,11 @@
 % Data Analysis and Processing, J. Synchrotron Rad. 24.
 
 % add the toolbox to the path
-addpath(genpath('path_to_toolbox')); % edit
+addpath(genpath('nanodiffraction')); % edit
 
 % file module
 f = files( 'beamline','id13',...
-           'prepath','path_to_file_storage',... % edit
+           'prepath','/homegroups/AG_Salditt/Projects_cellular_diffraction_and_actin/Analysis/test',... % edit
            'newfile','herz2_roi2',...
            'detector','eiger',...
            'scan',201);   
@@ -28,8 +28,8 @@ d = display();
 link(f,e,e,d);
 
 % masks
-e.set_mask('detector',f.read(1)==(2^32-1));         % data mask
-e.set_mask('pca',e.radial_mask('r1',86,'r2',230));  % data selection
+e.set_mask(f.read(1)==(2^32-1));         
+e.set_selection(e.radial_mask('r1',86,'r2',230));
 
 % roi and binning
 e.set_roi_and_binning('binning','on','biny',4,'binz',4,'detectorRoi','on','detRoiY',round([(e.pby_orig-200) (e.pby_orig+200)]),'detRoiZ',round([(e.pbz_orig-200) (e.pbz_orig+200)]));

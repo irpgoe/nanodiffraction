@@ -170,7 +170,7 @@ classdef files<handle
                 case 'eiger_none'
                     config.path = [sl prepath...
                         sl newfile '_'...
-                        sprintf('%05i',scannr) '_master.h5'];
+                        sprintf('%i',scannr) '_master.h5'];
                 case 'pilatus_p10'
                     if ~ispc
                         prepath = [sl prepath];
@@ -564,88 +564,88 @@ classdef files<handle
         end
         
         
-%         function result = read_from_dada(~, varargin)
-%         % READ_FROM_DATA  reads (preprocessed) data from dada. 
-%         % 
-%         %   DATA = READ_FROM_DADA(VARARGIN)
-%         %
-%         %   The following arguments are accepted:
-%         %
-%         %     INSTRUMENT:: [ESRF]
-%         %       As in dada.
-%         %
-%         %     EXPERIMENT:: [ls2522]
-%         %       As in dada.
-%         %
-%         %     DETECTOR:: [eiger1]
-%         %       As in dada.
-%         %
-%         %     SAMPLE:: [n05_ms532_uu09_roi6new]
-%         %       As in dada.
-%         %
-%         %     FILENUMBER:: [11]
-%         %       As in dada.
-%         %
-%         %     FRAMENUMBER:: [1]
-%         %       As in dada.
-%         %
-%         % In addition you could specify a ROI or BINNING
-%         %     ROI:: []
-%         %       e.g. '1090,1111,200,200'
-%         % 	  BINNING:: ['1,1']
-%         %       e.g. '1,1'
-%         
-%             
-%             % parse input
-%             pin = inputParser;
-%             addOptional(pin,'experiment','ls2522');
-%             addOptional(pin,'detector','eiger1');
-%             addOptional(pin,'instrument','ESRF');
-%             addOptional(pin,'sample','n05_ms532_uu09_roi6new');
-%             addOptional(pin,'filenumber',11);
-%             addOptional(pin,'framenumber',1); 
-%             addOptional(pin,'roi',''); 
-%             addOptional(pin,'binning','1,1');
-%             parse(pin,varargin{:});
-%             
-%             if (nargin == 1)
-%                disp('Showing you an example scan');
-%                disp(pin.Results)
-%             end
-%             
-%             % rename
-%             experiment = pin.Results.experiment;
-%             detector = pin.Results.detector;
-%             instrument = pin.Results.instrument;
-%             sample = pin.Results.sample;
-%             filenumber = pin.Results.filenumber;
-%             framenumber = pin.Results.framenumber;
-%             
-%             % preprocessing
-%             roi = pin.Results.roi;
-%             binning = pin.Results.binning;
-%             
-%             % get data from data
-%             tic;
-%             dada = 'http://dada-devel.roentgen.physik.uni-goettingen.de';
-%             url  =  [dada '/show/' instrument '/' experiment '/' detector '/' sample '/' num2str(filenumber) '/' num2str(framenumber) ['/?format=double&roi=' roi '&binning=' binning]];
-%             [data,extra] = urlread2(url);
-%             dims = str2num(extra.allHeaders.X_dimensions{1});
-%             data = typecast(cast(data, 'uint8'), 'double');
-%             data = reshape(data, dims);
+        function result = read_from_dada(~, varargin)
+        % READ_FROM_DATA  reads (preprocessed) data from dada. 
+        % 
+        %   DATA = READ_FROM_DADA(VARARGIN)
+        %
+        %   The following arguments are accepted:
+        %
+        %     INSTRUMENT:: [ESRF]
+        %       As in dada.
+        %
+        %     EXPERIMENT:: [ls2522]
+        %       As in dada.
+        %
+        %     DETECTOR:: [eiger1]
+        %       As in dada.
+        %
+        %     SAMPLE:: [n05_ms532_uu09_roi6new]
+        %       As in dada.
+        %
+        %     FILENUMBER:: [11]
+        %       As in dada.
+        %
+        %     FRAMENUMBER:: [1]
+        %       As in dada.
+        %
+        % In addition you could specify a ROI or BINNING
+        %     ROI:: []
+        %       e.g. '1090,1111,200,200'
+        % 	  BINNING:: ['1,1']
+        %       e.g. '1,1'
+        
+            
+            % parse input
+            pin = inputParser;
+            addOptional(pin,'experiment','ls2522');
+            addOptional(pin,'detector','eiger1');
+            addOptional(pin,'instrument','ESRF');
+            addOptional(pin,'sample','n05_ms532_uu09_roi6new');
+            addOptional(pin,'filenumber',11);
+            addOptional(pin,'framenumber',1); 
+            addOptional(pin,'roi',''); 
+            addOptional(pin,'binning','1,1');
+            parse(pin,varargin{:});
+            
+            if (nargin == 1)
+               disp('Showing you an example scan');
+               disp(pin.Results)
+            end
+            
+            % rename
+            experiment = pin.Results.experiment;
+            detector = pin.Results.detector;
+            instrument = pin.Results.instrument;
+            sample = pin.Results.sample;
+            filenumber = pin.Results.filenumber;
+            framenumber = pin.Results.framenumber;
+            
+            % preprocessing
+            roi = pin.Results.roi;
+            binning = pin.Results.binning;
+            
+            % get data from data
+            tic;
+            dada = 'http://dada-devel.roentgen.physik.uni-goettingen.de';
+            url  =  [dada '/show/' instrument '/' experiment '/' detector '/' sample '/' num2str(filenumber) '/' num2str(framenumber) ['/?format=double&roi=' roi '&binning=' binning]];
+            [data,extra] = urlread2(url);
+            dims = str2num(extra.allHeaders.X_dimensions{1});
+            data = typecast(cast(data, 'uint8'), 'double');
+            data = reshape(data, dims);
+            toc;
+
+            d = zeros(dims)-1;
+            d(data>0) = (data(data>0));
+%             d(data>0) = log10(data(data>0));
+%             imagesc(flipud(rot90(d))); caxis([-1 3]); colormap gray; colorbar;
+%             fprintf('compare to http://dada-devel/show/GINIX/run55/eiger/simone/17/1?scale=log&palette=bw&binning=4,4&cmin=0&cmax=1000\n');
 %             toc;
-% 
-%             d = zeros(dims)-1;
-%             d(data>0) = (data(data>0));
-% %             d(data>0) = log10(data(data>0));
-% %             imagesc(flipud(rot90(d))); caxis([-1 3]); colormap gray; colorbar;
-% %             fprintf('compare to http://dada-devel/show/GINIX/run55/eiger/simone/17/1?scale=log&palette=bw&binning=4,4&cmin=0&cmax=1000\n');
-% %             toc;
-% 
-%             % final signal
-%             result = flipud(rot90(d));
-% 
-%         end
+
+            % final signal
+            result = flipud(rot90(d));
+
+        end
         
                 
         function firstFile = set_first_file(obj,varargin)
