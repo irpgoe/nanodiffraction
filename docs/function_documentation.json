@@ -1,0 +1,37 @@
+{
+    module: [
+        files: {
+            desc: '',
+            functions: [
+                read: { desc: '', 
+                        input: [{'key','val'}, {'key', 'val'}], 
+                        output: {'res', 'desc'}},
+                write: {desc: '', 
+                        input: [{'key','val'}, {'key', 'val'}], 
+                        output: {'res', 'desc'}}
+                ]
+            },
+        nanodiffraction: {
+            desc: '',
+            functions: [
+                read: { desc: '', 
+                        input: [{'key','val'}, {'key', 'val'}], 
+                        output: {'res', 'desc'}},
+                write: {desc: '', 
+                        input: [{'key','val'}, {'key', 'val'}], 
+                        output: {'res', 'desc'}}
+                ]
+            },
+        display: {
+            desc: '',
+            functions: [
+                read: { desc: '', 
+                        input: [{'key','val'}, {'key', 'val'}], 
+                        output: {'res', 'desc'}},
+                write: {desc: '', 
+                        input: [{'key','val'}, {'key', 'val'}], 
+                        output: {'res', 'desc'}}
+                ]
+            }
+    ]
+}

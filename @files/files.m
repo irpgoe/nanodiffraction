@@ -133,6 +133,10 @@ classdef files<handle
                 obj.detectors.pilatus = pilatus(config);            
             end
             
+            if contains(p.Results.detector,'pirra')
+                obj.detectors.pirra = pirra(config);            
+            end
+            
             if contains(p.Results.detector,'xia')
                 obj.detectors.xia = xia(config,obj.fpf);
             end            
@@ -181,6 +185,16 @@ classdef files<handle
                         sl newfile...
                         sl newfile '_'];
                     config.filename = @(pre,n) [pre sprintf('%05i',n) '.cbf'];
+                case 'pirra_p10'
+                    if ~ispc
+                        prepath = [sl prepath];
+                    end
+                    config.path = [prepath...
+                        sl 'detectors'...
+                        sl 'pirra'...
+                        sl newfile...
+                        sl newfile '_'];
+                    config.filename = @(pre,n) [pre sprintf('%i',n) '.tif'];    
                 case 'rayonix_id02'
                     config.path = [sl prepath...
                         sl newfile '_'];        

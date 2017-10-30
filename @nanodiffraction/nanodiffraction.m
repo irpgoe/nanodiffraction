@@ -1403,6 +1403,10 @@ classdef nanodiffraction < handle
 
             selections = obj.sels;
             
+            if max(size(sel) == [obj.Nz_orig,obj.Ny_orig])
+                obj.sels_orig = obj.sels;     
+            end
+            
         end
         
                     
