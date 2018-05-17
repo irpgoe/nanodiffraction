@@ -1,0 +1,52 @@
+article:first-of-type {
+	margin-top: 1em;
+}
+
+article:last-of-type {
+	margin-bottom: 1em;
+}
+
+.entry {
+	position: relative;
+	display: flex;
+	background: white;
+	text-align: left;
+	width: 66em;
+	font: 100%/1.5 'Palatino Linotype', Palatino, serif;
+}
+
+article > span {
+	display: block;
+	min-width: 10em;
+	padding: .5em 1em;
+	margin: 0;
+	height: 100%;
+	box-sizing: border-box;
+}
+
+#citation {
+	background: #f06;
+	color: white;
+	font-weight: bold;
+}
+
+#sample {
+	background: #ccc;
+	color: black;
+}
+
+#comment {
+	background: #eee;
+	color: black;
+	min-width: 20em;
+}
+
+#muscle {
+	background: #ccc;
+	color: black;
+}
+
+#d10 {
+	background: #6f0;
+	color: black;
+}
