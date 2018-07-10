@@ -1,4 +1,19 @@
 function image = binning_2d(image,binx,biny)                
+    % BINNING_2D  takes in an image and bins it according to the binning
+    % factors BINX and BINY.
+    %
+    %   Usage:
+    %       BINNED_IMAGE = BINNING_2D(IMAGE, BINX, BINY)
+    %
+    %   Arguments:
+    %       image:: [no default]
+    %           2d array.
+    %
+    %       binx:: [no default]
+    %           Integer binning factor along the horizontal dimension.
+    %
+    %       biny:: [no default]
+    %           Integer binning factor along the vertical dimension.
 
     [m,n] = size(image);
     nnew = n - mod(n,binx);

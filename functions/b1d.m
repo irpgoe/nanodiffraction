@@ -4,7 +4,7 @@ function [results] = b1d(dat,mask,sel,grid,varargin)
 % is considered to be a rather simple but fast method to get accurate
 % angular averages.
 %   
-%   [RESULT] = B1D(DATA,sel,GRID,BINS) 
+%   [RESULT] = B1D(DATA,MASK,SEL,GRID,BINS) 
 %
 %   The following options are required:
 %
@@ -47,13 +47,14 @@ function [results] = b1d(dat,mask,sel,grid,varargin)
 % DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
 % TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
 % OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-            
+    
     % Settings, if none are passed than default values are taken
-	if (nargin == 5)
+	if nargin == 5
 		bins = varargin{1};
     else
         bins = 360;
-    end
+	end
+    
     if isempty(sel)
         sel = ones(size(dat));
     end
@@ -61,38 +62,29 @@ function [results] = b1d(dat,mask,sel,grid,varargin)
         mask = zeros(size(dat));
     end
     
-    % apply sel on radius in pixels and data
-    grid(mask | ~sel) = NaN;
-    dat(mask | ~sel) = NaN;
-
-    % transform into one-dimensional array
-    aavg = squeeze(reshape(dat,1,[]));    
-    x = squeeze(reshape(grid,1,[]));
-
-    % remove NaNs
-    aavg(isnan(aavg)) = [];
-    x(isnan(x)) = [];
-    
-    % sorting (x_i, I_i) pairs
+    % sort grid
+    x = grid(~(mask | ~sel))'; 
     [x, sortIndex] = sort(x);
-    aavg = aavg(sortIndex);
     
-    % binning of x values
+    % binning of grid
     binEdge = linspace(min(x),max(x),bins);
     [n,~,bin] = histcounts(x,binEdge);
-    
-    % put intensity values into bins (each qr value has a bin associated) and take mean
-    aavg = accumarray(bin',aavg,[],@mean,NaN);
     binEdge = binEdge';
     
-    % remove NaNs from intensity
-    aavg(isnan(aavg)) = [];
-
-    % binning and remove trailing zeros
+    % remove trailing zeros
     x = binEdge(1:sum(n~=0));
+    
+    % put intensity values into bins (each qr value has a bin associated) and take mean
+    aavg = dat(~(mask | ~sel))';
+    aavg = aavg(sortIndex);
+    aavg = accumarray(bin',aavg,[],@mean,NaN);
+    
+    % remove NaNs from intensity and bin index (NaNs appear where n is 0)
+    n(isnan(aavg)) = [];
+    aavg(isnan(aavg)) = [];
     
     % save results
     results.dat_1d = aavg;
     results.qr = x;
-    results.error = sqrt(aavg);
+    results.error = sqrt(aavg)./sqrt(n');
 end

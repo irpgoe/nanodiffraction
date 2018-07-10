@@ -32,6 +32,9 @@ classdef rayonix<handle
             
             % open file
             fid = fopen(filepath);
+            if fid == -1
+                error(['File not found: ' filepath]);
+            end
             fseek(fid, 8*512,'bof');
             data = flipud(rot90(reshape(fread(fid,obj.c.N*obj.c.N, 'uint16',0,'l'),obj.c.N,obj.c.N)));
             fclose(fid);

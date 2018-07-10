@@ -44,7 +44,7 @@ classdef spec<handle
             %     specfile:: [] (not required)
             %       Spec filename.
 
-            switch obj.beamline
+            switch obj.c.beamline
                 case 'id13'
                     [data,header,scaninfo] = obj.read_id13(specNr,varargin{:});
                 case 'p10'
@@ -86,14 +86,17 @@ classdef spec<handle
             % Read until #S is encountered
             tline = fgetl(fid);
             cond = 1;
-            while cond < 100
+            max_lines = 1e6;
+            while cond < max_lines  % maximum a million lines
+                
                 % split up
                 tmp = strsplit(tline,' ');
                 if strcmp(tmp(1),'#S')
+                    
                     % Compare scan number
                     if strcmp(tmp(2),num2str(specNr))
                         scaninfo = tmp;
-                        cond = 100;
+                        cond = max_lines ;
                     end
                 end
                 tline = fgetl(fid);
@@ -102,11 +105,11 @@ classdef spec<handle
             
             % If scan number correct, find #L line
             cond = 1;
-            while cond < 100
+            while cond < max_lines 
                 % split up
                 tmp = strsplit(tline,' ');
                 if strcmp(tmp(1),'#L')
-                    cond = 100;
+                    cond = max_lines ;
                     header = tmp;
                     % make some slight adjustments
                     header(1) = [];header(6) = [];
@@ -122,11 +125,15 @@ classdef spec<handle
             
             % read data
             ii = 1;
-%             fprintf(1,'Reading line %5.0f', 1);
+            fprintf(1,'Reading line %5.0f', 1);
             while ~strcmp(tline,'') && ~strcmp(tline(1:2),'#C') && ii < 100000
-%                 fprintf(1,'\b\b\b\b\b%5.0f', ii);
+                fprintf(1,'\b\b\b\b\b%5.0f', ii);
                 data(ii,:) = str2double(strsplit(tline));     
                 tline = fgetl(fid);
+                if tline == -1
+                    % end of file reached
+                    break;
+                end
                 ii = ii + 1;
             end
 %             fprintf(1,'\n');

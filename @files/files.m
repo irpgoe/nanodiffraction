@@ -1,13 +1,14 @@
 classdef files<handle
     % FILES  Class to process file requests for nanodiffraction data.
-    % files accepts name value pairs and requires in general the path to
+    % FILES accepts name value pairs and requires in general the path to
     % certain scan parameters such as the directory of data storage, file
     % naming conventions (prefixes and suffixes) and the type of detector
-    % used. Once initialized properly, it will be attached to a
+    % used. Once initialized properly, it should be linked to a
     % nanodiffraction class so that file reading will be done
-    % automatically based on the scan frame number.
+    % automatically based on the scan frame number. Use link() to connect a
+    % FILES class to a NANODIFFRACTION class.
     %   
-    %   DATA = FILES(VARARGIN) creates an files object, with a list of 
+    %   DATA = FILES(VARARGIN) creates a files object, with a list of 
     %   arguments provided in VARARGIN. VARARGIN consists of NAME - VALUE 
     %   pairs. NAME is a string describing the option and VALUE can be any 
     %   input. Typically, a specific input is requested by default and an 
@@ -16,28 +17,43 @@ classdef files<handle
     %   The following options are supported:
     %
     %   prepath:: [homegroups/Labdata-Archive/AG_Salditt/Messzeiten_Rohdaten/2016/extern/ESRF_ID13_SC4304/id13/inhouse/DATA/AUTO-TRANSFER/eiger1] 
-    %     path to folder where the data is stored. The prepath depends 
-    %     on the beamline you choose. Check files.path_by_beamline for help
+    %     Path to folder where the data is stored. The prepath depends 
+    %     on the beamline you choose. Check help path_by_beamline for more
+    %     information on the default settings.
     %
     %   beamline:: [id13]
-    %     Beamline, where data was recorded. Currently, only 'id13' and
-    %     'p10' are supported.
+    %     The beamline argument is necessary, because it is referred to
+    %     when a certain standard file naming convention should be used.
+    %     See the help on path_by_beamline for more information.
+    %
+    %       Options: 'id13'|'p10'|'id02'|'bessy'|'none' 
     %
     %   newfile:: [detdistcalib] 
-    %     name (prefix) of scan(s)
+    %     File name prefix.
     %
     %   detector:: [eiger] 
     %     Type of detector used in the experiment.
-    %     currently, only 'eiger' and 'pilatus' are supported
+    %     Each detector is currently contained in a separate module. 
+    %
+    %       Options: 'eiger'|'pilatus'|'rayonix'|'xia'
     %
     %   fn:: [1]
-    %     file (frame) number
+    %     File number. Note, that some detectors start the numbering scheme
+    %     with 1, while others start with 0. 
     %
     %   fpf:: [101]
-    %     usually the number of scan points along the fast axis are given
+    %     Frames per file. If a container format is used that collects a
+    %     given number (the fpf) of scattering patterns, this number of
+    %     frames per container is termed "frames per file". E.g. the Eiger
+    %     detector uses the hdf5 container format. fpf can be an arbitrary
+    %     number, but usually it is the number of scan points along the 
+    %     fast axis.
     %
     %   scan:: [210]
-    %     Number of the scan.
+    %     Number of the scan. Be aware, that SPEC or other logging software
+    %     might use a different numbering scheme than the detector. The
+    %     scan number always refers to the number that is appended to the
+    %     filename.
     %
     %   Example::
     %     fp = files( 'beamline','id13',...
@@ -45,10 +61,6 @@ classdef files<handle
     %       'newfile','herz2_roi2',...
     %       'detector','eiger',...
     %       'scan',201);
-    %
-    %   Properties::
-    %      <data> - ...
-    %             - debug (debug level) [0]
     %
     %   Methods::
     %      See seperate help for each method.
@@ -75,18 +87,19 @@ classdef files<handle
 
     properties
         
-        prepath;
-        newfile;
-        beamline;
-        detector;
-        scan;
-        fn;
-        fpf;
-        slash;
-        firstFile;
+        prepath;    % see help files
+        newfile;    % see help files
+        beamline;   % see help files
+        detector;   % see help files
+        scan;       % see help files
+        fn;         % see help files
+        fpf;        % see help files
+        firstFile;  % file number of the first frame in a scan
+        slash;      % either '/' or '\' based on the system in use
         
+        % internal use only
         detectors = struct();
-        debug = 0;
+        debug = 0;  
             
     end
     methods
@@ -111,6 +124,7 @@ classdef files<handle
                 obj.(names{ii}) = p.Results.(names{ii});
             end
             
+            
             % check path
             [obj.prepath,obj.slash] = obj.which_slash(obj.prepath);
             obj.prepath = obj.remove_leading_trailing_slashes(obj.prepath);
@@ -119,40 +133,54 @@ classdef files<handle
             % get file information by beamline and detector
             config = obj.path_by_beamline(obj.beamline,p.Results.detector,obj.prepath,obj.newfile,obj.scan);
 
-            
-            if contains(p.Results.detector,'eiger')
-                obj.detectors.eiger = eiger(config,obj.fpf);
-                obj.repair_frames_per_file();
-            end
-            
-            if contains(p.Results.detector,'rayonix')
-                obj.detectors.rayonix = rayonix(config);            
-            end
-            
-            if contains(p.Results.detector,'pilatus')
-                obj.detectors.pilatus = pilatus(config);            
-            end
-            
-            if contains(p.Results.detector,'pirra')
-                obj.detectors.pirra = pirra(config);            
-            end
-            
-            if contains(p.Results.detector,'xia')
-                obj.detectors.xia = xia(config,obj.fpf);
-            end            
-            
-            if contains(p.Results.detector,'spec')
-                obj.detectors.spec = spec(config);
+            switch p.Results.detector
+                case 'eiger'
+                    obj.detectors.eiger = eiger(config,obj.fpf);
+                case 'rayonix'
+                    obj.detectors.rayonix = rayonix(config);            
+                case 'pilatus'
+                    obj.detectors.pilatus = pilatus(config);            
+                case 'pirra'
+                    obj.detectors.pirra = pirra(config);         
+                case 'talos'
+                    obj.detectors.talos = talos(config);                       
+                case 'xia'
+                    obj.detectors.xia = xia(config,obj.fpf);
+                case 'spec'
+                    obj.detectors.spec = spec(config);
             end
         end
         
         
         function [config] = path_by_beamline(obj,beamline,detector,prepath,newfile,scannr)
-            %       id13: it is the path right before the data directory, hence
-            %       prepath/data_???_master.h5, usually ending with
-            %       .../DATA/AUTO-TRANSFER/eiger1
-            %       p10: it is the path before the /detectors/ directory, hence
-            %       prepath/detectors/<detector>/<newfile>/data_???_master.h5
+            % PATH_BY_BEAMLINE  contains the appropriate folder structure
+            % for each beamline. This file can be adapted to the specific
+            % needs. 
+            %   
+            %   CONFIGURATION = PATH_BY_BEAMLINE(BEAMLINE,DETECTOR,PREPATH,NEWFILE,SCANNR) 
+            %
+            %   The following options are supported:
+            %
+            %     beamline:: [no default] 
+            %       Beamline short name. As described in help files.
+            %
+            %       Options: 'p10'|'id13'|'id02'|'bessy'
+            %
+            %     detector: [no default] 
+            %       Detector. As described in help files.
+            %
+            %       Options:
+            %       'pilatus'|'eiger'|'pirra'|'rayonix'|'xia'|'spec'
+            %
+            %     prepath: [no default]
+            %       Path to data directory. As described in help files.
+            %
+            %     newfile: [no default]
+            %       Name of scan. As described in help files.
+            %
+            %     scannr: [no default]
+            %       Scan number. As described in help files.
+            %
     
             % shorthand
             sl = obj.slash;
@@ -195,6 +223,16 @@ classdef files<handle
                         sl newfile...
                         sl newfile '_'];
                     config.filename = @(pre,n) [pre sprintf('%i',n) '.tif'];    
+                case 'talos_none'
+                    if ~ispc
+                        prepath = [sl prepath];
+                    end                    
+                    config.path = [prepath...
+                        sl 'detectors'...
+                        sl 'talos'...
+                        sl newfile...
+                        sl newfile '_'];
+                    config.filename = @(pre,n) [pre sprintf('%04i',n) '.tif']; 
                 case 'rayonix_id02'
                     config.path = [sl prepath...
                         sl newfile '_'];        
@@ -217,7 +255,9 @@ classdef files<handle
                 case 'xia_id13'        
                     config.path = [sl prepath...
                         sl newfile...
-                        '_xia01_' sprintf('%04i',scannr) '_0000_'];     
+                        sl 'xia'...
+                        sl 'xia'...
+                        '_xia02_' sprintf('%04i',scannr) '_0000_'];     
                     config.filename = @(pre,n) [pre sprintf('%04i',n) '.edf'];
                 case 'default'
                     config.path = [sl prepath...
@@ -227,23 +267,8 @@ classdef files<handle
         end          
         
         
-        function set_frames_per_file(obj,fpf)
-            % SET_FRAMES_PER_FILE  sets the number of frames per file if
-            % data is stored in a container format such as hdf5.
-            %   
-            %   SET_FRAMES_PER_FILE(FPF) 
-            %
-            %   The following options are supported:
-            %
-            %     fpf:: []
-            %       Frames per file.
-            obj.detectors.eiger.fpf = fpf;
-        end
-        
-        
         function set_eiger_scan(obj,newfile,scan)
-            % SET_EIGER_SCAN  updates the eiger module,
-            %   and automatically determines the frames per file.
+            % SET_EIGER_SCAN  updates the eiger module.
             %   
             %   SET_EIGER_SCAN(newfile, scan) 
             %
@@ -257,7 +282,6 @@ classdef files<handle
             
             obj.newfile = newfile;
             obj.scan = scan;
-            obj.repair_frames_per_file();
             
             config = obj.path_by_beamline(obj.beamline,'eiger',obj.prepath,obj.newfile,obj.scan);
             obj.detectors.eiger = eiger(config,obj.fpf);
@@ -302,7 +326,7 @@ classdef files<handle
             obj.fpf = fpf;
             
             config = obj.path_by_beamline(obj.beamline,'xia',obj.prepath,obj.newfile,obj.scan);
-            obj.detectors.eiger = xia(config,fpf);
+            obj.detectors.xia = xia(config,fpf);
         end
         
         
@@ -348,46 +372,6 @@ classdef files<handle
                 % nothing to do
             end
             out_string = string;
-        end
-                
-        
-        function repair_frames_per_file(obj)
-            % REPAIR_FRAMES_PER_FILE  calculates frames per file when using 
-            % the h5 container format e.g. with the eiger detector
-            %
-            %   REPAIR_FRAMES_PER_FILE()
-            
-            % starting point
-            n = 1;
-            m = 100;
-            fpf = 1;
-            cond = 1;
-            while cond
-                
-                % try to read
-                try double(h5read(obj.compile_path{1},...
-                        ['/entry/data/data_' sprintf('%06i',1)],...
-                        [1 1 n],...
-                        [2070 2167 1]));
-                catch
-                    % we have gone out of bounds
-                    n = n - m; % go back to value before
-                    m = m / 10; % reduce sampling rate
-                    if m < 1 
-                        cond = 0;
-                    end
-                end
-                % last working condition
-                fpf = n;
-                % we are still within bounds, hence step forward
-                n = n + m;
-                
-            end
-            obj.fpf = fpf;
-            obj.set_frames_per_file(fpf);
-            
-            % debugging
-            % fprintf(1,'Frames per file and file number: %d, %d\n',obj.fpf,obj.fn);
         end
         
         
@@ -642,7 +626,8 @@ classdef files<handle
             % get data from data
             tic;
             dada = 'http://dada-devel.roentgen.physik.uni-goettingen.de';
-            url  =  [dada '/show/' instrument '/' experiment '/' detector '/' sample '/' num2str(filenumber) '/' num2str(framenumber) ['/?format=double&roi=' roi '&binning=' binning]];
+            url  =  [dada '/show/' instrument '/' experiment '/' detector '/' sample '/' num2str(filenumber) '/' num2str(framenumber) ['/?roi=' roi '&binning=' binning]];
+%             url  =  [dada '/show/' instrument '/' experiment '/' detector '/' sample '/' num2str(filenumber) '/' num2str(framenumber) ['/?format=double&roi=' roi '&binning=' binning]];
             [data,extra] = urlread2(url);
             dims = str2num(extra.allHeaders.X_dimensions{1});
             data = typecast(cast(data, 'uint8'), 'double');
@@ -659,55 +644,6 @@ classdef files<handle
             % final signal
             result = flipud(rot90(d));
 
-        end
-        
-                
-        function firstFile = set_first_file(obj,varargin)
-            % SET_FIRST_FILE  sets the scan information for all subsequent 
-            % analyses. For p10, one could use spec_get_scan_info. This
-            % function is necessarily to be called when e.g. images were
-            % acquired in eigerslow mode, because then single images are
-            % placed into a single big h5 file.
-            %
-            %    FIRSTFILE = SET_FIRST_FILE(VARARGIN)
-            %
-            %    The following arguments are accepted:
-            %
-            %      beamline:: [p10]
-            %        The beamline in use.
-            %
-            %      scanNo:: [1]
-            %        The number of the scan.
-            %
-            
-            if nargin == 2
-                obj.firstFile = varargin{1};
-            else
-            
-                % parse input
-                pin = inputParser;
-                addOptional(pin,'beamline','p10');
-                addOptional(pin,'scanNo',1);
-                parse(pin,varargin{:});
-
-                switch pin.Results.beamline
-                    case 'p10'
-                        % scan details
-                        scan_details = spec_get_scan_info(pin.Results.scanNo, obj.newfile,obj.specpath);
-
-                        % file numbers for each scanpoint
-                        firstFile  =  scan_details.first_file;
-                        obj.firstFile = firstFile;
-
-                    case 'id13'
-                        % file numbers for each scanpoint
-                        firstFile = 1;
-
-                        % save to object
-                        obj.firstFile = firstFile;                       
-
-                end
-            end
         end
     end
 end

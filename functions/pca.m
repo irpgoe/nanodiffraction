@@ -70,9 +70,13 @@ function [results] = pca(dat,qy,qz,mask,sel)
     if D(1,1)>=D(2,2)
         angle = atan2d(V(2,1),V(1,1));
         w = (D(1,1)-D(2,2))/(D(1,1)+D(2,2));
+        lambda_1 = D(1,1);
+        lambda_2 = D(2,2);
     else
         angle = atan2d(V(2,2),V(1,2));
         w = (D(2,2)-D(1,1))/(D(1,1)+D(2,2));
+        lambda_1 = D(2,2);
+        lambda_2 = D(1,1);
     end    
     
     % Project onto range [0 180)
@@ -91,4 +95,6 @@ function [results] = pca(dat,qy,qz,mask,sel)
     % Save results
     results.w = w;
     results.angle = angle;
+    results.lambda_1 = lambda_1;
+    results.lambda_2 = lambda_2;
 end

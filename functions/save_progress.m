@@ -1,4 +1,4 @@
-function save_progress(script_fn,location,desc)
+function save_progress(script_base,script_fn,location,desc)
 % SAVE_PROGRESS  saves ... 
 %   Syntax: SAVE_PROGRESS(SCRIPT_FN,LOCATION,DESC)
 %   script_fn:: Name of the script that is currently being used, e.g.ls2522
@@ -27,8 +27,12 @@ function save_progress(script_fn,location,desc)
 % TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
 % OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+    if isempty(script_base)
+        script_base = './experiments';
+    end
+    
     timestamp = datestr(now,'yyyy-mm-dd_HH:MM');
-    syscall = ['cp ./experiments/' script_fn '.m ' location '/' timestamp '.m'];
+    syscall = ['cp ' script_base '/' script_fn '.m ' location '/' timestamp '.m'];
     expression = ['save(''', [location '/' timestamp '.mat'], ''',','''-v7.3'')'];
 
     fprintf(1,'\n');

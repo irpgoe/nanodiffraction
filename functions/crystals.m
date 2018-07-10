@@ -45,10 +45,10 @@ function [result] = crystals(data,mask,sel,threshold)
         mask = zeros(size(data));
     end
     
-    snr = abs(data.*(~mask & sel));
+    data = data.*(~mask & sel);
     
     % several variations are possible, either
-    result = sum(sum(data(snr > threshold)));
+    result = sum(sum(data(data > threshold)));
     % or:
 %     result = sum(sum(data((snr./sqrt(bgr)) > threshold)));
     % or:

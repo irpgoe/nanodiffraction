@@ -24,6 +24,24 @@ classdef nanodiffraction < handle
     %   helper function link([handle to files class],[handle to helper
     %   class]). See help link for more information.
     %
+    %   Furthermore, three other properties of the nanodiffraction class
+    %   are of interest:
+    %       - nanodiffraction.mask:
+    %           A bad pixel mask can be set using the function set_mask().
+    %       - nanodiffraction.sels
+    %           A mask identifying pixels that shall be analyzed can be
+    %           defined using set_selection(). More selections can be added
+    %           using add_selection(). This is useful since data has to be
+    %           read only once, while the analysis can be performed
+    %           multiple times on the same data (but different selections).
+    %           In many cases it is useful to use the functions
+    %           radial_mask() and azimuthal_mask() in order to define
+    %           selections. 
+    %       - nanodiffraction.corr
+    %           A correction matrix that will be multiplied with the data
+    %           prior to the analysis to compensate for semi-transparent
+    %           objects such as glass capillaries.
+    %
     %   The following options are supported:
     %
     %   energy:: [0] (not necessary if wavenumber or wavelength are given)
@@ -69,14 +87,9 @@ classdef nanodiffraction < handle
     %      'Ny',1100,'Nz',1220,...
     %      'fluoCounters',{{'total',1 4100},{'caka',600,660}});
     %
-    %   Properties::
-    %      <experiment>  
-    %                   - scan (holds scan parameters)
-    %                   - data (links to the data)
-    %                   - helper (stores helper functions)
-    %
     %   Methods::
-    %      See seperate help for each method.
+    %      See seperate help for each method. Also, refer to the methods
+    %      summary in >> doc nanodiffraction.
     
     % Copyright 2017 Institute for X-ray Physics (University of Göttingen)
 
@@ -99,9 +112,9 @@ classdef nanodiffraction < handle
     % OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     properties
+        data = files;       % holds link to the data
         helper = struct;    % holds helper functions
         scan = struct;      % holds scan parameters
-        data = files;       % holds link to the data
         
         % experimental parameters
         energy = 0;
@@ -121,6 +134,7 @@ classdef nanodiffraction < handle
         qzaxis = [];
         qr = [];
         phi = [];
+        phi2 = [];
         
         % wait parameters used for data polling
         wait = 0;
@@ -284,6 +298,8 @@ classdef nanodiffraction < handle
             obj.theta = atand(obj.R.*obj.pixelsize./obj.detDistance);
             obj.phi = atan2d(repmat(obj.zaxis',1,obj.Ny),repmat(obj.yaxis,obj.Nz,1));
             obj.phi(obj.phi<0) = obj.phi(obj.phi<0) + 360;
+            obj.phi2 = atan2d(repmat(obj.zaxis',1,obj.Ny),repmat(obj.yaxis,obj.Nz,1));
+            obj.phi2(obj.phi2<0) = obj.phi2(obj.phi2<0) + 180;
             
             % detector q-axis
             obj.qyaxis = obj.helper.q_of_n(obj.yaxis);
@@ -326,6 +342,71 @@ classdef nanodiffraction < handle
         end
         
         
+        function p = get_parameters(obj)
+            % GET_PARAMETERS  Returns the experimental parameters stored in
+            % the nanodiffraction class. Note, that helper functions and
+            % links to other classes are not returned.
+            %
+            %   RESULT = GET_PARAMETERS();
+            %
+            %   Output:
+            %       RESULT:: struct containing all experimental parameters
+            %       stored in the instance of the nanodiffraction class
+            
+            p = struct();
+            pList = properties(obj);
+            for i = 3:numel(pList)
+                p.(pList{i}) = obj.(pList{i});
+            end
+        end
+        
+        
+        function result = get_location_in_frame(obj,y,z,sn,stitch)
+            % GET_LOCATION_IN_FRAME  Calculates the scan position within a
+            % frame based on the location in the stitched image.
+            %
+            %   RESULT = GET_LOCATION_IN_FRAME(X,Y,SN,STITCH);
+            %
+            %   Output:
+            %       RESULT:: struct containing
+            %           - linind:
+            %           - linfield:
+            %           - field:
+            %           - ind:
+
+            sny = sn(1);
+            snz = sn(2);
+            stitchy = stitch(1);
+            stitchz = stitch(2);
+            
+            if size(y,1) > 1
+                y = y';
+            end
+            if size(z,1) > 1
+                z = z';
+            end
+            
+            result.ind = [y-floor((y-1)/sny)*sny, z-floor((z-1)/snz)*snz];
+            result.linind = (result.ind(2)-1)*sny + result.ind(1);
+            result.field = [floor((y-1)/sny) + 1, floor((z-1)/snz) + 1];
+            result.linfield = result.field(1) + (result.field(2)-1)*stitchy;
+           
+        end
+        
+        
+        function [varargout] = get_index(obj,q,pos)
+            % GET_INDEX  Calculates pixel coordinate in pixels given a Q
+            % value.
+            %
+            %   OUT = GET_INDEX(Q,POS) where Q is the Q coordinate in [nm^-1]
+            %
+            % OUT: 
+            
+            for i = 1:numel(pos)
+                [~,varargout{i}] = obj.helper.getIndex(q,pos(i));
+            end
+        end
+        
         function [n] = n_of_q(obj,q)
             % N_OF_Q  Calculates pixel coordinate in pixels given a Q
             % value.
@@ -352,12 +433,110 @@ classdef nanodiffraction < handle
             q = 4*pi/obj.wavelength/1E9 * sin(atan(n*obj.pixelsize/obj.detDistance)/2);
         end
         
+        
+        function [q,x,y,z] = qr_tilt(obj,alpha,beta,gamma)
+            % Q_OF_N  Calculates Q coordinate in [nm^-1] given a pixel
+            % coordinate.
+            %
+            %   Q = Q_OF_N(N) where N is the pixel coordinate
+            %
+            % This function cannot be defined as an anonymous function,
+            % because pixelsize might in fact not be constant (and the
+            % other constants in some rare occasions as well)
+            
+            % define rotation matrices
+            rotx = [[1 0 0];[0 cosd(alpha) -sind(alpha)];[0 sind(alpha) cosd(alpha)]];
+            roty = [[cosd(beta) 0 sind(beta)];[0 1 0];[-sind(beta) 0 cosd(beta)]];
+            rotz = [[cosd(gamma) -sind(gamma) 0];[sind(gamma) cosd(gamma) 0];[0 0 1]];
+            
+            % apply the rotations in inverse order
+            rot = rotx*roty*rotz;
+            
+            % apply rotation on each pixel to get the correct pixel
+            % coordinates
+            y = repmat(obj.yaxis, obj.Nz, 1).*obj.pixelsize;
+            z = repmat(transpose(obj.zaxis), 1, obj.Ny).*obj.pixelsize;
+            x = repmat(0, obj.Nz, obj.Ny);
+            
+            q = zeros(obj.Nz, obj.Ny);
+            for i = 1:obj.Nz
+                for j = 1:obj.Ny
+                    new_coordinates = rot * [x(i,j);y(i,j);z(i,j)];
+                    x(i,j) = new_coordinates(1) + obj.detDistance;
+                    y(i,j) = new_coordinates(2);
+                    z(i,j) = new_coordinates(3);
+            
+                    % calculate qr
+                    theta = atan(sqrt(y(i,j).^2 + z(i,j).^2)/x(i,j));
+                    q(i,j) = 4*pi/obj.wavelength/1E9 * sin(theta/2);
+                end
+            end
+        end
+        
+        
+        function [img] = simulate_agbh(obj,varargin)
+
+            % d spacing of silver behenate
+            d = 5.8380e-9; % meters
+            sigma = 0.1e-9; % meters
+            q = 2*pi/d*1e-9; % rec. nm
+            dq = 0.1; % rec. nm
+            
+            % photon flux
+            n_photons_max = 100;
+            
+            if nargin == 4
+                one_or_two_d = '2d';
+                alpha = varargin{1};
+                beta = varargin{2};
+                gamma = varargin{3};
+            else
+                one_or_two_d = '1d';
+            end
+            
+            switch one_or_two_d
+                case '1d'
+
+                    qr_max = max(obj.qr(:));
+                    n_peaks = ceil(qr_max/q);
+                    
+
+                    % no background
+                    qr = linspace(0,qr_max,500);
+                    I = zeros(1,numel(qr));
+
+                    for ii = 1:n_peaks
+                        q0 = ii*q;
+                        Igauss = n_photons_max*exp(-((qr - q0)/dq).^2);
+                        I = I + Igauss;
+                    end
+                    
+                    img = obj.azimuthal_spread(I,qr);
+                    
+                case '2d'
+                    qr = obj.qr_tilt(alpha,beta,gamma);
+                    qr_max = max(qr(:));
+                    n_peaks = ceil(qr_max/q);
+                    I = zeros(obj.Nz, obj.Ny);
+                    for ii = 1:n_peaks
+                        q0 = ii*q;
+                        Igauss = n_photons_max.*exp(-((qr - q0)/dq).^2);
+                        I = I + Igauss;
+                    end
+                    
+                    img = I;
+                otherwise
+                    error('nothing done');
+            end
+                
+        end
+        
         function refresh(obj)
-            % REFRESH  This function might be needed in case the geometry 
+            % REFRESH  This function is needed in case the geometry 
             % settings change. This could happen eg. when for 
-            % some reason the detector pixel size was changed (e.g. a roi 
-            % was chosen) and q_r, primary beam position, etc. has to be 
-            % recalculated.
+            % some reason the detector pixel size was changed (e.g. when
+            % binning was used) and q_r, primary beam position, etc. has to
+            % be recalculated.
             %
             %   REFRESH()
                 
@@ -379,26 +558,55 @@ classdef nanodiffraction < handle
             obj.qr = obj.q_of_n(obj.R);
             obj.phi = atan2d(repmat(obj.zaxis',1,obj.Ny),repmat(obj.yaxis,obj.Nz,1));
             obj.phi(obj.phi<0) = obj.phi(obj.phi<0) + 360;
+            obj.phi2 = atan2d(repmat(obj.zaxis',1,obj.Ny),repmat(obj.yaxis,obj.Nz,1));
+            obj.phi2(obj.phi2<0) = obj.phi(obj.phi2<0) + 180;
+            
+            % detector roi in integers
+            obj.detRoiY = uint32(obj.detRoiY);
+            obj.detRoiZ = uint32(obj.detRoiZ);
             
             % update masks
             if max(size(obj.mask) ~= [obj.Nz,obj.Ny])
                 fprintf(1,'Processing detector mask...\n');
-                obj.mask = obj.process_mask(obj.mask);
+                try 
+                    obj.mask = obj.process_mask(obj.mask);
+                catch e
+                    try 
+                        obj.mask = obj.process_mask(obj.mask_orig);
+                    catch err
+                        error(err);
+                    end
+                end
             end
             if max(size(obj.sels(:,:,1)) ~= [obj.Nz,obj.Ny])
                 fprintf(1,'Processing selections...\n');
                 tmp = zeros(obj.Nz,obj.Ny,size(obj.sels,3));
                 for ii = 1:size(obj.sels,3)
-                    tmp(:,:,ii) = obj.process_mask(obj.sels(:,:,ii));
+                    try 
+                        tmp(:,:,ii) = obj.process_mask(obj.sels(:,:,ii));
+                    catch err
+                        try 
+                            tmp(:,:,ii) = obj.process_mask(obj.sels_orig(:,:,ii));
+                        catch err
+                            error(err);
+                        end
+                    end
+%                     tmp(:,:,ii) = obj.process_mask(obj.sels(:,:,ii));
                 end
                 obj.sels = tmp;
             end     
             if max(size(obj.corr) ~= [obj.Nz,obj.Ny])
                 fprintf(1,'Processing correction matrix...\n');
-                obj.corr = obj.process(obj.corr);
+                try 
+                    obj.corr = obj.process_mask(obj.corr);
+                catch err
+                    try 
+                        obj.corr = obj.process_mask(obj.corr_orig);
+                    catch err
+                        error(err);
+                    end
+                end
             end
-            
-            
         end
         
         
@@ -433,7 +641,12 @@ classdef nanodiffraction < handle
         function result = analyze_scan(obj,varargin)
             % ANALYZE_SCAN  Main method of nanodiffraction class. It
             % analyzes a scan based on several implemented methods that can
-            % be chosen in a random order and combination.
+            % be chosen in a random order and combination. However,
+            % corrections are always performed before any subsequent 
+            % analysis. The "healing" functionality has a special role, as
+            % it is a method but is always performed before any other
+            % analysis but after background and other corrections, for
+            % obvious reasons.
             %
             %   RESULT = ANALYZE_SCAN(VARARGIN) output the results as a
             %   struct where each entry in the struct is named after the
@@ -444,44 +657,54 @@ classdef nanodiffraction < handle
             %
             %      roi:: []
             %        A logical mask of size SNy x SNz. A logical (1)
-            %        indicates a scan point, that will be analyzed.
+            %        indicates a scan point that will be analyzed.
             %
             %      yCrop, zCrop:: [start end] 
-            %        start and end can be given to define a certain
-            %        range within the scan to be analyzed
+            %        Start and end can be given to define a certain
+            %        range within the scan to be analyzed.
             % 
             %      ySkip, zSkip:: [1]
             %        If only every n-th scan point should be analyzed
             %
-            %      emptySub:: [off] 
-            %        Can be switched between 'on' | 'off' . Subtracts the
-            %        empty image stored in <nanodiffraction>.scan.empty
-            %        from the data immediately after the data has been
-            %        read.
+            %      emptySub:: ['off'] 
+            %        Subtracts an empty image from the data immediately 
+            %        after the data has been read. If an empty image is
+            %        given (see keyword 'empty'), it will be used,
+            %        otherwise, it will be attempted to use the empty image
+            %        that was defined at an earlier stage using
+            %        set_empty().
             %
-            %      correction:: [off] 
-            %        Can be switched between 'on' | 'off' . Multiplies a 2d
+            %        Options: 'on' | 'off'
+            %
+            %      correction:: ['off'] 
+            %        Multiplies a 2d
             %        correction matrix with the data. E.g. used to account
             %        for semitransparent objects obscuring the detector
             %
-            %      method:: [] 
+            %        Options: 'on' | 'off'
+            %
+            %      method:: ['none'] 
             %        A string composed of the following options: 'debug', 
             %        'rotate','pca','stxm','maxProj','crystal','fluo',
-            %        'average','sum','data'. Methods can be combined using
-            %        a '+' symbol between the methods:
+            %        'average','sum','data','circDist'. 
+            %        Methods can be combined using a '+' symbol between the
+            %        methods:
             %           e.g. 'stxm+pca+maxProj+sum'
             %
             %      fluoCounters:: [{}] 
             %         The format is {{<name>,<channel_low>,<channel_high>},...}, 
             %           e.g. {{'caka',1000,1400},{},...}.
             %
-            %      parallel:: [off]
+            %      parallel:: ['off']
             %        When turned on, all available workers will be used to
-            %        speed up the calculation process. This is currently
-            %        only implemented for the stxm method.
+            %        speed up the calculation process. 
+            %        Warning: This is currently only implemented for the 
+            %        stxm method.
             %
-            %      scanmode:: [horz|horzalt|vert|vertalt]
+            %      scanmode:: ['horz']
             %        See description below.
+            %
+            %        Options: 'horz'|'horzalt'|'vert'|'vertalt'
             %
             % Some methods can be given a set of arguments in a struct.
             % Note, that all struct parameters are optional. If some or all
@@ -510,6 +733,18 @@ classdef nanodiffraction < handle
             %           - 'qrMax':  [-1]
             %           - 'sel':    [ones(obj.Nz,oabj.Ny))]
             %
+            %   circDist: Calculates the circular mean and circular'grid',obj.phi2,'bins',360,'sel',obj.sels,'mask',obj.mask,'bgr',[]),...
+            %   variance of a distribution. Here, used to calculate the
+            %   circular mean of I(phi) for a given qr-Interval.
+            %
+            %       PARAMETER ARGUMENTS: 'circDistArgs',struct()
+            %           struct() can take the following arguments:
+            %           - 'grid':   [obj.mask]
+            %           - 'mask':  [-1]
+            %           - 'sel':  [-1]
+            %           - 'bins':    [ones(obj.Nz,oabj.Ny))]
+            %           - 'bgr':    [ones(obj.Nz,oabj.Ny))]
+            %
             %   maxProj: Calculates the maximum projection of a stack of
             %   diffraction patterns. No arguments required.
             %
@@ -518,20 +753,25 @@ classdef nanodiffraction < handle
             %
             %       PARAMETER ARGUMENTS: 'crystalArgs',struct()
             %           struct() can take the following arguments:
-            %           - Description missing
-            %           -
-            %           -
-            %           -            
+            %           - 'bgr': [zeros(obj.Nz,obj.Ny)]
+            %           - 'mask': [obj.mask]
+            %           - 'threshold': [50]
+            %           - 'qrMin': [0]
+            %           - 'qrMax': [100]
+            %           - 'sel': [obj.sels]
             %
             %   pyfai: Fast azimuthal integration based on the python pyfai
             %   library.
             %
             %       PARAMETER ARGUMENTS: 'pyfaiArgs',struct()
             %           struct() can take the following arguments:
-            %           - Description missing
-            %           -
-            %           -
-            %           -         
+            %           - 'bins': [100]
+            %           - 'mask': []
+            %           - 'cake': [off]
+            %           - 'angles': []
+            %           - 'to2D': ['off']
+            %           - 'roi2d': ['off']
+            %           - 'cakeRoi': [0 360]
             %
             %   b1d: Fast azimuthal integration based on rebinning the
             %   data.
@@ -552,10 +792,9 @@ classdef nanodiffraction < handle
             %
             %       PARAMETER ARGUMENTS: 'symmetryArgs',struct()
             %           struct() can take the following arguments:
-            %           - Description missing
-            %           -
-            %           -
-            %           -         
+            %           - 'bgr': [zeros(obj.Nz,obj.Ny)]
+            %           - 'sigma': [1.6]
+            %           - 'noise_level': [6]
             %
             %   heal: Heals a scattering pattern by filling values were
             %   data has been lost or not recorded by reflecting measured
@@ -592,15 +831,15 @@ classdef nanodiffraction < handle
             %        <===================<
             %        v
             %     3 vertical <vert>
-            %        * # # #
-            %        # # # #
-            %        # # # #
-            %        v v v v
+            %        *  v  v  v  v
+            %        v  v  v  v  .
+            %        v  v  v  v  .
+            %        v  v  v  v  .
             %     4 vertical,alternating <vertalt>
-            %        * A>v A>
-            %        # # # #
-            %        # # # #
-            %        v>A v>A
+            %        *   A > v   A > v
+            %        v   A   v   A   .
+            %        v   A   v   A   .
+            %        v > A   v > A   .
             %
             %   Output arguments:
             %       Result:: 
@@ -612,7 +851,6 @@ classdef nanodiffraction < handle
             %               data
             %               maxProjection
             %               crystal
-            %               crystalBgr
             %               devel
             %               dpc - dpcx, dpcy
             %               stxm - df
@@ -624,7 +862,11 @@ classdef nanodiffraction < handle
             %               symmetry - Ln
             %               b1d - dat_1d, error, qr
             %               pyfai - dat_1d, error, r
-
+            %
+            %       Note, that the output structure can be split into
+            %       variables using the helper function
+            %       split_struct_by_vars(). This should improve readability
+            %       of the code.
             
             
             % make checks on input
@@ -645,10 +887,12 @@ classdef nanodiffraction < handle
             addOptional(pin,'empty',[]);
             addOptional(pin,'correction','off',@ischar);
             addOptional(pin,'parallel','off',@ischar);
+            addOptional(pin,'live','off',@ischar);
             % stxm, crystal, b1d and symmetry
             addOptional(pin,'stxmArgs',struct(),@isstruct);
             addOptional(pin,'crystalArgs',struct(),@isstruct);
             addOptional(pin,'symmetryArgs',struct(),@isstruct);
+            addOptional(pin,'circDistArgs',struct(),@isstruct);
             addOptional(pin,'b1dArgs',struct(),@isstruct);
             addOptional(pin,'pcaArgs',struct(),@isstruct);
             addOptional(pin,'pyfaiArgs',struct(),@isstruct);
@@ -676,37 +920,15 @@ classdef nanodiffraction < handle
                 else
                     empty = (obj.empty);
                 end
-                
-                if min(size(empty) ~= [obj.Nz,obj.Ny])
-                    warning('Empty size does not match detector size');
-                    try
-                        empty = obj.process(empty);
-                    catch err
-                        error(err);
-                    end
-                end
-            end
-            if min(size(obj.mask) ~= [obj.Nz,obj.Ny])
-                warning('Detector mask size does not match detector size');
-                try
-                    mask = obj.process_mask(obj.mask);
-                catch err
-                    error(err);
-                end
             else
-                mask = logical(obj.mask);
+                empty = obj.empty;
             end
-            
-            if min(size(obj.corr) ~= [obj.Nz,obj.Ny]) 
-                warning('Correction mask size does not match detector size');
-                try
-                    corr = obj.process_mask(obj.corr);
-                catch err
-                    error(err);
-                end
-            else
-                corr = obj.corr;
-            end
+
+            % verify all masks and selections
+            mask    = obj.verify_array(obj.mask, logical(obj.mask), @obj.process_mask);
+            empty   = obj.verify_array(empty,    empty,             @obj.process);
+            corr    = obj.verify_array(obj.corr, obj.corr,          @obj.process);
+            sels    = obj.verify_array(obj.sels, obj.sels,          @obj.process);
             
             if ~isempty(pin.Results.roi)
                 disp('Ignoring yCrop, zCrop, ySkip and zSkip since a custom roi is chosen');
@@ -760,11 +982,35 @@ classdef nanodiffraction < handle
             healYes = 0;
             dpcYes = 0;
             liveYes = 0;
+            itotYes = 0;
+            imaxYes = 0;
+            circDistYes = 0;
             
+            % Slice some variables
+            fnrs = obj.scan.fnrs;
+            
+            
+            % All methods are initialized with default values if they are
+            % selected using the 'method' parameter
             nr_rows = length(zsampling);
             nr_cols = length(ysampling);
-            if contains(method,'live')
-                liveYes = 1;
+            if contains(method,'circDist')
+                circDistYes = 1;
+                phi = zeros(nr_rows*nr_cols,1);
+                w = zeros(nr_rows*nr_cols,1);
+                circDistArgs = update_defaults(...
+                    struct('grid',obj.phi2,'bins',360,'sel',obj.sels,'mask',obj.mask,'bgr',[]),...
+                    pin.Results.circDistArgs);
+                
+                [ph,sortIndex_rad,n_rad,bin_rad] = prepare_averaging(circDistArgs.grid,circDistArgs.mask,circDistArgs.sel,circDistArgs.bins);
+            end
+            if contains(method,'Itot')
+                itotYes = 1;
+                itot = zeros(nr_rows*nr_cols,1);
+            end
+            if contains(method,'Imax')
+                imaxYes = 1;
+                imax = zeros(nr_rows*nr_cols,1);
             end
             if contains(method,'dpc')
                 dpcYes = 1;
@@ -785,16 +1031,16 @@ classdef nanodiffraction < handle
             end
             if contains(method,'pca')
                 pcaYes = 1;
-                angle = zeros(nr_rows*nr_cols,size(obj.sels,3));
-                w = zeros(nr_rows*nr_cols,size(obj.sels,3));
+                phi = zeros(nr_rows*nr_cols,size(sels,3));
+                w = zeros(nr_rows*nr_cols,size(sels,3));
                 pcaArgs = update_defaults(...
-                    struct('qy',repmat(obj.qyaxis ,obj.Nz,1),'qz',repmat(obj.qzaxis',1,obj.Ny),'sel',obj.sels,'mask',obj.mask),...
+                    struct('qy',repmat(obj.qyaxis ,obj.Nz,1),'qz',repmat(obj.qzaxis',1,obj.Ny),'sel',sels,'mask',mask),...
                     pin.Results.pcaArgs);
             end
             if contains(method,'stxm') 
                 stxmYes = 1;
                 stxmArgs = update_defaults(...
-                    struct('mask',obj.mask,'qrMin',-1,'qrMax',-1,'sel',ones(obj.Nz,obj.Ny)),...
+                    struct('mask',obj.mask,'qrMin',-1,'qrMax',-1,'sel',sels),...
                     pin.Results.stxmArgs);
                 if (stxmArgs.qrMin > 0 && stxmArgs.qrMax < 0) 
                     stxmArgs.sel = obj.radial_mask('grid',obj.qr,'r1',stxmArgs.qrMin,'r2',1000);
@@ -806,7 +1052,7 @@ classdef nanodiffraction < handle
                 end
                 df = zeros(nr_rows*nr_cols,1);
             end
-            if contains(method,'maxProj') 
+            if contains(method,'maxProj') || contains(method,'mp') % legacy
                 maxProjYes = 1;
                 maxproj = zeros(obj.Nz,obj.Ny);
             end
@@ -814,7 +1060,7 @@ classdef nanodiffraction < handle
                 crystalYes = 1;
                 crystal = zeros(nr_rows*nr_cols,1);
                 crystalArgs = update_defaults(...
-                    struct('bgr',zeros(obj.Nz,obj.Ny),'mask',obj.mask,'threshold',10,'qrMin',0,'qrMax',100,'sel',ones(obj.Nz,obj.Ny)),...
+                    struct('bgr',zeros(obj.Nz,obj.Ny),'mask',mask,'threshold',50,'qrMin',0,'qrMax',100,'sel',sels),...
                     pin.Results.crystalArgs);
                 if (crystalArgs.qrMin > 0 && crystalArgs.qrMax < 0)
                     crystalArgs.sel = obj.radial_mask('grid',obj.qr,'r1',crystalArgs.qrMin,'r2',1000);
@@ -840,7 +1086,7 @@ classdef nanodiffraction < handle
             end
             if contains(method,'symmetry') 
                 symmetryYes = 1;
-                Ln = zeros(nr_rows,nr_cols,length(0:4:ceil(max(obj.R(:)))));               
+                Ln = zeros(nr_rows*nr_cols,length(0:4:ceil(max(obj.R(:)))));               
                 symmetryArgs = update_defaults(...
                     struct('bgr',zeros(obj.Nz,obj.Ny),'sigma',1.6,'noise_level',6),...
                     pin.Results.symmetryArgs);
@@ -851,19 +1097,22 @@ classdef nanodiffraction < handle
                 b1dYes = 1;
                 b1d_res = repmat(struct(), nr_rows * nr_cols, 1);
                 b1dArgs = update_defaults(...
-                    struct('grid',obj.qr,'bins',100,'mask',obj.mask,'sel',ones(obj.Nz,obj.Ny)),...
+                    struct('grid',obj.qr,'bins',100,'mask',mask,'sel',sels,'bgr',[]),...
                     pin.Results.b1dArgs);
+                
+                [qr,sortIndex_azim,n_azim,bin_azim] = prepare_averaging(b1dArgs.grid,b1dArgs.mask,b1dArgs.sel,b1dArgs.bins);
+                
             end
             if contains(method,'fluo') 
                 fluoYes = 1;
-                obj.data.p.fluoFramesPerFile = obj.scan.SNy;
                 % initialize struct fields for results corresponding to
                 fluoResult = struct;
                 fluoResult.averageSpectrum = zeros(4096,1);
+                fluoResult.sumSpectrum = zeros(4096,1);
                 for ii = 1:length(obj.fluoCounters)
                     tmp = obj.fluoCounters{ii}(1);
                     % register field
-                    fluoResult.(tmp{1}) = zeros(nr_rows,nr_cols);
+                    fluoResult.(tmp{1}) = zeros(nr_rows * nr_cols,1);
                 end
             end
             if contains(method,'pyfai') 
@@ -896,6 +1145,29 @@ classdef nanodiffraction < handle
                 end                                        
             end
             
+            % after the initialization, live plotting
+            if strcmp(pin.Results.live,'on')
+                fprintf(1,'Information on live plotting: The first selected method will be shown live');
+                liveYes = 1;
+                line = 0;
+                liveMethod = strsplit(method,'+');
+                liveMethod = liveMethod{1};
+                methodKeys = {'stxm','pca','circDist','maxProj','average','Itot','Imax','crystal'};
+                methodVarNames = {'df','phi','phi','maxproj','sumResult','itot','imax','crystal'};
+                methodMap = containers.Map(methodKeys,methodVarNames);
+                try 
+                    methodVariable = methodMap(liveMethod);
+                    fprintf(1,'You have chosen the following method: %s\n',liveMethod);
+                    eval(['methodVariable = ' methodVariable ';']);
+                catch err
+                    warning('Method not supported for live display, live mode will be disabled')
+                    liveYes = 0;
+                end
+            end
+            if contains(method,'live')
+                liveYes = 1;
+                line = 0;
+            end
             
             tic;       
             
@@ -908,47 +1180,69 @@ classdef nanodiffraction < handle
                     fprintf(1,'\b\b\b\b\b\b\b%6.2f%%', double(jj)/length(indexlist)*100);
 
                     index = indexlist(jj);
-                    fn = obj.scan.fnrs(index);
+                    fn = fnrs(index);
                     
                     % read data if necessary/requested
-                    if ~contains(method,'none')
+                    if ~contains(method,'none') && ~contains(method,'fluo')
 
                         dat = obj.process(obj.data.read(fn));
-%                         dat = obj.read_wait(fn);
+                        % dat = obj.read_wait(fn);
                         
+                        % perform pre-processing
                         if emptyYes
                             dat = dat - empty;
                         end
-                        
-%                         dat = (~obj.mask).*data_temp;
                         
                         if strcmp(pin.Results.correction,'on')
                             dat = dat.*corr;
                         end
                         
                         % always apply mask
-                        dat(mask) = 0;
+                        % dat(mask) = 0; % is this still needed?
                     end
                     
+                    % only fully pre-processed images should be healed
                     if healYes
-%                         dat = obj.make_data_symmetric((~obj.mask).*dat,healMask);
                         dat = dat(healIl);
                     end
-                    if liveYes
-                        figure(1);imagesc(dat);colorbar;axis image;caxis([0 20]);
-                        drawnow;
-                    end
+                    
+%                     % live viewing
+%                     if liveYes
+%                         % show line progress
+%                         if index > (line+1)*numel(ysampling) % line done
+%                             if strcmp(liveMethod,'maxProj') || strcmp(liveMethod,'average')
+%                                 imagesc(methodVariable);axis image;colorbar;colormap(pmkmp);title(liveMethod);
+%                             elseif strcmp(liveMethod,'pca') || strcmp(liveMethod,'circDist')
+%                                 methodVariable_tmp = sort_scan(methodVariable,nr_rows,nr_cols,scanmode);
+%                                 imagesc(methodVariable_tmp-90);colormap(cmap('C2'));colorbar;axis image;
+%                             else
+%                                 methodVariable_tmp = sort_scan(methodVariable,nr_rows,nr_cols,scanmode);
+%                                 imagesc(methodVariable_tmp);colormap(pmkmp);colorbar;axis image;
+%                             end
+%                             drawnow;
+%                             
+%                             % wait for next line
+%                             line = line + 1;
+%                         end
+%                         
+%                     end
                     if dataYes
                         dataStorage{jj} = dat;
-%                         dataStorage{jj} = (~obj.mask).*dat;
+                    end
+                    if itotYes
+                        itot(jj) = sum(dat(:));
+                    end
+                    if imaxYes
+                        imax(jj) = max(dat(:));
                     end
                     if fluoYes
-                        fluoData = obj.data.read_fluorescence(index);
+                        fluoData = obj.data.read(index);
+                        % iterate over all counters
                         for kk = 1:length(obj.fluoCounters)
                             currCounter = obj.fluoCounters{kk}(1);
                             lower = obj.fluoCounters{kk}(2);
                             upper = obj.fluoCounters{kk}(3);
-                            fluoResult.(currCounter{1})(index) = sum(fluoData(lower{1}:upper{1},1));
+                            fluoResult.(currCounter{1})(jj) = sum(fluoData(lower{1}:upper{1},1));
                         end
                         fluoResult.sumSpectrum = fluoResult.sumSpectrum + fluoData;
                     end
@@ -962,42 +1256,74 @@ classdef nanodiffraction < handle
                         end
                     end
                     if dpcYes
-                        [dpcx(index),dpcy(index)] = dpc((~obj.mask).*dat);
+                        [dpcx(jj),dpcy(jj)] = dpc((~mask).*dat);
                     end
                     if develYes
-                        devel(index) = sum(sum(((~obj.mask).*dat) > 50));
+                        devel(jj) = NaN; %sum(sum(((~obj.mask).*dat) > 50));
                     end
                     if crystalYes
-                        crystal(index) = crystals(dat-crystalArgs.bgr,crystalArgs.mask,crystalArgs.sel,crystalArgs.threshold);
+                        for ii = 1:size(crystalArgs.sel,3)
+                            crystal(jj,ii) = crystals(dat-crystalArgs.bgr,crystalArgs.mask,crystalArgs.sel(:,:,ii),crystalArgs.threshold);
+                        end
                     end
                     if pcaYes
                         for ii = 1:size(pcaArgs.sel,3)
                             res = pca(dat,pcaArgs.qy,pcaArgs.qz,pcaArgs.mask,pcaArgs.sel(:,:,ii));
                             w(jj,ii) = res.w;
-                            angle(jj,ii) = res.angle;
+                            phi(jj,ii) = res.angle;
                             % also available as mex function
+                        end
+                    end
+                    if circDistYes
+                        for ii = 1:size(circDistArgs.sel,3)
+                            % radial averaging
+%                             tmp = b1d(dat,circDistArgs.mask,circDistArgs.sel(:,:,ii),circDistArgs.grid,circDistArgs.bins);
+                            % faster
+                            tmp = b1d_fast(dat,circDistArgs.mask,circDistArgs.sel(:,:,ii),sortIndex_rad,n_rad,bin_rad);
+                            tmp.qr = ph; % for backwards compatibility
+                            
+                            % remove background
+                            if ~isempty(circDistArgs.bgr)
+                                tmp.dat_1d = tmp.dat_1d - circDistArgs.bgr(:,ii);
+                            end
+                            % find correct mean and variance of circular
+                            % (phase) signal
+                            [circAngleTmp, circWtmp] = circular_dist(tmp.qr, tmp.dat_1d);
+                            w(jj,ii) = circWtmp;
+                            phi(jj,ii) = circAngleTmp;
                         end
                     end
                     if sumYes
                         sumResult = sumResult + dat;
                     end
                     if symmetryYes
-                        Ln(index,:) = symmetry(dat, symmetryArgs.bgr, symmetryArgs.sigma, symmetryArgs.noise_level, obj);
+                        Ln(jj,:) = symmetry(dat, symmetryArgs.bgr, symmetryArgs.sigma, symmetryArgs.noise_level, obj);
                     end
                     if b1dYes
+                        
+                        if ~isempty(b1dArgs.bgr)
+                            dat_b1d = dat - b1dArgs.bgr;
+                        else
+                            dat_b1d = dat;
+                        end
+                        
                         for ii = 1:size(b1dArgs.sel,3)
-                            tmp = b1d(dat,b1dArgs.mask,b1dArgs.sel(:,:,ii),b1dArgs.grid,b1dArgs.bins);
-                            b1d_res(index,ii).dat_1d = tmp.dat_1d;
-                            b1d_res(index,ii).qr = tmp.qr;
+%                             tmp = b1d(dat,b1dArgs.mask,b1dArgs.sel(:,:,ii),b1dArgs.grid,b1dArgs.bins);
+%                             b1d_res(jj,ii).dat_1d = tmp.dat_1d;
+%                             b1d_res(jj,ii).qr = tmp.qr;
+                            % faster
+                            tmp = b1d_fast(dat_b1d,b1dArgs.mask,b1dArgs.sel(:,:,ii),sortIndex_azim,n_azim,bin_azim);
+                            b1d_res(jj,ii).dat_1d = tmp.dat_1d;
+                            b1d_res(jj,ii).qr = qr;
                         end
                     end
                     if pyfaiYes
                         tmp = pyfai(dat,pin.Results.pyFAImask,obj.pby,obj.pbz,pfsettings);
-                        pyfai_res(index).error = tmp.error;
-                        pyfai_res(index).dat_1d = tmp.dat_1d;
-                        pyfai_res(index).qr = obj.q_of_n(tmp.r);
+                        pyfai_res(jj).error = tmp.error;
+                        pyfai_res(jj).dat_1d = tmp.dat_1d;
+                        pyfai_res(jj).qr = obj.q_of_n(tmp.r);
                         if strcmp(pfsettings.to2D,'on')
-                            pyfai_res(index).dat_2d = tmp.dat_2d;
+                            pyfai_res(jj).dat_2d = tmp.dat_2d;
                         end
                     end
                         
@@ -1006,30 +1332,85 @@ classdef nanodiffraction < handle
             else 
                 % here parallel version
                 
-                f = obj.data.compile_static_function;
-                g = obj.process_data_static;
+%                 f = obj.data.compile_static_function;
+%                 g = obj.process_data_static;
                 
-                % slice some variables
-                emptySub = pin.Results.emptySub;
-                fnrs = obj.scan.fnrs;
-                mask_sliced = (~obj.mask);
                 parfor jj = 1:length(indexlist)
+
+%                     index = indexlist(jj);
+%                     fn = fnrs(index);
+%                  
+%                     % always read data
+%                     data_temp = f(fn);
+% 
+%                     if strcmp(emptySub,'on')
+%                         dat = mask_sliced.*(g(data_temp) - empty);
+%                     else                            
+%                         dat = mask_sliced.*g(data_temp);
+%                     end
+                    
+                    
 
                     index = indexlist(jj);
                     fn = fnrs(index);
-                 
-                    % always read data
-                    data_temp = f(fn);
+                    
+%                     if index > (line+1)*numel(ysampling) % line done
+%                         fprintf(1,'Processed line: %7d / %7d\n', line, numel(zsampling));
+%                         line = line + 1;
+%                     end
+                    
+                    % read data if necessary/requested
+                    if ~contains(method,'none')
 
-                    if strcmp(emptySub,'on')
-                        dat = mask_sliced.*(g(data_temp) - empty);
-                    else                            
-                        dat = mask_sliced.*g(data_temp);
+                        dat = obj.process(obj.data.read(fn));
+                        % dat = obj.read_wait(fn);
+                        
+                        % perform pre-processing
+                        if emptyYes
+                            dat = dat - empty;
+                        end
+                        
+                        if strcmp(pin.Results.correction,'on')
+                            dat = dat.*corr;
+                        end
+                        
+                        % always apply mask
+                        % dat(mask) = 0; % is this still needed?
                     end
                     
+                    
                     if stxmYes
-                        df(jj) = sum(dat(:));
+                        if size(stxmArgs.sel,3) == 1
+                            df(jj) = stxm(dat,stxmArgs.mask,stxmArgs.sel(:,:,1));
+                            % also available as mex function
+                        end
                     end
+%                     if crystalYes
+%                         if size(crystalArgs.sel,3) == 1
+%                             crystal(jj) = crystals(dat-crystalArgs.bgr,crystalArgs.mask,crystalArgs.sel(:,:,1),crystalArgs.threshold);
+%                         end
+%                     end
+                    if circDistYes
+                        if size(circDistArgs.sel,3) == 1
+                            tmp = b1d(dat,circDistArgs.mask,circDistArgs.sel(:,:,1),circDistArgs.grid,circDistArgs.bins);
+                            if ~isempty(circDistArgs.bgr)
+                                tmp.dat_1d = tmp.dat_1d - circDistArgs.bgr(:,1);
+                            end
+                            [circAngleTmp, circWtmp] = circular_dist(tmp.qr, tmp.dat_1d);
+                            w(jj) = circWtmp;
+                            phi(jj) = circAngleTmp;
+                        end
+                    end
+                    if sumYes
+                        sumResult = sumResult + dat;
+                    end
+%                     if b1dYes
+%                         if size(b1dArgs.sel,3) == 1
+%                             tmp = b1d(dat,b1dArgs.mask,b1dArgs.sel(:,:,1),b1dArgs.grid,b1dArgs.bins);
+%                             b1d_res(jj).dat_1d = tmp.dat_1d;
+%                             b1d_res(jj).qr = tmp.qr;
+%                         end
+%                     end
                     
                 end                
             end
@@ -1041,11 +1422,17 @@ classdef nanodiffraction < handle
                 result.data = sort_scan(dataStorage,nr_rows,nr_cols,scanmode);
             end
             if maxProjYes
-                result.maxProjection = maxproj;
+                result.maxProjection = maxproj; % legacy
+                result.mp = maxproj;
+            end
+            if imaxYes
+                result.imax = sort_scan(imax,nr_rows,nr_cols,scanmode);
+            end
+            if itotYes
+                result.itot = sort_scan(itot,nr_rows,nr_cols,scanmode);
             end
             if crystalYes
                 result.crystal = sort_scan(crystal,nr_rows,nr_cols,scanmode);
-                result.crystalBgr = crystalBgr;
             end
             if develYes
                 result.devel = devel;
@@ -1059,14 +1446,20 @@ classdef nanodiffraction < handle
             end
             if pcaYes
                 result.pca.w = sort_scan(w,nr_rows,nr_cols,scanmode);
-                result.pca.angle = sort_scan(angle,nr_rows,nr_cols,scanmode);
+                result.pca.angle = sort_scan(phi,nr_rows,nr_cols,scanmode);
+            end
+            if circDistYes
+                result.circDist.w = sort_scan(w,nr_rows,nr_cols,scanmode);
+                result.circDist.angle = sort_scan(phi,nr_rows,nr_cols,scanmode);
             end
             if fluoYes
-                result.fluo = fluoResult;
+                fluoResult.averageSpectrum = fluoResult.sumSpectrum / length(indexlist);
+                % sort every fluo counter
                 for kk = 1:length(obj.fluoCounters)
                     currCounter = obj.fluoCounters{kk}(1);
                     fluoResult.(currCounter{1}) = sort_scan(fluoResult.(currCounter{1}),nr_rows,nr_cols,scanmode);
                 end
+                result.fluo = fluoResult;
             end
             if averageYes
                 result.avg = sumResult / length(indexlist);
@@ -1078,7 +1471,7 @@ classdef nanodiffraction < handle
                 result.rotate = angles;
             end
             if symmetryYes
-                result.symmetry.Ln = Ln;
+                result.symmetry.Ln = sort_scan(Ln,nr_rows,nr_cols,scanmode);
             end
             if b1dYes
                result.b1d = sort_scan(b1d_res,nr_rows,nr_cols,scanmode);
@@ -1089,12 +1482,56 @@ classdef nanodiffraction < handle
         end        
         
         
+        function [stripped, varargout] = strip(obj, data, winSize, iterations, varargin)
+            % STRIP  Model-indepentend background stripping for
+            % one-dimensional graphs with monotone background and
+            % superimposted, sharp features such as bragg reflections or 
+            % spectral lines.
+            %   
+            %   STRIPPED = STRIP(DATA,WINSIZE,ITERATIONS,QR)
+            %
+            %   The following parameters are accepted:
+            %
+            %       DATA, WINSIZE, ITERATIONS: see help baseline
+            %
+            %       QR:: (optional)
+            %           Qr detector matrix of size [Nz,Ny]
+            %
+            %   Output arguments:
+            %   
+            %       stripped::
+            %           stripped background
+            %
+            %       stripped_2d:: (optional)
+            %           2d stripped background of size [Nz,Ny]
+            
+            
+            
+            % pre-process
+            % implement some filter here
+            
+            % strip
+            stripped = baseline(...
+                       baseline(data,winSize,iterations)...
+                       ,1,500);
+            
+            % postprocess
+            if nargin == 5
+                % make 2d background
+                qr = varargin{1};
+                varargout{1} = obj.azimuthal_spread(stripped,qr);
+            end
+        end
+        
+        
         function [healed, il] = heal(obj, data, mask)
             % HEAL  uses make_mask_symmetric to find the correct mapping
             % from valid to invalid pixels. Takes in an n x m data matrix
             % and an n x m logical mask (1: corrupt pixel, 0: otherwise)
             % and mirrors data that is lost due to e.g. modular gaps from 
-            % the point-symmetric position in the data.
+            % the point-symmetric position in the data. This function was
+            % inspired by the article "Healing X-ray scattering images" by 
+            % Liu et al., IUCrJ 2017, Vol. 4, Issue 4, pp. 455 - 465.
             %   
             %   HEALED = HEAL(DATA,MASK)
             %
@@ -1203,11 +1640,11 @@ classdef nanodiffraction < handle
             Nz = obj.Nz;
 
             % get data stack
-%             if strcmp(opts.heal,'off')
-%                 result = obj.analyze_scan('method','data','yCrop',opts.yCrop,'zCrop',opts.zCrop,'ySkip',opts.ySkip,'zSkip',opts.zSkip,'emptySub',opts.emptySub,'correction',opts.correction);
-%             else
+            if strcmp(opts.heal,'off')
+                result = obj.analyze_scan('method','data','yCrop',opts.yCrop,'zCrop',opts.zCrop,'ySkip',opts.ySkip,'zSkip',opts.zSkip,'emptySub',opts.emptySub,'correction',opts.correction);
+            else
                 result = obj.analyze_scan('method','data+heal','yCrop',opts.yCrop,'zCrop',opts.zCrop,'ySkip',opts.ySkip,'zSkip',opts.zSkip,'emptySub',opts.emptySub,'empty',opts.empty,'correction',opts.correction,'healmask',opts.healmask);
-%             end
+            end
             
             % yCrop and zCrop, ySkip and zSkip are the important parameters
             imsY = numel(opts.yCrop(1):opts.ySkip:opts.yCrop(2));
@@ -1602,6 +2039,7 @@ classdef nanodiffraction < handle
             addOptional(pin,'binz',1);
             parse(pin,varargin{:});
             
+
             % reset the values to their original value when the class was
             % initialized
             obj.Ny = obj.Ny_orig;
@@ -1772,7 +2210,7 @@ classdef nanodiffraction < handle
         end
         
         function set_empty(obj,empty)
-            obj.scan.empty = empty;
+            obj.empty = empty;
         end
         
        
@@ -1789,8 +2227,7 @@ classdef nanodiffraction < handle
                     obj.detRoiY(1) > size(dat,2) || obj.detRoiY(2) > size(dat,2)
                 fprintf('Size of matrix: %d (row) x %d (col)\n', size(dat,1), size(dat,2));
                 fprintf('Roi (y): [%d %d], Roi (z): [%d %d]\n', obj.detRoiY(1),obj.detRoiY(2),obj.detRoiZ(1),obj.detRoiZ(2));
-                warning('Sizes do not match');
-                return
+                error('Sizes do not match');
             end
             
             % apply detectorRoi only if really desired
@@ -2022,144 +2459,6 @@ classdef nanodiffraction < handle
         end
         
         
-        function [circMean, circVar] = circular_dist(~,phi,I)
-            % CIRCULAR_DIST  Calculates the circular mean and variance of a 
-            % distribution based on 
-            % https://en.wikipedia.org/wiki/Directional_statistics
-            %
-            % Accepted arguments:
-            % phi, I, where I is usually given in counts and phi usually 
-            % within the range [-180, 180] (because of central symmetry)
-            
-            angles = [];
-            for jj = 1:numel(phi)
-                % repeat the angle N times for each angle
-                angles = [angles repmat(phi(jj),1,round(I(jj)))];
-            end
-            
-            % number of data points
-            N = numel(angles);
-            
-            % transform to complex number
-            z = zeros(N,1);
-            for jj = 1:N
-                z(jj) = 1.0*exp(1i*angles(jj)*pi/180);
-            end
-            
-            % circular mean
-            circMean = angle(sum(z)/N)*180/pi;
-    
-            % circular variance
-            c = sum(cos(angle(z)));
-            s = sum(sin(angle(z)));
-            r = sqrt(c^2 + s^2)/N;
-            circVar = 1-r; 
-            
-        end
-        
-        
-%         function [bgr] = local_background_single(obj,dat,varargin)
-%             % LOCAL_BACKGROUND_SINGLE  under development.
-%             
-%             % parse input
-%             pin = inputParser;
-%             addOptional(pin,'method','pyfai');
-%             addOptional(pin,'max_radius',10);
-%             addOptional(pin,'percentile',5);
-%             addOptional(pin,'bins',100);
-%             addOptional(pin,'pyFAIdetector','Eiger4M');
-%             addOptional(pin,'pyFAImask',[]);
-%             parse(pin,varargin{:});
-%             
-%              % Process mask
-%             mask = obj.process(obj.mask);
-%             mask = round(mask ./ (obj.binx*obj.biny));
-%             
-%             tic;
-%             switch pin.Results.method
-%                 case 'zaefferer'
-%                     zaeff.bgr = 0;
-%                 case 'pyfai'
-%                     % import modules
-%                     py.importlib.import_module('numpy');
-%                     py.importlib.import_module('pyFAI');
-% 
-%                     dimensions = py.tuple({obj.Ny,obj.Nz});
-%                     bins = pin.Results.bins;
-% 
-%                     kwa1 = pyargs('detector',pin.Results.pyFAIdetector,'pixel1',obj.pixelsize,'pixel2',obj.pixelsize);
-% 
-%                     % apply special pyfai mask
-%                     if ~isempty(pin.Results.pyFAImask)
-%                         % reshape to fit
-%                         signal1d = reshape(pin.Results.pyFAImask,1,[]);
-%                         reshaped = py.numpy.reshape(signal1d,dimensions);
-%                         kwa2 = pyargs('correctSolidAngle',0,'method','numpy','unit','r_mm','error_model','poisson','mask',reshaped);
-%                     else
-%                         kwa2 = pyargs('correctSolidAngle',0,'method','numpy','unit','r_mm','error_model','poisson');
-%                     end
-% 
-%                     % set azimuthal integrator object
-%                     ai = py.pyFAI.AzimuthalIntegrator(kwa1);
-%                     ai.setFit2D(1,obj.pbz,obj.pby);
-%                     
-%                     % reshape to fit
-%                     signal1d = reshape(dat,1,[]);
-%                     reshaped = py.numpy.reshape(signal1d,dimensions);
-% 
-%                     tmp = ai.integrate2d(reshaped, bins, kwa2);
-%                     tmp2 = py.numpy.reshape(tmp{1},py.tuple({360*bins,}));
-%                     dat_2d = reshape(cell2mat(cell(tmp2.tolist())),bins,360);
-%                     mm_scale = obj.q_of_n(cell2mat(cell(tmp{2}.tolist())));
-%                     
-%                     % apply percentile criterium
-%                     filtered = dat_2d;
-%                     filteredAverage = zeros(size(dat_2d,1),1);
-%                     for ii = 1:size(dat_2d,1)
-%                         
-%                         line = dat_2d(ii,:);
-%                         upper = prctile(line,100 - pin.Results.percentile);
-%                         lower = prctile(line,pin.Results.percentile);
-%                         fprintf(1,'lower: %f, upper: %f, percentile: %d\n',lower,upper,pin.Results.percentile);
-% 
-%                         line(line < lower) = nan;
-%                         line(line > upper) = nan; 
-%                         
-%                         filtered(ii,:) = line;
-%                         filteredAverage(ii) = mean(line,'omitnan');
-%                     end
-%                     
-%                     % create artificial background by interpolating back
-%                     % onto 2d detector
-%                     R_mm = obj.R.*obj.pixelsize*1000;
-%                     
-%                     bgr = zeros(Nz,Ny);
-%                     for ii = 1:obj.Nz
-%                         for jj = 1:obj.Ny
-%                             % find the according bin
-%                             [~,I] = obj.helper.getIndex(mm_scale,R_mm(ii,jj));
-%                             bgr(ii,jj) = filteredAverage(I);
-%                         end
-%                     end
-%                     
-%                     pyfai_res.bgr = bgr;
-%                     pyfai_res.dat_2d = dat_2d;
-%                     pyfai_res.filtered = filtered;
-%                     pyfai_res.filteredAverage = filteredAverage;
-%             end
-%             toc;
-%             
-%             % return data
-%             switch pin.Results.method
-%                 case 'zaefferer'
-%                     bgr = zaeff;
-%                 case 'pyfai'
-%                     bgr = pyfai_res;
-%             end
-%             bgr.mask = mask;
-%         end
-        
-        
 %         function [result] = remove_background_saxs(~,aavgResult1,aavgResult2,scalingFactor)
 %             % REMOVE_BACKGROUND_SAXS  under development.
 %             
@@ -2271,6 +2570,20 @@ classdef nanodiffraction < handle
         
         
         function [parameter] = moment_from_selection(obj,varargin)
+            % MOMENT_FROM_SELECTION  In an active figure, a roi can be
+            % selected and the mean, standard deviation, variance and the
+            % median can be obtained.
+            %
+            %   [PARAMETER] = MOMENT_FROM_SELECTION(OPTS)
+            %
+            %   The following parameters are accepted:
+            %
+            %       OPTS:: ['mean']  (optional)
+            %          Moment that should be calculated. By default, the
+            %          mean will be calculated if OPTS is not set.
+            %          The following options are available:
+            %               'mean','std','var','median'
+            %
             
             if nargin > 1
                 method = varargin{1};
@@ -2283,7 +2596,7 @@ classdef nanodiffraction < handle
             axhandle = get(gca,'Children');
             data = axhandle.CData;
             
-            % seelct roi
+            % select roi
             sel = roipoly;
             data = obj.helper.to1dcol(data(sel));
             
@@ -2302,23 +2615,21 @@ classdef nanodiffraction < handle
             end
             
             disp(parameter);
-            
         end
         
-        function sub = ind2sub(obj,ind)
+        function [row,col] = ind2sub(obj,ind,sny)
             % IND2SUB  calculates the row and column index based on the
             % linear index in the current scan.
             %
-            %   [ROW,COL] = READ(LININDEX) calculates row and column index.
+            %   [ROW,COL] = IND2SUB(LININDEX) calculates row and column index.
             %
             %   The following parameters are accepted:
             %
             %       linindex:: [] 
             %          Linear index (first frame: 1).
             %
-            row = floor(double(ind-1)/double(obj.scan.SNy))+1; % 1 -> SNz
-            col = mod((ind-1),double(obj.scan.SNy))+1; % 1 -> SNy
-            sub = [row,col];
+            row = floor(double(ind-1)/double(sny))+1; % 1 -> SNz
+            col = mod((ind-1),double(sny))+1; % 1 -> SNy
         end
         
         function clicktool(obj,vis,map,varargin)
@@ -2353,8 +2664,9 @@ classdef nanodiffraction < handle
             %           struct('data',data,'scale',sc)
            
             
-            % get current figure
-            fig_map = gcf;
+            % get figure of parameter map and figure of diffraction pattern
+            fig_map = figure(1);
+            new_fig = figure(2);
             
             % get size of data content
             [rows, cols] = size(getimage(fig_map));
@@ -2409,11 +2721,10 @@ classdef nanodiffraction < handle
                 data_out = [];
             end
             
-            % create new figure
-            new_fig = figure;
             
-            % activate first figure though
-            figure(fig_map)
+            
+            % now activate parameter map figure
+            figure(fig_map); 
             
             while 1
                 % get a single location and the type of input
@@ -2432,7 +2743,8 @@ classdef nanodiffraction < handle
                 
                 fprintf(1,'Corresponding scan coordinates: sy: %d/%d  sz: %d/%d\n',c,obj.scan.SNy,r,obj.scan.SNz);
                     
-                figure(new_fig);
+                % output the result in output figure
+                figure(new_fig); drawnow;
                 try
                     switch button
                         case 1 % left mouse click (new plot)
@@ -2448,8 +2760,10 @@ classdef nanodiffraction < handle
                                 vis.saxs(show_block);
                             else
                                 % show diffraction pattern
-                                disp(['Reading frame #' num2str((r-1)*obj.scan.SNy + c)]);
-                                vis.diffraction(obj.readm((r-1)*obj.scan.SNy + c),'process','off');
+                                frame_in_scan = (r-1)*obj.scan.SNy + c;
+                                image_nr = obj.scan.fnrs(frame_in_scan);
+                                disp(['Reading frame #' num2str(frame_in_scan)]);
+                                vis.diffraction(obj.readm(image_nr),struct('process','off'));
                             end
 
                         case 97 % keyboard button a ('add')
@@ -2472,8 +2786,10 @@ classdef nanodiffraction < handle
                     rethrow(e);
                 end
                 
-                % switch back to old figure
-                figure(fig_map);
+                % switch back to old figure, note that drawnow is essential
+                % here: https://de.mathworks.com/matlabcentral/answers/216085-ginput-not-working-with-r2015a-for-handling-two-figures
+                figure(fig_map); drawnow;
+                
             end
         end
         
@@ -2643,7 +2959,7 @@ classdef nanodiffraction < handle
             % data and combines all data into a single array, based on the
             % stitching dimensions.
             %
-            %   STITCHED = STITCH(DATASET,STITCHY,STITCHZ,WINDOW) 
+            %   STITCHED = STITCH(DATASET,STITCHY,STITCHZ,OPTS) 
             %
             %   The following parameters are accepted:
             %
@@ -2658,16 +2974,28 @@ classdef nanodiffraction < handle
             %       STITCHZ:: []
             %           Number of images to be concatenated vertically.
             %            
-            %       WINDOW:: [] (optional)
+            %       OPTS:: [] (optional)
+            %           A struct containing the following entries:
+            %               win:
             %           4-element vector containing the lower and upper
             %           limits (in pixel units) along the horizontal and
             %           lower and upper limits along the vertical dimension
             %           of the scattering pattern. 
             %           Example: [100 900 100 900]
+            %
+            %               append:
+            %           Appends N fields of zeros.
+            %
+            %               prepend:
+            %           Prepends N fields of zeros.
+            %
+            %               replaceEmpty:
+            %           If a cell array at a random location is empty, it
+            %           can be replaced by a field of zeros.
             
-            defaults = struct('win',[],'append',0,'prepend',0);
+            defaults = struct('win',[],'append',0,'prepend',0,'replaceEmpty',0);
             fields = fieldnames(defaults);
-            if nargin > 2
+            if nargin > 4
                 opts = varargin{1};
                 for f = 1:numel(fields)
                     if ~isfield(opts,fields{f})
@@ -2686,6 +3014,19 @@ classdef nanodiffraction < handle
             end
             if opts.prepend > 0
                 for ii = 1:opts.prepend;data = prepend(data);end
+            end
+            if opts.replaceEmpty > 0
+                ii = 1;
+                while isempty(data{ii})
+                    ii = ii + 1;
+                end
+                [snz,sny,snx] = size(data{ii});
+                
+                for ii = 1:numel(data)
+                    if isempty(data{ii})
+                        data{ii} = zeros(snz,sny,snx);
+                    end
+                end
             end
             
             if numel(data) ~= stitchy*stitchz
@@ -2721,5 +3062,216 @@ classdef nanodiffraction < handle
             stitched = cat(1,line{:});
         end
         
+        
+        function [im_out,corr] = remove_semitransparent_object(obj,im_in,phi1,phi2)
+            
+            % perform azimuthal average on phi-range
+            sel = obj.azimuthal_mask('phi1',phi1,'phi2',phi2);
+            azim_average = b1d(im_in,obj.mask,sel,obj.qr,500);
+            
+            % spread out 1d data on 2d grid
+            spreaded = obj.azimuthal_spread(azim_average.dat_1d,azim_average.qr);
+            
+            % calculate correction
+            corr = spreaded./im_in;
+            
+            % final image
+            im_out = im_in .* corr;
+            
+        end
+        
+        
+        function [streak] = simulate_streak(obj, varargin)
+            % SIMULATE_STREAK  simulates a gaussian streak at the location
+            % of the primary beam.
+            %
+            %   [STREAK] = SIMULATE_STREAK(OPTS)
+            %
+            %   The following parameters are accepted:
+            %
+            %       OPTS:: [struct('long',0.005,'short',0.05,...
+            %               'y',obj.yaxis,'z',obj.zaxis,...
+            %               'Ny',obj.Ny,'Nz',obj.Nz,...
+            %               'angle',30,...
+            %               'I0',1)] (optional)
+            %           Struct that can contain the following arguments:
+            %               'long': long axis length of streak;
+            %               'short': short axis length of streak;
+            %               'y': ?
+            %               'y': ?
+            %               'Ny': Number of horizontal detector pixels 
+            %               'Nz': Number of vertical detector pixels 
+            %               'angle': rotation angle of the streak
+            %               'I0': number of incident photons
+            %
+            
+            defaults = struct('long',0.005,'short',0.05,'y',obj.yaxis,'z',obj.zaxis,'Ny',obj.Ny,'Nz',obj.Nz,'angle',30,'I0',1);
+            fields = fieldnames(defaults);
+            if nargin > 1
+                opts = varargin{1};
+                for f = 1:numel(fields)
+                    if ~isfield(opts,fields{f})
+                        opts.(fields{f}) = defaults.(fields{f});
+                    end
+                end
+            else
+                opts = defaults;
+            end
+            
+            ffgauss   = @(x,a) (exp((-1/2)*(x*a).^2)); % Gauss /(sqrt(2*pi)/a)
+            rotmat    = @(alpha) [[cosd(alpha) -sind(alpha)];[sind(alpha) cosd(alpha)]];
+            [long,short,y,z,ny,nz,angle,I0] = split_struct(opts,fields);
+            
+            % generate mesh
+            Y = repmat(y,nz,1);
+            Z = repmat(z,ny,1)';
+            
+            % list of points
+            v = [obj.helper.to1dcol(Y),obj.helper.to1dcol(Z)];
+            v = rotmat(angle)*v';
+            Y = obj.helper.to2d(v(1,:),ny,nz);
+            Z = obj.helper.to2d(v(2,:),ny,nz);
+            
+%             % rotate mesh
+%             for ii = 1:ny
+%                 for jj = 1:nz
+%                     tmp = rotmat(30)*transpose([Y(jj,ii),Z(jj,ii)]);
+%                     Y(jj,ii) = tmp(1); Z(jj,ii) = tmp(2);
+%                 end
+%             end
+            streak = I0 * ffgauss(Y,long).*ffgauss(Z,short);
+%             imagesc(streak)
+        end
+        
+        
+        function [bgr] = simulate_airscattering(obj, varargin)
+            % SIMULATE_AIRSCATTERING  simulates the effect of air
+            % scattering.
+            %
+            %   [BGR] = SIMULATE_AIRSCATTERING(OPTS)
+            %
+            %   The following parameters are accepted:
+            %
+            %       OPTS:: [default struct] (optional)
+            %           Struct that can contain the following arguments:
+            %               'l_pre': ?
+            %               'l_post': ?
+            %               'l_sd': ?
+            %               'l_sampl': ?
+            %               'ap_size': ?
+            %               'bs_size': ?
+            %               'ny': Number of horizontal detector pixels 
+            %               'nz': Number of vertical detector pixels 
+            %               'px': pixel size 
+            %               'I0': number of incident photons
+            %
+            
+            defaults = struct(...            
+                'l_pre', 10, 'l_post', 10, 'l_sd', 500, 'l_sampl', 0.1,...
+                'I0', 1, 'bs_size', 0.01, 'ap_size', 0.07, ...
+                'ny', obj.Ny, 'nz', obj.Nz, 'px', 0.075);
+            fields = fieldnames(defaults);
+            if nargin > 1
+                opts = varargin{1};
+                for f = 1:numel(fields)
+                    if ~isfield(opts,fields{f})
+                        opts.(fields{f}) = defaults.(fields{f});
+                    end
+                end
+            else
+                opts = defaults;
+            end
+            
+            % shorthands
+            [l_pre,l_post,l_sd,l_sampl,I0,bs_size,ap_size,ny,nz,px] = split_struct(opts,fields);
+            
+            n_slices_pre = round(l_pre / l_sampl);
+            n_slices_post = round(l_post / l_sampl);
+            bgr_slice = I0 / (n_slices_pre + n_slices_post);
+            bgr_post = n_slices_post * bgr_slice;
+
+            % detector
+%             y_det = (-(ny-1)/2:(ny-1)/2) * px;
+%             z_det = (-(nz-1)/2:(nz-1)/2) * px;
+%             [y_det, z_det] = meshgrid(y_det,z_det);
+%             r_det = sqrt(y_det.^2 + z_det.^2);
+            r_det = obj.R;
+
+            bgr = zeros(nz,ny);
+            for i = 1:n_slices_pre
+                r_cone = ap_size/2 * (l_pre - i*l_sampl + l_sd ) / (l_pre - i*l_sampl);
+                bgr = bgr + (r_det < r_cone)*bgr_slice;
+            end
+            bgr = bgr + bgr_post;
+%             bgr_saxs = b1d(bgr,[],[],r_det);
+
+%             d = display;
+%             subplot(1,2,1);d.stxm(bgr,struct('sampl',10));
+%             subplot(1,2,2);d.saxs(bgr_saxs,'mode','loglog');grid on; legend('simulated air scattering');
+%             set(gcf,'Position',[0 0 1400 400]);
+        end
+        
+        
+        function bs_size_det_q = simulate_bs(obj, bs_size, bs_dist)
+            % SIMULATE_BS  Estimates the size of the beamstop that can be
+            % expected projected on the detector.
+            %
+            %   [BS_SIZE_DET_Q] = SIMULATE_BS(BS_SIZE, BS_DIST)
+            %
+            %   The following parameters are accepted:
+            %
+            %       BS_SIZE:: [none]
+            %           Diameter of beamstop in (mm)
+            %
+            %       BS_DIST:: [none]
+            %           Distance in (mm) behind focal spot
+            %
+            
+            % bs_size is diameter in (mm)
+            % bs_distace is distance in (mm) behind focal spot
+            
+            % convert to m
+            bs_size = bs_size*0.001;
+            bs_dist = bs_dist*0.001;
+            
+            % bs size in (mm) on detector
+            bs_size_det = bs_size * obj.detDistance / bs_dist;
+            bs_size_det
+            % according q
+            bs_size_det_q = obj.q_of_n(bs_size_det*0.5 / obj.pixelsize);
+            
+            
+        end
+        
+        function arr_out = verify_array(obj, arr_in, ref, process_handle)
+            
+            % determine input size
+            size_full = size(arr_in);
+            size_slice = size_full(1:2);
+            nr_slices = size(arr_in,3);
+            arr_out = zeros(obj.Nz, obj.Ny,nr_slices);
+            
+            if min(size_slice ~= [obj.Nz,obj.Ny])
+                try
+                    for slice = 1:nr_slices
+                        arr_out(:,:,slice) = process_handle(arr_in(:,:,slice));
+                    end
+                catch err
+                    error(err);
+                end
+                warning('Array size does not match detector size and was automatically resized.');
+            else
+                arr_out = ref;
+            end
+        end
+        
+        
+        function roi = around_y(obj,pixel)
+            roi = round([-pixel pixel] + obj.pby);
+        end
+        
+        function roi = around_z(obj,pixel)
+            roi = round([-pixel pixel] + obj.pbz);
+        end
     end
 end

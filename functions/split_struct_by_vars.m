@@ -8,7 +8,7 @@ function [varargout] = split_struct_by_vars(struct_name, arglist)
             varargout{jj} = val;
             jj = jj + 1;
         else
-            warning([arg ' is not an element of input structure']);
+            warning([arg ' is not an element of input structure.']);
         end
     end
 end

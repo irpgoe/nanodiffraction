@@ -9,8 +9,10 @@ classdef display<handle
     % or by using the link() function (see help link for usage information)
     %
     % The following arguments are accepted:
-    %   axis:: [image]
+    %   axis:: ['image']
     %       Default axis of images plotted
+    %
+    %       Options: Default Matlab options.
     %
     %   cmap:: [{gray,inverse}]
     %       Default colormap
@@ -18,32 +20,48 @@ classdef display<handle
     %   figure:: [1]
     %       Figure number
     %
-    %   colorbar:: [on]
+    %   colorbar:: ['on']
     %       Adds a colorbar by default
     %
-    %   caxis:: [auto]
+    %       Options: 'on'|'off'
+    %
+    %   caxis:: ['auto']
     %       Automatic color scaling by default. Another useful option is to
     %       use the helper function autoc which scales to the 5 - 95
     %       percentile.
     %
-    %   xlabel:: []
+    %   xlabel:: ['']
     %       Standard x-label.
     %
-    %   ylabel:: []
+    %   ylabel:: ['']
     %       Standard y-label.
     %
+    %   zlabel:: ['']
+    %       Standard z-label.
+    %
     %  It contains the following functionality:
-    %   cluster(): shows the result of a cluster analysis
-    %   fluo(): displays fluorescence maps
-    %   stxm(): displays darkfield images
-    %   pca(): shows a darkfield with arrows superimposed to indicate the
-    %   director of the anisotropic field
-    %   composite(): shows a composite image
-    %   diffraction(): shows a diffraction pattern
     %   add_circle(): adds circles at certain q_r to the diffraction
     %   pattern
-    %   create_movie(): creates an avi movie
-    %   saxs(): shows one or more 1d saxs curves
+    %   add_line(): adds a vertical line to a SAXS curve
+    %   add_quiver(): superimposes a PCA result with quiver lines
+    %   indicating the orientation of the scattering of the structure
+    %   orientation.    
+    %   autoc(): Auto-contrast based on the 5% percentile.
+    %   autonorm(): Normalizes a distribution (z-transform).
+    %   azimuthal_colormap(): Several colormaps to plot phase angles are
+    %   available.
+    %   cluster(): shows the result of a cluster analysis.
+    %   composite(): displays a composite image.
+    %   diffraction(): shows a diffraction pattern    
+    %   imlap(): processes an image and then displays it on a log. scale.
+    %   image_overlay(): Overlays an image with a transparent second image.
+    %   saxs(): shows one or more 1d saxs curves    
+    %   scalebar(): Adds a scalebar (in pixel units) to an image.
+    %   show_location(): Highlights a scan point in a map based on its
+    %   linear index.
+    %   stxm(): displays darkfield images    
+    %   pca(): shows a darkfield with arrows superimposed to indicate the
+    %   director of the anisotropic field
         
     % Copyright 2017 Institute for X-ray Physics (University of Göttingen)
 
@@ -85,10 +103,11 @@ classdef display<handle
             addOptional(p,'q',1);
             addOptional(p,'title','');
             addOptional(p,'colorbar','on');
-            addOptional(p,'caxis','auto');
+            addOptional(p,'cAxis',[]);
             addOptional(p,'xlabel','');
             addOptional(p,'ylabel','');
             addOptional(p,'zlabel','');
+            addOptional(p,'scale','log');
             
             % parse arguments
             parse(p,varargin{:});
@@ -144,6 +163,89 @@ classdef display<handle
             end
             hold off;
         end
+        
+        
+        function f = figure_size(obj,varargin)
+            
+            pos = [0 0 10 8];
+            if nargin == 2
+                pos = varargin{1};
+            end
+            
+            f = gcf;
+            f.PaperUnits = 'centimeters';
+            f.PaperPosition = pos;
+            f.Units = 'centimeters';
+            f.Position = pos;
+        end
+        
+        function ax = remove_axis(obj)
+            
+            ax = gca;
+            ax.XTick = [];
+            ax.XTickLabel = [];
+            ax.YTick = [];
+            ax.YTickLabel = [];
+            ax.XLabel = [];
+            ax.YLabel = [];
+        end
+        
+        
+        function scalebar(obj, sl_pixel, varargin)
+            % SCALEBAR  adds a scale bar to the current plot.
+            %   
+            %   SCALEBAR(SL_PIXEL, OPTS) 
+            %
+            %   The following options are supported:
+            %
+            %     sl_pixel:: []
+            %       Scale bar length in pixel units.
+            %
+            %     OPTS:: [struct('sb_height',0.05,...
+            %                    'margin_right',0.05,...
+            %                    'margin_bottom',0.05)] (optional)
+            %       Struct that can contain the following fields:
+            %           - 'sb_height': height of the scalebar in fig. units
+            %           - 'margin_right': right margin of the scalebar in 
+            %                             fig. units
+            %           - 'margin_bottom': bottom margin of the scalebar in
+            %                              fig. units
+            %
+            
+            defaults = struct('sb_height',0.2,'margin_right',0.05,'margin_bottom',0.05);
+            fields = fieldnames(defaults);
+            if nargin > 2
+                opts = varargin{1};
+                for f = 1:numel(fields)
+                    if ~isfield(opts,fields{f})
+                        opts.(fields{f}) = defaults.(fields{f});
+                    end
+                end
+            else
+                opts = defaults;
+            end
+            
+            axhandle = get(gca,'Children');
+            if numel(axhandle) > 1
+                axhandle = axhandle(end);
+            end
+            [sizeY,sizeX] = size(axhandle.CData);
+            
+            % scalebar length and height in pixels
+            sb_len = round(sl_pixel);
+            sb_height = round(opts.sb_height*sb_len);
+            
+            % scalebar margin right and bottom
+            sb_off_x = round(sizeX*opts.margin_right);
+            sb_off_y = round(sizeY*opts.margin_bottom);
+            
+            % superimpose an image consisting of -infs to ensure the sb is 
+            % black and plot scale bar as transparency layer
+            hold on; 
+            plot([sizeX-sb_off_x-sb_len; sizeX-sb_off_x], [sizeY-sb_off_y; sizeY-sb_off_y], '-k', 'LineWidth', sb_height)
+            hold off;
+        end
+        
         
         function cluster(obj,cluster_data,varargin)
             % CLUSTER  plots cluster map with relative contributions.
@@ -214,7 +316,7 @@ classdef display<handle
             %                                 'scale',<number>,...
             %                                 'unit',<um|mm>));
 
-            defaults = struct('sampl',1,'scale',1,'unit','um');
+            defaults = struct('sampl',100,'scale',1,'unit','mm','alpha',[]);
             fields = fieldnames(defaults);
             if nargin > 2
                 opts = varargin{1};
@@ -245,8 +347,14 @@ classdef display<handle
                 scy = scale;
             end
             
+            if ~isempty(opts.alpha)
+                doAlpha = true;
+            else 
+                doAlpha = false;
+            end
+            
             % show data
-            imagesc(data);
+            h=imagesc(data);
                 axis image;
                 c = colorbar;
                 % contrast and color
@@ -268,22 +376,55 @@ classdef display<handle
                 yticks([1:sampl:size(data,1)]);
                 yticklabels(([1:sampl:size(data,1)] - 1)*scy);
                 
+            % alpha mask
+            if doAlpha
+                set(h,'AlphaData',opts.alpha);
+            end
+                
+        end
+        
+        
+        function [limits] = round_limits(obj,varargin)
+            % round limit to decimal digit, 
+            % e.g 1342 rounded with level -3 -> 1000
+            % e.g 0.042 rounded with level 2 -> 0.04
+            if nargin > 1
+                level = varargin{1};
+            else
+                level = 1;
+            end
+            
+            % get limits
+            tmp = gca;
+            limits = tmp.CLim;
+            
+            % adjust limits
+            limits = round(limits,level);
+            caxis([limits(1) limits(2)]);
+        end
+        
+        
+        function add_title(obj,limits, sb_len)
+            % requires limits (2x1 array) and sb length as input
+            title(sprintf('min: %g, max: %g, sb: %g um', limits(1), limits(2), sb_len));
         end
         
         function add_quiver(obj,orientation,varargin)
             % ADD_QUIVER  Adds quiver lines onto an image, based on the
             % orientation.
             %
-            %   QUIVER(ORIENTATION, VARARGIN)
+            %   QUIVER(ORIENTATION, OPTS)
             %   
             %   The following arguments are accepted:
             %       orientation:: []
             %           2d-array that contains angles in degrees confined
             %           to the interval [-90 90].
             %
-            %       varargin:: []
-            %           First argument: sampling ratio.
-            %           Second argument: scale.
+            %       opts:: [struct('sampling',1,'scale',0.1,'selection',[])]
+            %           Struct containing the following fields:
+            %           'sampling': sampling ratio.
+            %           'scale': scale.
+            %           'selection': selection.
             %
             %   Example:
             %       (display_object).add_quiver(angles,struct('sampling',1,'scale',0.1));
@@ -320,6 +461,7 @@ classdef display<handle
             
             % selection
             if ~isempty(opts.selection)
+                opts.selection = opts.selection(sampl);
                 x = x(find(opts.selection));
                 y = y(find(opts.selection));
                 u = u(find(opts.selection));
@@ -412,19 +554,35 @@ classdef display<handle
             %
             
             if nargin == 1
-                warning('No arguments, choose either process, qRange, qSteps');
+                warning('Please provide a data set.');
             end
             
             % qRange and Steps in rec. nanometers
+            defaults = struct('process','on',...
+                              'qRange',[-max(max(obj.exp.qr)) max(max(obj.exp.qr))],...
+                              'qSteps',round((2*max(max(obj.exp.qr)))) / 10,...
+                              'alpha',[]);
+            fields = fieldnames(defaults);
+            if nargin > 2
+                opts = varargin{1};
+                for f = 1:numel(fields)
+                    if ~isfield(opts,fields{f})
+                        opts.(fields{f}) = defaults.(fields{f});
+                    end
+                end
+            else
+                opts = defaults;
+            end
+            
             % parse input
-            p = inputParser;
-            addOptional(p,'process','on');
-            addOptional(p,'qRange',[-max(max(obj.exp.qr)) max(max(obj.exp.qr))]);
-            addOptional(p,'qSteps',round((2*max(max(obj.exp.qr)))) / 10 );
-            parse(p,varargin{:});
+%             p = inputParser;
+%             addOptional(p,'process','on');
+%             addOptional(p,'qRange',[-max(max(obj.exp.qr)) max(max(obj.exp.qr))]);
+%             addOptional(p,'qSteps',round((2*max(max(obj.exp.qr)))) / 10 );
+%             parse(p,varargin{:});
 
             % q tick values
-            qTicks = (floor(p.Results.qRange(1)/p.Results.qSteps)*p.Results.qSteps):p.Results.qSteps:(floor(p.Results.qRange(2)/p.Results.qSteps)*p.Results.qSteps);  
+            qTicks = (floor(opts.qRange(1)/opts.qSteps)*opts.qSteps):opts.qSteps:(floor(opts.qRange(2)/opts.qSteps)*opts.qSteps);  
             
             % N as a function of Q
             N = obj.exp.helper.n_of_q(qTicks);
@@ -437,14 +595,24 @@ classdef display<handle
             qx = (obj.exp.helper.q_of_n((0:size(data,2)-1) - obj.exp.pby));
             qy = (obj.exp.helper.q_of_n((0:size(data,1)-1) - obj.exp.pbz));
 
+            switch obj.p.scale
+                case 'log'
+                    im = @(data) imla(data);
+                case 'lin'
+                    im = @(data) imagesc(data);
+                otherwise
+                    im = @(data) imla(data);
+            end 
+            
             % show file
-            if strcmp(p.Results.process,'on')
-                obj.imlap(data);
-            elseif strcmp(p.Results.process,'off')
-                imla(data);
+            if strcmp(opts.process,'on')
+                data = obj.exp.process(data);
+            elseif strcmp(opts.process,'off')
             else
                 error('Argument has to be either "on" or "off"');
             end
+            im(data);drawnow;
+            h = gca; 
             
             % tweak display
             colormap gray;
@@ -454,11 +622,21 @@ classdef display<handle
             xlabel('q_r [nm^{-1}]')
             ylabel('q_r [nm^{-1}]')
             axis image;
+            if isempty(obj.p.cAxis)
+                caxis('auto');
+            else
+                caxis(obj.p.cAxis);
+            end
             ax = gca;
             ax.XTick = Ny;
             ax.YTick = Nz;
             ax.XTickLabel = qTicks;
             ax.YTickLabel = -qTicks;
+            
+            % alpha mask
+            if ~isempty(opts.alpha)
+                set(h.Children,'AlphaData',opts.alpha);
+            end
             
             % save data size that is currently holded
             obj.p.cols = size(data,2);
@@ -495,6 +673,13 @@ classdef display<handle
                 warning('did you set display.exp to your experiment?')
             end
             
+            % size of image
+            axhandle = get(gca,'Children');
+            if numel(axhandle) > 1
+                axhandle = axhandle(end);
+            end
+            [rows,cols] = size(axhandle.CData);
+            
             for ii = 1 : numel(qCircles)
 
                 % calculate circles
@@ -503,8 +688,8 @@ classdef display<handle
                 y = R*sind(phi) + obj.exp.pbz;
 
                 % filter all values that are outside the boundaries
-                y(x>obj.p.cols) = []; x(x>obj.p.cols) = []; 
-                x(y>obj.p.rows) = []; y(y>obj.p.rows) = []; 
+                y(x>cols) = []; x(x>cols) = []; 
+                x(y>rows) = []; y(y>rows) = []; 
                 y(x<1) = []; x(x<1) = [];
                 x(y<1) = []; y(y<1) = [];
                 
@@ -703,7 +888,7 @@ classdef display<handle
             %
             %   VARARGIN:: []
             %       Struct, that can contain several plotting options.
-            %       Option 1: 'dir' ('v1' | 'v2')
+            %       Option 1: 'dir' ['v2']
             %           By default, the input angle represents the
             %           orientation of the diffraction
             %           streak/modulation/peak. However, by default, the
@@ -712,14 +897,24 @@ classdef display<handle
             %           Using the 'dir' option, one can choose 'v2' or 'v1'
             %           as options that indicate which eigenvector
             %           direction should be used.
-            %       Option 2: 'quiver' ('on' | 'off')
+            %
+            %               Options: 'v1'|'v2'
+            %
+            %       Option 2: 'quiver' ['off']
             %           'quiver': 'on' will superimpose lines on each data
             %           point to indicate fibre or streak orientation.
-            %       Option 3: 'alpha' (alphaMap)
+            %           Note, that default quiver arguments are used. For a
+            %           more custom quiver display, please use
+            %           add_quiver().
+            %
+            %               Options: 'on'|'off'
+            %
+            %       Option 3: 'alpha' [no default]
             %           'alpha' can be given a map of alpha values that can
             %           be used for mapping color saturation to another
             %           parameter map. If an alpha map is given, it will be
             %           automatically used.
+            %
             
             switch nargin 
                 case 1
@@ -780,7 +975,7 @@ classdef display<handle
             
             % alpha mask
             if doAlpha
-                set(h,'AlphaData',flipud(rot90(opts.alpha)));
+                set(h,'AlphaData',opts.alpha);
             end
             
             % real or reciprocal space direction?

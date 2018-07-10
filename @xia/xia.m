@@ -32,18 +32,22 @@ classdef xia<handle
 
 	        % file numbers start with 0
 	        remainder = mod(double(fn-1),double(obj.fpf))+1;
-	        filename = obj.c.filename(obj.c.path, fn);
+	        filename = obj.c.filename(obj.c.path, floor((fn-1)/obj.fpf));
 
             % read data
             try
                 tmp = read_spectrum(filename);
-	           	 data = tmp.data(:,double(remainder)); 
+	           	data = tmp.data(:,double(remainder)); 
             catch e
                 warning(e.message);
                 fprintf(1,'Debug information: \n');
-                fprintf(1,'File path: %s\n',filepath);
+                fprintf(1,'File path: %s\n',filename);
                 rethrow(e)
             end
+        end
+        
+        function write(obj,data)
+            
         end
     end
 end

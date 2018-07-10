@@ -73,8 +73,8 @@ S = regionprops(CC,'Centroid'); % output format (y,x)
 
 % get orientation, reference axis is x axis and rotation is clockwise
 for ii = 1:numel(S)
-S(ii).pos = [obj.p.zaxis(round(S(ii).Centroid(1))) obj.p.yaxis(round(S(ii).Centroid(2)))];
-phi = atan2(obj.p.zaxis(round(S(ii).Centroid(1))),obj.p.yaxis(round(S(ii).Centroid(2))));
+S(ii).pos = [obj.zaxis(round(S(ii).Centroid(1))) obj.yaxis(round(S(ii).Centroid(2)))];
+phi = atan2(obj.zaxis(round(S(ii).Centroid(1))),obj.yaxis(round(S(ii).Centroid(2))));
 S(ii).Orientation = phi*180/pi;
 S(ii).Scale = sqrt((S(ii).pos(1))^2 + (S(ii).pos(2))^2);
 S(ii).Size = 1;
@@ -133,7 +133,7 @@ theta(theta == 0) = [];
 
 % calculate histogram of angles and rotation order
 % distribution function
-binEdges = 0:4:ceil(max(obj.p.R(:)));
+binEdges = 0:4:ceil(max(obj.R(:)));
 [dist_histogram,~,bins] = histcounts(distance,binEdges);
 
 Ln = zeros(1,length(dist_histogram)+1);
@@ -179,7 +179,7 @@ function response = order_estimation_function(histogram,delta_theta)
         x_offset = conv2(x_offset,g,'same');
 
         % calculate response
-        response(order) = (sum(x.*histogram) - sum(x_offset.*histogram))/order;
+        response(order-1) = (sum(x.*histogram) - sum(x_offset.*histogram))/order;
     end
     response(response<0) = 0;
     response = response/max(response(:));
