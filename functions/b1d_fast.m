@@ -67,5 +67,6 @@ function [results] = b1d_fast(dat,mask,sel,sortIndex,n,bin)
     
     % save results
     results.dat_1d = aavg;
+    results.y = aavg;
     results.error = sqrt(abs(aavg))./sqrt(n');
 end

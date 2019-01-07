@@ -4,29 +4,45 @@ function [results] = b1d(dat,mask,sel,grid,varargin)
 % is considered to be a rather simple but fast method to get accurate
 % angular averages.
 %   
-%   [RESULT] = B1D(DATA,MASK,SEL,GRID,BINS) 
+%   result = b1d(data,mask,selection,grid,bins) 
 %
-%   The following options are required:
-%
-%     DATA::
+% The following arguments are supported:
+%     data:: [] (required)
 %       The data that will be processed.
 %
-%     MASK::
-%       A logical sel that sets all values that should not be taken into
-%       account to NaN
+%     mask:: [] (required)
+%       A logical mask that identifies all values that should not be taken 
+%       into account during rebinning.
 %
-%     SEL::
-%       A logical sel that selects all pixels that should be taken into
-%       account 
+%     selection:: [] (required)
+%       A logical array that selects all pixels that should be taken into
+%       account. A pixel is taken into account if it is identified in the
+%       selection as 1.
 %
-%     GRID::
+%     grid:: [] (required)
 %       Usually, Qr is expected to be used, however, any radial grid can be
 %       used here.
 %
-%   The following options are optional:
-%
-%     BINS:: (360)
+%     bins:: [360] (optional)
 %       Number of bins.
+%
+% Example:
+%   testavg = b1d(2d_diffraction_pattern,detector_mask,[],qr_map,512);
+%
+% Output arguments:
+%   result:: Structure than contains the following fields:
+%
+%       - dat_1d:: One-dimensinoal azimuthally integrated data.
+%
+%       - qr:: X-axis, dependent on the grid used, however, it is usually
+%       expected in units of the reciprocal wavevector qr (inv. nanometers)
+%       and hence named qr.
+%
+%       - y:: A short-hand for dat_1d.
+%
+%    	- x:: A short-hand for qr. Also, independent of a specified grid.
+%
+%       - error:: Propagated measurement error.
 %
 % Copyright 2017 Institute for X-ray Physics (University of Göttingen)
 
@@ -86,5 +102,7 @@ function [results] = b1d(dat,mask,sel,grid,varargin)
     % save results
     results.dat_1d = aavg;
     results.qr = x;
+    results.y = aavg;
+    results.x = x;
     results.error = sqrt(aavg)./sqrt(n');
 end

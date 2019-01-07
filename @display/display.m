@@ -123,10 +123,25 @@ classdef display<handle
             % all the given parameters so that multiple instances of a 
             % display module can be used.
             %
-            %   NEW_INSTANCE = COPY(DISPLAY_OBJECT)
+            %   new_instance = copy(display_object)
             %
-            %   EXAMPLE::
-            %       d = copy(generic_display)
+            % The following arguments are supported:
+            %   
+            %   display_object:: [] (required)
+            %       This function requires a display object that should be
+            %       copied.
+            %
+            % Example:
+            %   d_generic = display();
+            %   d_saxsdata = copy(d_generic);
+            %   d_waxsdata = copy(d_generic);
+            %
+            % Output arguments:
+            %
+            %   This function outputs the following arguments:
+            %       
+            %       new_instance:: A copy of the initial display_object.
+            %
             
             
             % Instantiate new object of the same class.
@@ -142,16 +157,28 @@ classdef display<handle
         end
         
         function add_line(obj,qr_values)
-            % ADD_LINE  plots a vertical line at a specific qr value or
-            % values.
+            % ADD_LINE  plots a vertical line at a specific location given
+            % in units of the reciprocal wavevector (inverse nanometers).
+            % This function is used to plot vertical lines in SAXS plots.
+            % The vertical lines run through the entire y-range.
             %   
-            %   ADD_LINE(QR_VALUES) 
+            %   add_line(qr_values) 
             %
-            %   The following options are supported:
+            % The following arguments are supported:
             %
-            %     QR_VALUES:: []
-            %       A single qr value or a 1d vector of values.
+            %     qr_values:: [] (required)
+            %       A one-dimensional vector of values in units of inverse
+            %       nanometers. Each entry specifies the location of a
+            %       vertical line that is superimposed onto the current
+            %       plot.
             %
+            % Example:
+            %   d = display();
+            %   d.saxs(some_saxs_data);
+            %   d.add_line([0.2 0.6 1.2]);
+            %
+            % Output arguments:
+            %   This function does not return any arguments.
             
             y_limits = ylim(gca);
             y = linspace(y_limits(1),y_limits(2),2);
@@ -180,7 +207,22 @@ classdef display<handle
         end
         
         function ax = remove_axis(obj)
+            % REMOVE_AXIS  removes the axis and ticks from the active
+            % figure.
+            %   
+            %   remove_axis()
+            %
+            % The function does not require any arguments.
+            %
+            % Example:
+            %   d = display();
+            %   d.stxm(some_map);
+            %   d.remove_axis();
+            %
+            % Output arguments:
+            %   This function does not return any arguments.
             
+
             ax = gca;
             ax.XTick = [];
             ax.XTickLabel = [];
@@ -191,28 +233,42 @@ classdef display<handle
         end
         
         
-        function scalebar(obj, sl_pixel, varargin)
-            % SCALEBAR  adds a scale bar to the current plot.
+        function add_scalebar(obj, sl_pixel, varargin)
+            % ADD_SCALEBAR  adds a scale bar to the current figure.
             %   
-            %   SCALEBAR(SL_PIXEL, OPTS) 
+            %   add_scalebar(sl_pixel, opts) 
             %
-            %   The following options are supported:
+            % The following options are supported:
             %
-            %     sl_pixel:: []
+            %     sl_pixel:: [] (required)
             %       Scale bar length in pixel units.
             %
-            %     OPTS:: [struct('sb_height',0.05,...
-            %                    'margin_right',0.05,...
-            %                    'margin_bottom',0.05)] (optional)
-            %       Struct that can contain the following fields:
-            %           - 'sb_height': height of the scalebar in fig. units
-            %           - 'margin_right': right margin of the scalebar in 
-            %                             fig. units
-            %           - 'margin_bottom': bottom margin of the scalebar in
-            %                              fig. units
+            %     opts:: [see default values below] (optional)
+            %       Structure that can contain the following fields. Note,
+            %       that all fields are optional. Default values that are
+            %       otherwise used are as usual given in angle brackets:
             %
+            %           - sb_height:: [0.2]
+            %           height of the scalebar in figure units.
+            %
+            %           - margin_right:: [0.05]
+            %           right margin of the scalebar in figure units.
+            %
+            %           - margin_bottom:: [0.05]
+            %           bottom margin of the scalebar in figure units.
+            %
+            % Example:
+            %   d = display();
+            %   d.stxm(some_map);
+            %   d.add_scalebar(100); % if one pixel corresponds to a scan
+            %                        % stepsize of 2 um, then 100 pixel 
+            %                        % correspond to a scale bar of length 
+            %                        % 200 um.
+            %
+            % Output arguments:
+            %   This function does not return any arguments.
             
-            defaults = struct('sb_height',0.2,'margin_right',0.05,'margin_bottom',0.05);
+            defaults = struct('sb_height',0.2,'margin_right',0.05,'margin_bottom',0.05,'color','k');
             fields = fieldnames(defaults);
             if nargin > 2
                 opts = varargin{1};
@@ -242,79 +298,97 @@ classdef display<handle
             % superimpose an image consisting of -infs to ensure the sb is 
             % black and plot scale bar as transparency layer
             hold on; 
-            plot([sizeX-sb_off_x-sb_len; sizeX-sb_off_x], [sizeY-sb_off_y; sizeY-sb_off_y], '-k', 'LineWidth', sb_height)
+            plot([sizeX-sb_off_x-sb_len; sizeX-sb_off_x], ...
+                 [sizeY-sb_off_y; sizeY-sb_off_y], ...
+                 '-', 'color', opts.color, 'LineWidth', sb_height);
             hold off;
         end
         
         
-        function cluster(obj,cluster_data,varargin)
-            % CLUSTER  plots cluster map with relative contributions.
-            %   
-            %   CLUSTER(CLUSTER_DATA, MEANS) 
-            %
-            %   The following options are supported:
-            %
-            %     CLUSTER_DATA:: []
-            %       Cluster map.
-            %
-            %     MEANS:: []
-            %       Means of each cluster.
-            %
-
-            if nargin == 3
-                means = varargin{1};
-            end
-            
-            % number of clusters
-            n_clusters = max(cluster_data(:));
-            
-            % show cluster as map
-            subplot(1,2,1);
-            imagesc(clusterres.clusters);
-            colormap(pmkmp(n_clusters));
-            axis image; 
-            c=colorbar;
-            ylabel(c,'cluster label');
-
-            % show result as bar plot
-            ax2 = subplot(1,2,2);
-            colormap(ax2,gray(n_clusters));
-            b = bar(means,'stacked');
-            ylim([0 1]);
-            xlim([0 n_clusters+1]);
-            title('contribution of coefficients to clusters');xlabel('cluster label');ylabel('percentage'); 
-            
-            % calculate legend
-            l_content = cell(1,n_clusters);
-            for ii = 1:n_clusters
-                l_content(ii) = sprintf('c_%d',ii-1);
-            end
-            l = legend(l_content);
-            set(l,'Location','EastOutside');
-            
-        end
+%         function cluster(obj,cluster_data,varargin)
+%             % CLUSTER  plots cluster map with relative contributions.
+%             %   
+%             %   CLUSTER(CLUSTER_DATA, MEANS) 
+%             %
+%             %   The following options are supported:
+%             %
+%             %     CLUSTER_DATA:: []
+%             %       Cluster map.
+%             %
+%             %     MEANS:: [] (optional)
+%             %       Means of each cluster.
+%             %
+% 
+%             if nargin == 3
+%                 means = varargin{1};
+%             end
+%             
+%             % number of clusters
+%             n_clusters = max(cluster_data(:));
+%             
+%             % show cluster as map
+%             subplot(1,2,1);
+%             imagesc(clusterres.clusters);
+%             colormap(pmkmp(n_clusters));
+%             axis image; 
+%             c=colorbar;
+%             ylabel(c,'cluster label');
+% 
+%             % show result as bar plot
+%             ax2 = subplot(1,2,2);
+%             colormap(ax2,gray(n_clusters));
+%             b = bar(means,'stacked');
+%             ylim([0 1]);
+%             xlim([0 n_clusters+1]);
+%             title('contribution of coefficients to clusters');xlabel('cluster label');ylabel('percentage'); 
+%             
+%             % calculate legend
+%             l_content = cell(1,n_clusters);
+%             for ii = 1:n_clusters
+%                 l_content(ii) = sprintf('c_%d',ii-1);
+%             end
+%             l = legend(l_content);
+%             set(l,'Location','EastOutside');
+%             
+%         end
         
         
-        % shows stxm scan results
         function stxm(obj, data, varargin)
-            % STXM  plots parameter mappings with scale.
+            % STXM  plots parameter maps with with pre-defined settings.
             %   
-            %   STXM(DATA, OPTS) 
+            %   stxm(data, opts) 
             %
-            %   The following options are supported:
+            % The following options are supported:
             %
-            %     data:: []
+            %     data:: [] (required)
             %       Parameter map.
             %
-            %     opts:: []
-            %       Struct that should contain a sampling value and a
-            %       scale. It can in addition contain a custom unit. The
-            %       default is microns.
+            %     opts:: [see default values below] (optional)
+            %       Structure that can contain the following fields. Note,
+            %       that all fields are optional. Default values that are
+            %       otherwise used are as usual given in angle brackets:
             %
-            %   Example:
-            %   (displayobj).stxm(data,struct('sampl',<number>,...
-            %                                 'scale',<number>,...
-            %                                 'unit',<um|mm>));
+            %           - sampl:: [100] 
+            %           A tick is added to every N-th pixel/scan point.
+            %
+            %           - scale:: [1]
+            %           Length of one pixel/scan point in units 'unit'.
+            %
+            %           - unit:: [mm]
+            %           Either 'um' or 'mm'.
+            %
+            %           - alpha:: []
+            %           An alpha/transparency map, values of the map should
+            %           range within (0,1).
+            %
+            % Example:
+            %   d = display();
+            %   d.stxm(data,struct('sampl',100,...
+            %                      'scale',10,...
+            %                      'unit','um'));
+            %
+            % Output arguments:
+            %   This function does not return any arguments.
 
             defaults = struct('sampl',100,'scale',1,'unit','mm','alpha',[]);
             fields = fieldnames(defaults);
@@ -362,14 +436,14 @@ classdef display<handle
                 colormap(pmkmp(128));
                 % label
                 if strcmp(unit,'mm')
-                    xlabel('y [mm]');
-                    ylabel('z [mm]');
+                    xlabel('y (mm)','Interpreter','Latex');
+                    ylabel('z (mm)','Interpreter','Latex');
                 else
                     % default: um
-                    xlabel('y [\mum]');
-                    ylabel('z [\mum]');
+                    xlabel('y ($\mathrm{\mu m}$)','Interpreter','Latex');
+                    ylabel('z ($\mathrm{\mu m}$)','Interpreter','Latex');
                 end
-                ylabel(c,'intensity [counts]');
+                ylabel(c,'intensity (counts)','Interpreter','Latex');
                 % axis tic labels
                 xticks([1:sampl:size(data,2)]);
                 xticklabels(([1:sampl:size(data,2)] - 1)*scx);
@@ -385,9 +459,26 @@ classdef display<handle
         
         
         function [limits] = round_limits(obj,varargin)
-            % round limit to decimal digit, 
+            % ROUND_LIMITS  rounds the caxis limits of the current figure to 
+            % a given decimal digit level :
             % e.g 1342 rounded with level -3 -> 1000
             % e.g 0.042 rounded with level 2 -> 0.04
+            %
+            %   round_limits(level)
+            %
+            % The following arguments are supported:
+            %   level:: [1] (optional)
+            %       The rounding level. The same level as used in the
+            %       Matlab-round function.
+            %
+            % Example:
+            %   d = display();
+            %   d.stxm(some_map);
+            %   d.round_limits(-3);
+            %
+            % Output arguments:
+            %   This function does not return any arguments.
+            
             if nargin > 1
                 level = varargin{1};
             else
@@ -399,37 +490,72 @@ classdef display<handle
             limits = tmp.CLim;
             
             % adjust limits
-            limits = round(limits,level);
+            lim_tmp = round(limits,level);
+            
+            i = 1;
+            while lim_tmp(1) == lim_tmp(2) && i < 10
+                lim_tmp = round(limits,level+i);
+                i  = i + 1;
+            end
+            
+            limits = lim_tmp;
             caxis([limits(1) limits(2)]);
         end
         
         
         function add_title(obj,limits, sb_len)
-            % requires limits (2x1 array) and sb length as input
-            title(sprintf('min: %g, max: %g, sb: %g um', limits(1), limits(2), sb_len));
+            
+            if isempty(limits)
+                ca = gca;
+                limits = ca.CLim;
+                title(sprintf('min: %g, max: %g, sb: %g um', limits(1), limits(2), sb_len));    
+            else
+                % requires limits (2x1 array) and sb length as input
+                title(sprintf('min: %g, max: %g, sb: %g um', limits(1), limits(2), sb_len));
+            end
         end
         
         function add_quiver(obj,orientation,varargin)
             % ADD_QUIVER  Adds quiver lines onto an image, based on the
             % orientation.
             %
-            %   QUIVER(ORIENTATION, OPTS)
+            %   add_quiver(orientation, opts)
             %   
-            %   The following arguments are accepted:
-            %       orientation:: []
+            % The following arguments are supported:
+            %       orientation:: [] (required)
             %           2d-array that contains angles in degrees confined
             %           to the interval [-90 90].
             %
-            %       opts:: [struct('sampling',1,'scale',0.1,'selection',[])]
-            %           Struct containing the following fields:
-            %           'sampling': sampling ratio.
-            %           'scale': scale.
-            %           'selection': selection.
+            %       opts:: [see default values below] (optional)
+            %           Structure that can contain the following fields.
+            %           Note, that all fields are optional. Default values
+            %           that are otherwise used are as used given in angle
+            %           brackets:
             %
-            %   Example:
-            %       (display_object).add_quiver(angles,struct('sampling',1,'scale',0.1));
+            %           sampling:: [1]
+            %           plot quiver lines every n-th pixel/scan point.
+            %
+            %           scale:: [0.1]
+            %           length of quiver lines.
+            %
+            %           selection:: []
+            %           display quiver lines only on selected
+            %           scanpoints. selection is a 2d logical array.
+            %
+            %           dir:: ['v2']
+            %           Can either be set to 'v2' or 'v1' where 'v2'
+            %           denotes the fiber direction and 'v1' the scattering
+            %           direction, respectively.
+            %
+            % Example:
+            %       d = display();
+            %       d.add_quiver(orientation,struct('sampling',1,'scale',0.1));
+            %
+            % Output arguments:
+            %       This function does not return any arguments.
             
-            defaults = struct('sampling',1,'scale',0.1,'selection',[]);
+            
+            defaults = struct('sampling',1,'scale',0.1,'selection',[],'dir','v2');
             fields = fieldnames(defaults);
             if nargin > 2
                 opts = varargin{1};
@@ -440,6 +566,11 @@ classdef display<handle
                 end
             else
                 opts = defaults;
+            end
+        
+            % default direction is along the fiber axis
+            if strcmp(opts.dir,'v2')
+                orientation = orientation - 90;
             end
             
             % shorthand
@@ -481,17 +612,95 @@ classdef display<handle
             % COMPOSITE  shows a collection of diffraction patterns as a
             % composite with default styling.
             %   
-            %   COMPOSITE(COMP, P) 
+            %   composite(comp, p) 
             %
-            %   The following options are supported:
-            %
-            %     composite:: []
+            % The following options are supported:
+            %     composite:: [] (required)
             %       A two-dimensional composite image.
             %
-            %     p:: []
+            %     p:: [see default values below] (required)
             %       Parameters that were used for composite calculation.
             %       p is obtained as a second argument from
-            %       e.calculate_composite().
+            %       e.calculate_composite(). It can also be defined
+            %       manually. p is a structure that can contain the
+            %       following fields:
+            %       
+            %       - Ny:: [] (required)
+            %       Number of pixels along the horizontal dimension of a 
+            %       single frame.
+            %
+            %       - Nz:: [] (required)
+            %       Number of pixels along the vertical dimension of a 
+            %       single frame.
+            %
+            %       - imsY:: [] Settings, if none are passed than default values are taken(required)
+            %       Number of images displayed along the horizontal
+            %       dimension of the composite image.
+            %
+            %       - imsZ:: [] (required)
+            %       Number of images displayed along the vertical
+            %       dimension of the composite image.
+            %
+            %       - yCrop:: [1 obj.scan.SNy] (optional)
+            %       Description. This value is optional, but useful for 
+            %       future reference.
+            %
+            %       - zCrop:: [1 obj.scan.SNz] (optional)
+            %       Description. This value is optional, but useful for 
+            %       future reference.
+            %
+            %       - ySkip:: [1] (optional)
+            %       Description. This value is optional, but useful for 
+            %       future reference.
+            %
+            %       - zSkip:: [1] (optional)
+            %       Description. This value is optional, but useful for 
+            %       future reference.
+            %
+            %       - correction:: ['off'] (optional)
+            %       Description. This value is optional, but useful for 
+            %       future reference.
+            %
+            %       - emptySub:: ['off'] (optional)
+            %       Description. This value is optional, but useful for 
+            %       future reference.
+            %
+            %       - empty:: [] (optional)
+            %       Description. This value is optional, but useful for 
+            %       future reference.
+            %
+            %       - heal:: ['off'] (optional)
+            %       Switch that toggled healing on or off for the 
+            %       calculation of the composite image. This value is 
+            %       optional, but useful for future reference.
+            %
+            %       - healmask:: [] (optional)
+            %       Mask that has been used for healing of the diffraction
+            %       patterns. This value is optional, but useful for future
+            %       reference.
+            %
+            %       - binning:: [] (optional)
+            %       Description. This value is optional, but useful for 
+            %       future reference.
+            %
+            %       - detRoiY:: [] (optional)
+            %       Description. This value is optional, but useful for 
+            %       future reference.
+            %
+            %       - detRoiZ:: [] (optional)
+            %       Description. This value is optional, but useful for 
+            %       future reference.
+            %
+            % Example:
+            %   e = nanodiffraction(<some settings here>);
+            %   e.set_scan_info(<some settings here>);
+            %   [comp,p] = e.calculate_composite(...
+            %                   struct('ySkip',4,'zSkip',4));
+            %   d = display();
+            %   d.composite(comp,p);
+            %
+            % Output arguments:
+            %   This function does not return any arguments.
             
             imla(comp); 
             colormap(flipud(hot));
@@ -533,25 +742,60 @@ classdef display<handle
         
         
         function figureHandle = diffraction(obj,data,varargin)
-            % DIFFRACTION  Displays diffraction patterns in a pre-defined
-            % fashion.
+            % DIFFRACTION  Displays a diffraction patterns with pre-defined
+            % settings. Simplifies the correct addition of labels to the x-
+            % and y-axis of the figure. By default, diffraction patterns
+            % are shown in log-scale and display in grayscale (a linear
+            % scale that does not highlight any particular q-range).
             %
-            %   DIFFRACTION(DATA, VARARGIN)
+            %   diffraction(data, opts)
             %   
-            %   The following arguments are accepted:
-            %       data:: []
-            %           Frame to be drawn.
+            % The following arguments are supported:
+            %       data:: [] (required)
+            %           A two-dimensional diffraction pattern. By default,
+            %           this diffraction pattern is automatically processed
+            %           to be in accordance with the currently active
+            %           settings for a detector ROI and a binning factor.
+            %           Processing can however be switched off using the
+            %           second optional argument 'opts'.
             %
-            %       process:: [on]
-            %           Calls nanodiffraction.process when reading the
-            %           data
+            %       opts:: [see default values below] (optional)
+            %           Structure that can contain the following fields.
+            %           Note, that all fields are optional. Default values
+            %           that are otherwise used are as usual given in angle
+            %           brackets:
             %
-            %       qRange:: [-max(max(obj.exp.qr)) max(max(obj.exp.qr))]
-            %           q-Range
+            %           - process:: ['on'] 
+            %           Either 'on' or 'off'. If activated
+            %           ('on'), then data of the size of a raw detector
+            %           frame is expected and the data will be
+            %           automatically binned and cropped based on the
+            %           detector roi and binning settings
             %
-            %       qSteps:: [round((2*max(max(obj.exp.qr)))) / 10]
-            %           Delta q between ticks
+            %           - qRange:: [-max(max(e.qr)) max(max(e.qr))]
+            %           Lower and upper limit for the detector q-range to 
+            %           be plotted on the axis of the figure. Typically,
+            %           the full q-range of the detector is used. The
+            %           q-range of the currently linked nanodiffraction
+            %           object (shorthand: e) is used for this purpose.
             %
+            %           - qSteps:: [round((2*max(max(obj.exp.qr)))) / 10]
+            %           Distance between ticks in units of the radial 
+            %           wavevector transfer. The q-range of the currently 
+            %           linked nanodiffraction object (shorthand: e) is 
+            %           used for this purpose.
+            %
+            %           - alpha: []
+            %           A two-dimensional alpha map.
+            %
+            % Example:
+            %   d = display();
+            %   e = nanodiffraction();
+            %   frame = e.read(1); 
+            %   d.diffraction(frame,struct('process','off','qSteps',5);
+            %
+            % Output arguments:
+            %   This function does not return any arguments.
             
             if nargin == 1
                 warning('Please provide a data set.');
@@ -573,28 +817,30 @@ classdef display<handle
             else
                 opts = defaults;
             end
-            
-            % parse input
-%             p = inputParser;
-%             addOptional(p,'process','on');
-%             addOptional(p,'qRange',[-max(max(obj.exp.qr)) max(max(obj.exp.qr))]);
-%             addOptional(p,'qSteps',round((2*max(max(obj.exp.qr)))) / 10 );
-%             parse(p,varargin{:});
 
             % q tick values
             qTicks = (floor(opts.qRange(1)/opts.qSteps)*opts.qSteps):opts.qSteps:(floor(opts.qRange(2)/opts.qSteps)*opts.qSteps);  
             
             % N as a function of Q
-            N = obj.exp.helper.n_of_q(qTicks);
+            N = obj.exp.n_of_q(qTicks);
             
             % shift N according to primary beam
             Ny = round(N) + obj.exp.pby;
             Nz = round(N) + obj.exp.pbz;
 
             % calculate x/y q-axis
-            qx = (obj.exp.helper.q_of_n((0:size(data,2)-1) - obj.exp.pby));
-            qy = (obj.exp.helper.q_of_n((0:size(data,1)-1) - obj.exp.pbz));
+            qx = (obj.exp.q_of_n((0:size(data,2)-1) - obj.exp.pby));
+            qy = (obj.exp.q_of_n((0:size(data,1)-1) - obj.exp.pbz));
 
+            % check whether data needs to be processed
+            [dz,dy] = size(data);
+            [rz,ry] = deal(obj.exp.detRoiZ(2) - obj.exp.detRoiZ(1) + 1,...
+                obj.exp.detRoiY(2) - obj.exp.detRoiY(1) + 1);
+            if isequal([dz,dy],[rz,ry]) && ~strcmp(opts.process,'force')
+                warning('Data appears to be already processed, processing will be turned off. To enforce processing, use "force" as an argument.')
+                opts.process = 'off';
+            end
+            
             switch obj.p.scale
                 case 'log'
                     im = @(data) imla(data);
@@ -605,22 +851,24 @@ classdef display<handle
             end 
             
             % show file
-            if strcmp(opts.process,'on')
+            if strcmp(opts.process,'on') || strcmp(opts.process,'force')
                 data = obj.exp.process(data);
             elseif strcmp(opts.process,'off')
             else
-                error('Argument has to be either "on" or "off"');
+                error('Argument has to be either "on", "off" or "force"');
             end
-            im(data);drawnow;
+            im(data);
+%             drawnow;
             h = gca; 
             
             % tweak display
+            axis image;
             colormap gray;
             colormap(flipud(colormap))
             c=colorbar;
-            ylabel(c,'log_{10}(intensity/cps)');
-            xlabel('q_r [nm^{-1}]')
-            ylabel('q_r [nm^{-1}]')
+            ylabel(c,'$\log_{10}$(intensity/cps)','Interpreter','Latex');
+            xlabel('$\mathrm{q_r}$ ($\mathrm{nm^{-1}}$)','Interpreter','Latex')
+            ylabel('$\mathrm{q_r}$ ($\mathrm{nm^{-1}}$)','Interpreter','Latex')
             axis image;
             if isempty(obj.p.cAxis)
                 caxis('auto');
@@ -645,32 +893,90 @@ classdef display<handle
         
         
         function add_circle(obj, qCircles, varargin)
-            % ADD_CIRCLE  Superimposes circles on diffraction pattern.
+            % ADD_CIRCLE  Superimposes circles on a diffraction pattern.
+            % Multiple circle radii can be given to the function. The radii
+            % are expected in units of rec. nanometers.
             %
-            %   ADD_CIRCLE(QCIRCLES, VARARGIN)
+            %   add_circle(qCircles, opts)
             %
             % The following arguments are accepted:
-            %   qCircles:: []
-            %       Qr value or vector of Qr values. Defines the radius of
-            %       the circles to be plotted. Values are in reciprocal
-            %       nanometers.
+            %   qCircles:: [] (required)
+            %       One-dimensional array of circle radii in units of the
+            %       reciprocal wavevector (inverse nanometers).
             %
-            %   circleColor:: [black]
+            %   opts:: [see default values below] 
+            %       Structure that can contain the following fields. Note
+            %       that all fields are optional. Default values that are
+            %       otherwise used are given as usual in angle brackets
+            %       below:
+            %
+            %       - circleColor:: [black]
             %       Color of the circles to be plotted. Any default Matlab
             %       color can be chosen.
+            %
+            %       - wedge:: [0 360] 
+            %       One-dimensional array of circle radii in units of the
+            %       reciprocal wavevector (inverse nanometers).
+            %       
+            %
+            % Example:
+            %   d = display();
+            %   e = nanodiffraction(); 
+            %   frame = e.read(1);
+            %   d.diffraction(frame);
+            %   d.add_circle([0.2 0.6 1.2],'white');
+            %
+            % Output arguments:
+            %   This function does not return any arguments.
             
+            if nargin == 1
+                warning('Please provide circle positions.');
+            end
             
-            % parse input
-            p = inputParser;
-            addOptional(p,'circleColor','black');
-            parse(p,varargin{:});   
+            % qRange and Steps in rec. nanometers
+            defaults = struct('circleColor','black',...
+                              'wedge',[0 360],...
+                              'nrWedges',2,...
+                              'circleStyle','--');
+            fields = fieldnames(defaults);
+            if nargin > 2
+                opts = varargin{1};
+                for f = 1:numel(fields)
+                    if ~isfield(opts,fields{f})
+                        opts.(fields{f}) = defaults.(fields{f});
+                    end
+                end
+            else
+                opts = defaults;
+            end
             
              % calculate q circles
-            phi = 0:360;
+            phi = opts.wedge(1):1:opts.wedge(2);
+            
+            switch opts.nrWedges
+                case 1
+                case 2
+                    opts.nrWedges = 1;
+                    opts.wedge = opts.wedge+180;
+                    obj.add_circle(qCircles,opts);
+                case 4
+                    opts.nrWedges = 1;
+                    wedge1 = opts.wedge+180;
+                    wedge2 = opts.wedge+90;
+                    wedge3 = opts.wedge-90;
+                    opts.wedge = wedge1;
+                    obj.add_circle(qCircles,opts);
+                    opts.wedge = wedge2;
+                    obj.add_circle(qCircles,opts);
+                    opts.wedge = wedge3;
+                    obj.add_circle(qCircles,opts);
+                otherwise
+                    error('nrWedges should be either 1,2 or 4');
+            end
 
             % assure that display is linked to experiment
             if isempty(obj.exp)
-                warning('did you set display.exp to your experiment?')
+                warning('Did you set display.exp to your experiment?')
             end
             
             % size of image
@@ -683,7 +989,7 @@ classdef display<handle
             for ii = 1 : numel(qCircles)
 
                 % calculate circles
-                R = obj.exp.helper.n_of_q(qCircles(ii)); % radius in pixels
+                R = obj.exp.n_of_q(qCircles(ii)); % radius in pixels
                 x = R*cosd(phi) + obj.exp.pby;
                 y = R*sind(phi) + obj.exp.pbz;
 
@@ -695,20 +1001,32 @@ classdef display<handle
                 
                 % show q circles
                 hold on 
-                line(x,y,'LineStyle','--','color',p.Results.circleColor,'LineWidth',1);
+                line(x,y,'LineStyle',opts.circleStyle,'color',opts.circleColor,'LineWidth',1);
                 hold off
             end
             figure(gcf);
         end
         
         function imlap(obj,frame)
-            % IMLAP  Reading and processing of a frame.
+            % IMLAP  Displays a detector image in logscale. The detector
+            % image is hearby automatically processed, based on the currect
+            % setting of the detector ROI and binning factors. 
             %
-            %   IMLAP(FRAME)
+            %   imlap(frame)
             %
-            % The following arguments are accepted:
-            %   FRAME:: []
-            %       Frame number within a scan.
+            % The following arguments are supported:
+            %   frame:: [] (required)
+            %       Detector image. The image should have identical
+            %       dimensions as the detector. 
+            %
+            % Example: 
+            %   d = display();
+            %   e = nanodiffraction();
+            %   frame = e.read(1);
+            %   d.imlap(frame);
+            %
+            % Output arguments:
+            %   This function does not return any arguments.
             
             imla(obj.exp.process(frame));axis image;
         end
@@ -718,40 +1036,76 @@ classdef display<handle
             % structure factor I(qr) with default labeling of x- and
             % y-axis.
             %
-            %   SAXS(SF, VARARGIN)
+            %   saxs(sf, opts)
             %
-            % The following arguments are accepted:
-            %   SF:: []
-            %       Structure factor, given as a struct that contains at
-            %       least the fields "dat_1d" and "qr".
+            % The following arguments are supported:
+            %   sf:: [] (required)
+            %       Structure factor, given as a structure that contains at
+            %       least the fields "dat_1d" and "qr". Both fields should
+            %       contain a one-dimensional array that should have the
+            %       same lengths. A cell array of structures is also
+            %       supported if multiple one-dimensional saxs curves
+            %       should be plotted.
             %
-            %   LIMITS:: []
+            %   opts:: [see default values below] (optional)
+            %       Structure that can contain the following fields. Note,
+            %       that all fields are optional. Default values that are
+            %       otherwise used are as usual given in angle brackets:
+            %
+            %       - limits:: []
             %       Limits [xlow xhigh ylow yhigh]. By default, this is set
             %       to "auto".
             %
-            %   PIXEL:: [off]
+            %       - pixel:: ['off']
             %       If the structure factor should be plotted as a function
-            %       of detector pixel, PIXEL should be set to "on". In this
-            %       case, the SF should contain a field "pixel".
+            %       of detector pixel, 'pixel' should be set to "on". In 
+            %       this case, the SF should contain a field "pixel".
             %
-            %   MODE:: [semilogy]
-            %       Either semilogy or loglog are accepted.
-            
+            %       - mode:: ['semilogy']
+            %       Either 'semilogy' or 'loglog' are accepted.
+            %
+            % Example:
+            %   d = display();
+            %   d.saxs({my_1d_averaged_data,...
+            %          struct('dat_1d',some_1d_data,'qr',some_qr_axis)},...
+            %          struct('mode','loglog'));
+            %
+            % Output arguments:
+            %   This function does not return any arguments.
             
             % parse input
-            p = inputParser;
-            addOptional(p,'limits',[]);
-            addOptional(p,'pixel','off');
-            addOptional(p,'mode','semilogy');
-            parse(p,varargin{:});  
+            defaults = struct('limits',[],...
+                              'pixel','off',...
+                              'mode','semilogy');
+            fields = fieldnames(defaults);
+            if nargin > 2
+                opts = varargin{1};
+                for f = 1:numel(fields)
+                    if ~isfield(opts,fields{f})
+                        opts.(fields{f}) = defaults.(fields{f});
+                    end
+                end
+            else
+                opts = defaults;
+            end
             
-            switch p.Results.mode
+            
+            switch opts.mode
                 case 'semilogy'
                     plot_fn = @semilogy;
                 case 'loglog'
                     plot_fn = @loglog;
             end
             legendstr = {};
+            
+            % pmkmp requires at least 2 colors
+            if numel(saxsresult) == 1
+                cm = pmkmp(2);
+                cm = cm(1,:);
+            else
+                cm = pmkmp(numel(saxsresult));
+            end
+            
             for ii = 1:numel(saxsresult)
                 if iscell(saxsresult)
                 tmp = saxsresult{ii};
@@ -760,19 +1114,38 @@ classdef display<handle
                 else
                     error('something is wrong');
                 end
-                if strcmp(p.Results.pixel,'off')
-                    plot_fn(tmp.qr,tmp.dat_1d,'o-','MarkerSize',2);hold all;grid on;
-                    xlabel('q_r [nm^{-1}]');
-                elseif strcmp(p.Results.pixel,'on')
-                    plot_fn(tmp.pixel,tmp.dat_1d,'o-','MarkerSize',2);hold all;grid on;
+                
+                % check for correct fieldnames
+                if isfield(tmp,'qr')
+                    x = tmp.qr;
+                elseif isfield(tmp,'x')
+                    x = tmp.x;
+                else
+                    error('x-axis not found in structure');
+                end
+                    
+                if isfield(tmp,'dat_1d')
+                    y = tmp.dat_1d;
+                elseif isfield(tmp,'y')
+                    y = tmp.y;
+                else
+                    error('y-axis not found in structure');
+                end
+                
+                % pixel option
+                if strcmp(opts.pixel,'off') 
+                    plot_fn(x,y,'o-','MarkerSize',2,'color',cm(ii,:));hold all;grid on;
+                    xlabel('q_r (nm^{-1})');
+                elseif strcmp(opts.pixel,'on')
+                    plot_fn(tmp.pixel,y,'o-','MarkerSize',2,'color',cm(ii,:));hold all;grid on;
                     xlabel('pixel');
                 else
                 end
                 ylabel('log_{10}(intensity/counts)');
-                if isempty(p.Results.limits)
+                if isempty(opts.limits)
                     axis auto;
                 else
-                    axis(p.Results.limits);
+                    axis(opts.limits);
                 end
                 legendstr{ii} = num2str(ii);
             end
@@ -780,39 +1153,46 @@ classdef display<handle
             legend(legendstr);
         end
         
-        function cmap = single_hue_colormap(obj,hue,sat,cmap) 
-            % SINGLE_HUE_COLORMAP  Creates a colormap based on a single hue
-            % value.
-            %
-            %   SINGLE_HUE_COLORMAP(HUE, SAT, COLORMAP)
-            %
-            % The following arguments are accepted:
-            %   HUE:: []
-            %       Hue given in degrees.
-            %
-            %   SAT:: []
-            %       Saturation is given a value between 0 and 1.
-            %
-            %   COLORMAP:: []
-            %       desc.
-            
-%             h = ones(n,1).*hue/360;
-%             s = ones(n,1).*sat;
-%             v = linspace(0,1,n)';
-%             s = linspace(1,0,n)';
-%             cmap = [h s v];
-            
-            test = rgb2hsv(rgb2gray(cmap));
-            test(:,1) = hue/360; test(:,2) = sat;
-            
-            % shorten
-            test(1:32,:) = test(1:2:end,:);
-            test(33:end,:) = test(1:2:end,:);
-            test(33:end,2) = linspace(sat,0,32);
-            test(33:end,3) = 1;
-
-            cmap = hsv2rgb(test);
-        end
+%         function cmap = single_hue_colormap(obj,hue,sat,cmap) 
+%             % SINGLE_HUE_COLORMAP  Creates a colormap based on a single hue
+%             % value. 
+%             %
+%             %   single_hue_colormap(hue, saturation, colormap)
+%             %
+%             % The following arguments are accepted:
+%             %   hue:: [] (required)
+%             %       Hue given in degrees.
+%             %
+%             %   saturation:: [] (required)
+%             %       Saturation is given a value between 0 and 1.
+%             %
+%             %   colormap:: [] (required)
+%             %       Description missing.
+%             %
+%             % Example:
+%             %   Example missing.
+%             %
+%             % Output arguments:
+%             %   This function does not return any arguments.
+%             %
+%             
+% %             h = ones(n,1).*hue/360;
+% %             s = ones(n,1).*sat;
+% %             v = linspace(0,1,n)';
+% %             s = linspace(1,0,n)';
+% %             cmap = [h s v];
+%             
+%             test = rgb2hsv(rgb2gray(cmap));
+%             test(:,1) = hue/360; test(:,2) = sat;
+%             
+%             % shorten
+%             test(1:32,:) = test(1:2:end,:);
+%             test(33:end,:) = test(1:2:end,:);
+%             test(33:end,2) = linspace(sat,0,32);
+%             test(33:end,3) = 1;
+% 
+%             cmap = hsv2rgb(test);
+%         end
         
         function newmap = azimuthal_colormap(obj,varargin)
             % AZIMUTHAL_COLORMAP  Returns a colormap suitable for
@@ -820,10 +1200,11 @@ classdef display<handle
             % as colormap, however, the more uniform colormap by Peter
             % Kovesi is recommended.
             %   
-            %   AZIMUTHAL_COLORMAP(COLORMAP_NAME)
+            %   azimuthal_colormap(colormap_name)
             %   
-            %   The input argument COLORMAP_NAME can take the following 
-            %   values:
+            % The following arguments are supported:
+            %   colormap_name:: ['hsv'] (required)
+            %       The following colormap names are currently implemented:
             %       'pmkmp'     :: based on the matlab package 
             %                      'Perceptually improved colormaps' by 
             %                      Matteo Niccoli and the adaptation by 
@@ -839,6 +1220,19 @@ classdef display<handle
             %       'peterkovesi' :: Based on "Peter Kovesi. Good Colour
             %                        Maps: How to Design Them. 
             %                        arXiv:1509.03700 [cs.GR] 2015"
+            %
+            % Example:
+            %   d = display();
+            %   d.stxm(some_stxm_map);
+            %   d.remove_axis();
+            %   cmap = d.azimuthal_colormap('pmkmp');
+            %   colormap(gca,cmap);
+            %
+            % Output arguments:
+            %   This function returns the following arguments:
+            %       new_map:: Colormap based on the choice made using the
+            %       colormap name.
+            %
             
             
             if nargin == 2
@@ -880,15 +1274,18 @@ classdef display<handle
             % however, lines can be superimposed. Color can also be
             % weighted by saturation.
             %
-            %   PCA(ANGLE, VARARGIN)
+            %   pca(angle, opts)
             %
-            % The following arguments are accepted:
-            %   ANGLE:: []
-            %       Map of angles from PCA analysis.
+            % The following arguments are supported:
+            %   angle:: [] (required)
+            %       Map of angles that is e.g. output from a PCA analysis.
             %
-            %   VARARGIN:: []
-            %       Struct, that can contain several plotting options.
-            %       Option 1: 'dir' ['v2']
+            %   opts:: [see default values below] (optional)
+            %       Structure that can contain the following fields. Note,
+            %       that all fields are optional. Default values that are
+            %       otherwise used are as usual givin in angle brackets.
+            %
+            %       - dir:: ['v2']
             %           By default, the input angle represents the
             %           orientation of the diffraction
             %           streak/modulation/peak. However, by default, the
@@ -898,69 +1295,72 @@ classdef display<handle
             %           as options that indicate which eigenvector
             %           direction should be used.
             %
-            %               Options: 'v1'|'v2'
-            %
-            %       Option 2: 'quiver' ['off']
-            %           'quiver': 'on' will superimpose lines on each data
-            %           point to indicate fibre or streak orientation.
+            %       - quiver:: ['off']
+            %           If set to 'on' quiver lines will be superimposed on
+            %           each data point to indicate fibre or streak 
+            %           orientation.
             %           Note, that default quiver arguments are used. For a
             %           more custom quiver display, please use
-            %           add_quiver().
+            %           display.add_quiver.
             %
-            %               Options: 'on'|'off'
-            %
-            %       Option 3: 'alpha' [no default]
-            %           'alpha' can be given a map of alpha values that can
+            %       - alpha:: []
+            %           alpha can be given a map of alpha values that can
             %           be used for mapping color saturation to another
             %           parameter map. If an alpha map is given, it will be
             %           automatically used.
             %
+            % Example:
+            %   d.display();
+            %   d.pca(some_orientation_map,struct('quiver','on');
+            %
+            % Output arguments:
+            %   This function does not return any arguments.
+            %
             
-            switch nargin 
-                case 1
-                    error('Please provide a nxm matrix with entries within the range [-pi,pi)');
-                case 2
-                    opts = struct();
-                    % everything ok. Quiver option not chosen.
-                case 3
-                    opts = varargin{1};
+            if nargin == 1
+                warning('Please provide a data set.');
+            end
+            
+            defaults = struct('dir','v2',...
+                              'quiver','off',...
+                              'alpha',[],...
+                              'axHandle',[]);
+            fields = fieldnames(defaults);
+            if nargin > 2
+                opts = varargin{1};
+                for f = 1:numel(fields)
+                    if ~isfield(opts,fields{f})
+                        opts.(fields{f}) = defaults.(fields{f});
+                    end
+                end
+            else
+                opts = defaults;
             end
             
             % default direction is along the fiber axis
-            if isfield(opts,'dir')
-                if strcmp(opts.dir,'v2')
-                    angle = angle - 90;
-                    normDir = true;
-                else
-                    normDir = false;
-                end
-            else 
-                % default
+            if strcmp(opts.dir,'v2')
                 angle = angle - 90;
                 normDir = true;
-            end
-            
-            if isfield(opts,'quiver')
-                if strcmp(opts.quiver,'on')
-                    % add quiver to plot
-                    doQuiver = true;
-                else 
-                    doQuiver = false;
-                end
             else
-                % default
-                doQuiver = false; 
+                normDir = false;
+            end
+
+            % add quiver to plot
+            if strcmp(opts.quiver,'on')
+                doQuiver = true;
+            else 
+                doQuiver = false;
             end
             
-            if isfield(opts,'alpha')
+            % add overlay
+            if ~isempty(opts.alpha)
                 doAlpha = true;
             else 
                 doAlpha = false;
             end
 
-            
             % show orientation
-            if isfield(opts,'axHandle')
+            if ~isempty(opts.axHandle)
                 % update figure
                 set(get(opts.axHandle,'Children') ,'CData',angle);
                 h = gca;
@@ -994,28 +1394,37 @@ classdef display<handle
         end
         
         function image_overlay(obj,im1,im2,transp)
-            % IMAGE_OVERLAY  Overlays to images. The second image is placed
-            % on top of the first image, and the transparency channel of
-            % the second image can be tuned for overlay.
+            % IMAGE_OVERLAY  Overlays two images. The second image is 
+            % placed on top of the first image, and the transparency 
+            % channel of the second image can be tuned for overlay.
+            % Note, that the images should be given in rgb color. To create 
+            % rgb images use e.g.:
+            %       rgbimage1 = ind2rgb(round(mat2gray(data)*63 + 1),gray);
+            % or for a single color overlay
+            %       rgbimage2 = ind2rgb(ones(256)*16,gray);
+            % a colormap can be defined by e.g.
+            %       d = display();
+            %       testColormap = d.single_hue_colormap(265,0.4,gray);
             %
-            %   IMAGE_OVERLAY(IMAGE1, IMAGE2, TRANSP)
+            %   image_overlay(image1, image2, transparency)
             %   
-            %   The following arguments are accepted:
-            %       image1:: []
+            % The following arguments are supported:
+            %       image1:: [] (required)
             %           Base image.
             %
-            %       image2:: []
+            %       image2:: [] (required)
             %           Overlay image.
             %
-            %       transp:: []
-            %           Transparency of image2.
+            %       transparency:: []
+            %           Transparency of image2. Values should range within
+            %           the interval (0,1).
             %            
-            %   to create rgb images use e.g.:
-            %       rgbimage1 = ind2rgb(round(mat2gray(data)*63 + 1),testColormap);
-            %   or for a single color overlay
-            %       rgbimage2 = ind2rgb(ones(256)*16,testColormap);
-            %   a colormap can be defined by e.g.
-            %       testColormap = ds.single_hue_colormap(265,0.4,gray);
+            % Example:
+            %   Example is missing.
+            %
+            % Output arguments:
+            %   This function does not return any arguments.
+
 
             % autoscale
             imagesc(im1);
@@ -1032,27 +1441,33 @@ classdef display<handle
         
         function show_location(obj,scanpoint,varargin)
             % SHOW_LOCATION  highlights the location of a given scanpoint
-            % in a 2d parameter map.
+            % in a two-dimensional parameter map.
             %   
-            %   SHOW_LOCATION(SCANPOINT, OPTS) 
+            %   show_location(scanpoint, opts) 
             %
-            %   The following options are supported:
+            % The following options are supported:
             %
-            %     scanpoint:: []
+            %     scanpoint:: [] (required)
             %       A single index, corresponding to the location in the
             %       scan. Note, that the index starts with 1 in the
             %       top-left corner of the scan.
             %
-            %     opts:: []
-            %       Work in progress. Currently, only a struct with the
-            %       direction as a parameter can be given.
-            %       
-            %       Usage: struct('dir',<'col'|'row'>))
+            %     opts:: [] (optional)
+            %       Structure that can contain the following field. Note 
+            %       that currently, only a single field can be set, which
+            %       is likely to be made more flexible in the future.
             %
-            %   Example: 
-            %   imagesc(rand(60,21));
-            %   ds.show_location(150,struct('dir','row'));
-            %   Note that ds.show_location(150) would also work.
+            %       - dir:: ['row']
+            %       Specifies the direction along the single index should
+            %       be incremented. Either 'col' or 'row' are allowed.
+            %
+            % Example: 
+            %       d = display();
+            %       imagesc(rand(60,21));
+            %       d.show_location(150,struct('dir','row'));
+            %
+            % Output arguments:
+            %   This function does not return any arguments.
             
             
             defaults = struct('dir','row');

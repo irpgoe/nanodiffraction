@@ -1,23 +1,43 @@
 function [results] = pca(dat,qy,qz,mask,sel)
 % PCA  calculates the covariance of the diffraction pattern and determines the eigenvalues of the scattering distribution.
 %
-%   RESULT = PCA(DAT,QY,QZ,MASK,EMPTY)
+%   result = pca(data,qy,qz,mask,selection)
 %
-%   The following arguments are required:
-%       DAT:: ()
+% The following arguments are supported:
+%       data:: [] (required)
 %           Diffraction pattern.
 %
-%       QY:: ()
-%           2d array of horizontal momentum transfer.
+%       qy:: [] (required)
+%           2d array of horizontal momentum transfer. The array has to
+%           match the dimensions of data.
 %
-%       QZ:: ()
-%           2d array of vertical momentum transfer.
+%       qz:: [] (required)
+%           2d array of vertical momentum transfer. The array has to match 
+%           the dimensions of data.
 %
-%       MASK:: ()
-%           Mask that defines which pixels are considered bad.
+%       mask:: [] (required)
+%           Mask that defines which pixels are considered bad. The mask can
+%           be an empty matrix. In this case, it is assumed that all pixels
+%           are valid. The array has to math the dimensions of data.
 %
-%       SEL:: ()
-%           Data selection matrix.
+%       selection:: [] (required)
+%           Data selection matrix. The selection can be an empty matrix. In
+%           this case, it is assumed that all pixels should be selected. 
+%           The array has to match the dimensions of data.
+%
+% Example:
+%   pca_result = pca(a_2d_diffraction_pattern,qy,qz,mask,[]);
+%
+% Output arguments:
+%   result:: A structure that contains the following fields:
+%       - w:: Anisotropy of the data.
+%
+%       - angle:: Orientation angle of the largest component.
+%
+%       - lambda_1:: Eigenvalue of the largest component.
+%
+%       - lambda_2:: Eigenvalue of the smallest component.
+%
 %
 % Copyright 2017 Institute for X-ray Physics (University of Göttingen)
 

@@ -2,17 +2,30 @@ function result = stxm(data,mask,sel)
 % STXM  Sums a 2d array. In addition, it takes into
 % account a minimum and maximum q_r value for integration
 %
-%   RESULT = STXM(DATA,MASK,SEL)
+%   result = stxm(data,mask,selection)
 %
-%   The following arguments are required:
-%       DAT:: ()
-%           Diffraction pattern.
+% The following arguments are supported:
+%       data:: [] (required) 
+%           A two-dimensional diffraction pattern. 
 %
-%       MASK:: ()
-%           Mask that defines which pixels are bad and should be ignored.
+%       mask:: [] (required)
+%           Mask that defines which pixels are bad and should not be taken
+%           into account. The mask can be an empty matrix. In this case, it
+%           is assumed that all pixels are valid. The dimensions of mask
+%           have to match the size of data.
 %
-%       SEL:: ()
-%           Data selection, defines which pixels should be taken into account.
+%       selection:: [] (required)
+%           Data selection, defines which pixels should be taken into
+%           account. The selection can be an empty matrix. In this case, it
+%           is assumed that all pixels should be selected. The dimensions
+%           of mask have to match the size of data.
+%
+% Example:
+%   stxm_result = stxm(a_2d_diffraction_pattern,mask,[]);
+%
+% Output arguments:
+%   result:: The integrated intensity of data.
+%
 %
 % Copyright 2017 Institute for X-ray Physics (University of Göttingen)
 

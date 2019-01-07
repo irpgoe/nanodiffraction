@@ -41,7 +41,7 @@ classdef eiger<handle
             
             fprintf(1,'Initialized Eiger module with the following settings:\n');
             fprintf(1,'Data path: %s\n',obj.c.path);
-            fprintf(1,'Frames per file: %d\n',fpf);
+            fprintf(1,'Frames per file: %d\n',obj.fpf);
         end
         
         function data = read_standard(obj,fn)
@@ -61,7 +61,7 @@ classdef eiger<handle
                 rethrow(e)
             end
         end
-        
+                
         function data = read(obj,fn)
             index = floor(double(fn-1)/double(obj.fpf))+1;
             remainder = mod(double(fn-1),double(obj.fpf))+1;
@@ -125,9 +125,9 @@ classdef eiger<handle
                     H5F.close(fid);
 %                 end
                 
-                % row-first to column-first indexing
+                % uint16 to double and row-first to column-first indexing
+%                 data = double(data);
                 data = transpose(double(data));
-                
             catch e
                 warning(e.message);
                 fprintf(1,'Debug information: \n');

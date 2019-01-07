@@ -1,18 +1,24 @@
 function data = baseline(data, winSize, iterations)
-    % BASELINE  performs...
+    % BASELINE  Description.
     %   
-    %   [RESULT] = BASELINE(DATA,WINSIZE,ITERATIONS) 
+    %   data = baseline(data, winSize, iterations)
     %
-    %   The following options are required:
+    % The following arguments are supported:
     %
-    %     DATA::
+    %     data::
     %       The data that will be processed.
     %
-    %     WINSIZE::
+    %     winSize::
     %       Integer > 0
     %
-    %     ITERATIONS::
+    %     iterations::
     %       Integer > 0
+    %
+    % Example:
+    %   Example missing.
+    %
+    % Output arguments:
+    %   Description.
     %
     % Copyright 2017 Institute for X-ray Physics (University of Göttingen)
 

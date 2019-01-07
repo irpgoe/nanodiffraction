@@ -1,12 +1,29 @@
 function save_progress(script_base,script_fn,location,desc)
 % SAVE_PROGRESS  saves ... 
-%   Syntax: SAVE_PROGRESS(SCRIPT_FN,LOCATION,DESC)
-%   script_fn:: Name of the script that is currently being used, e.g.ls2522
-%   location:: location where result will be saved
-%   desc:: String that describes what you did
 %   
-%   Note, that the location should not contain an ending slash
+%   save_progress(script_base,script_fn,location,desc) 
 %
+% The following arguments are supported:
+%     script_base:: ['./experiments'] (required)
+%       The data that will be processed. If script_base is empty, then the
+%       default value will be used.
+%
+%     script_fn:: [] (required)
+%       Name of the script that is currently being used, e.g.ls2522
+%
+%     location:: [] (required)
+%       location where result will be saved. Note, that the location should
+%       not contain an ending slash.
+%
+%     desc:: [] (required)
+%       String that describes what you did.
+%
+% Example:
+%   save_progress([],ls2728,'/results/ls2728','I added a few things');
+%
+% Output arguments:
+%   This function does not return any arguments.
+%   
 % Copyright 2017 Institute for X-ray Physics (University of Göttingen)
 
 % Permission is hereby granted, free of charge, to any person obtaining 
