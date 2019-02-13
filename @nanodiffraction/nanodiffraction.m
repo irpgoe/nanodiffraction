@@ -219,7 +219,7 @@ classdef nanodiffraction < handle
             
         	pin = inputParser;
             % set defaults and add optional arguments
-            addOptional(pin,'energy',13.8);
+            addOptional(pin,'energy',13.8e3);
             addOptional(pin,'wavenumber',0);
             addOptional(pin,'wavelength',0);
             addOptional(pin,'detDistance',5);
@@ -820,8 +820,8 @@ classdef nanodiffraction < handle
             %           - 'qrMin':  Only pixels above the radial wavevector transfer qrMin will be analyzed [-1]
             %           - 'qrMax':  Only pixels below the radial wavevector transfer qrMax will be analyzed [-1]
             %           - 'sel':    Logical 2d array. A value of 1 represents a pixel that will be analyzed [ones(obj.Nz,oabj.Ny))]
-            %           - 'mask':   Logical 2d array. A value of 1 represents a pixel that will be discarded [obj.mask]            
-            %
+            %           - 'mask':   Logical 2d array. A value of 1 represents a pixel that will be discarded [obj.mask]                     
+            %            
             %   circDist: Calculates the circular mean and circular'grid',obj.phi2,'bins',360,'sel',obj.sels,'mask',obj.mask,'bgr',[]),...
             %   variance of a distribution. Here, used to calculate the
             %   circular mean of I(phi) for a given qr-Interval.
@@ -992,6 +992,7 @@ classdef nanodiffraction < handle
             addOptional(pin,'parallel','off',@ischar);
             addOptional(pin,'live','off',@ischar);
             % stxm, crystal, b1d and symmetry
+            addOptional(pin,'liveArgs',struct(),@isstruct);
             addOptional(pin,'stxmArgs',struct(),@isstruct);
             addOptional(pin,'crystalArgs',struct(),@isstruct);
             addOptional(pin,'symmetryArgs',struct(),@isstruct);
@@ -1166,7 +1167,7 @@ classdef nanodiffraction < handle
                 else
                 end
             end
-            if contains(method,'average') 
+            if contains(method,'average') || contains(method,'avg')
                 averageYes = 1; 
                 sumYes = 1; 
                 sumResult = zeros(obj.Nz,obj.Ny);
@@ -1195,9 +1196,13 @@ classdef nanodiffraction < handle
                     struct('grid',obj.qr,'bins',100,'mask',mask,'sel',sels,'bgr',[]),...
                     pin.Results.b1dArgs);
                 
-                [qr,sortIndex_azim,n_azim,bin_azim] = prepare_averaging(b1dArgs.grid,b1dArgs.mask,b1dArgs.sel,b1dArgs.bins);
-%                 [qr,sortIndex_azim,n_azim,bin_azim] = prepare_averaging(transpose(b1dArgs.grid),transpose(b1dArgs.mask),transpose(b1dArgs.sel),b1dArgs.bins);
-                
+                % prepare averaging requires only a single mask and
+                % selection
+                if size(b1dArgs.sel,3) > 1 
+                    warning('Only slower method can be used at the moment')
+                else
+                    [qr,sortIndex_azim,n_azim,bin_azim] = prepare_averaging(b1dArgs.grid,b1dArgs.mask,b1dArgs.sel,b1dArgs.bins);
+                end
             end
             if contains(method,'fluo') 
                 fluoYes = 1;
@@ -1263,6 +1268,11 @@ classdef nanodiffraction < handle
             if contains(method,'live')
                 liveYes = 1;
                 line = 0;
+                displayClass = display();
+                link(obj,displayClass);
+                liveArgs = update_defaults(...
+                    struct('display',displayClass,'cAxis',[0 1]),...
+                    pin.Results.liveArgs);
             end
             if contains(method,'avgPerLine')
                 avgPerLineYes = 1;
@@ -1381,7 +1391,7 @@ classdef nanodiffraction < handle
 
                     % live viewing
                     if liveYes
-                        imla(dat);caxis([-1 1]);drawnow;
+                        liveArgs.display.diffraction(dat.*~obj.mask);caxis(liveArgs.cAxis);title(num2str(index));drawnow;
                     end
                     if dataYes
                         dataStorage{ss} = dat;
@@ -1457,7 +1467,8 @@ classdef nanodiffraction < handle
                         avgPerLine{line} = avgPerLine{line} + dat;
                     end
                     if symmetryYes
-                        Ln(ss,:) = symmetry(dat, symmetryArgs.bgr, symmetryArgs.sigma, symmetryArgs.noise_level, obj);
+                         [ln, symmetryBinCenter] = symmetry(dat, symmetryArgs.bgr, symmetryArgs.sigma, symmetryArgs.noise_level, obj);
+                         Ln(ss,:) = ln;
                     end
                     if b1dYes
                         
@@ -1468,14 +1479,20 @@ classdef nanodiffraction < handle
                         end
                         
                         for ii = 1:size(b1dArgs.sel,3)
-%                             tmp = b1d(dat,b1dArgs.mask,b1dArgs.sel(:,:,ii),b1dArgs.grid,b1dArgs.bins);
-%                             b1d_res(jj,ii).dat_1d = tmp.dat_1d;
-%                             b1d_res(jj,ii).qr = tmp.qr;
-                            % faster
-                            tmp = b1d_fast(dat_b1d,b1dArgs.mask,b1dArgs.sel(:,:,ii),sortIndex_azim,n_azim,bin_azim);
-                            b1d_res(ss,ii).dat_1d = tmp.dat_1d;
-                            b1d_res(ss,ii).qr = qr;
-                            b1d_res(ss,ii).x = qr;
+                            if size(b1dArgs.sel,3) > 1 
+                                % slightly slower method
+                                tmp = b1d(dat,b1dArgs.mask,b1dArgs.sel(:,:,ii),b1dArgs.grid,b1dArgs.bins);
+                                b1d_res(ss,ii).dat_1d = tmp.dat_1d;
+                                b1d_res(ss,ii).qr = tmp.qr;
+                                b1d_res(ss,ii).x = tmp.qr;
+                            else
+                                % faster method
+                                tmp = b1d_fast(dat_b1d,b1dArgs.mask,b1dArgs.sel(:,:,ii),sortIndex_azim,n_azim,bin_azim);
+                                b1d_res(ss,ii).dat_1d = tmp.dat_1d;
+                                b1d_res(ss,ii).qr = qr;
+                                b1d_res(ss,ii).x = qr;                                
+                            end
+
                         end
                     end
                     if pyfaiYes
@@ -1642,6 +1659,8 @@ classdef nanodiffraction < handle
             end
             if symmetryYes
                 result.symmetry.Ln = sort_scan(Ln,nr_rows,nr_cols,scanmode);
+                result.symmetry.binCenter = symmetryBinCenter;
+                result.symmetry.lnHist = squeeze(sum(sum(result.symmetry.Ln,1),2));
             end
             if b1dYes
                result.b1d = sort_scan(b1d_res,nr_rows,nr_cols,scanmode);
@@ -2304,6 +2323,7 @@ classdef nanodiffraction < handle
 
             % reset the values to their original value when the class was
             % initialized
+            disp('Resetting number of pixels, pixel size and primary beam coordinates to original values');
             obj.Ny = obj.Ny_orig;
             obj.Nz = obj.Nz_orig;
             obj.pby = obj.pby_orig;
@@ -3609,6 +3629,48 @@ classdef nanodiffraction < handle
         end
         
         
+        
+        function [I] = simulate_actomyosin(obj,phi0,varargin)
+            % SIMULATE_ACTOMYOSIN  Description.
+            %
+            %   simulation = simulate_actomyosin(opts) 
+            %
+            % The following arguments are supported:
+            %
+            %       phi0:: [see default values below] (optional)
+            %          Description.
+            %            
+            % Example:
+            %   Example missing.
+            %
+            % Output arguments:
+            %   simulation:: A simulated diffraction pattern.
+            %
+            
+            % d spacing of actomyosin
+            d = 40e-9; % meters
+            sigma = 0.034; % rec. nm
+            q0 = 2*pi/d*1e-9; % rec. nm
+            
+            % anisotropy
+            dphi = 20;
+            
+            % photon flux
+            n_photons_max = 100;
+            
+            IGauss = n_photons_max.*exp(-((obj.qr - q0)/sigma).^2);
+            AzimGauss = 1.*exp(-((obj.phi - phi0)/dphi).^2);
+            I = IGauss.*AzimGauss;
+            
+            if nargin ~= 3
+                I = I + obj.simulate_actomyosin(phi0+180,1);
+                I = I + obj.simulate_actomyosin(phi0+360,1);
+            end
+                
+        end
+        
+        
+        
         function [streak] = simulate_streak(obj, varargin)
             % SIMULATE_STREAK  simulates a gaussian streak at the location
             % of the primary beam.
@@ -3697,7 +3759,7 @@ classdef nanodiffraction < handle
         
         function [bgr] = simulate_airscattering(obj, varargin)
             % SIMULATE_AIRSCATTERING  simulates the effect of air
-            % scattering.
+            % scattering. 
             %
             %   [bgr] = simulate_airscattering(opts)
             %
@@ -3706,7 +3768,7 @@ classdef nanodiffraction < handle
             %           Structure that can contain the following fields.
             %           Note, that all fields are optional. Default values
             %           that are otherwise used are as usual given in angle
-            %           brackets.
+            %           brackets. All distances are given in millimeters.
             %
             %           - l_pre:: [10]
             %               Pre-distance.
@@ -3723,18 +3785,6 @@ classdef nanodiffraction < handle
             %           - ap_size:: [0.07]
             %               Aperture size.
             %
-            %           - bs_size:: [0.01]
-            %               Beamstop size.
-            %
-            %           - ny:: []
-            %               Number of horizontal detector pixels 
-            %
-            %           - nz:: []
-            %               Number of vertical detector pixels 
-            %
-            %           - px:: [0.075]
-            %               pixel size 
-            %
             %           - I0:: [1]
             %               number of incident photons
             %
@@ -3748,8 +3798,7 @@ classdef nanodiffraction < handle
             
             defaults = struct(...            
                 'l_pre', 10, 'l_post', 10, 'l_sd', 500, 'l_sampl', 0.1,...
-                'I0', 1, 'bs_size', 0.01, 'ap_size', 0.07, ...
-                'ny', obj.Ny, 'nz', obj.Nz, 'px', 0.075);
+                'I0', 1, 'ap_size', 0.07);
             fields = fieldnames(defaults);
             if nargin > 1
                 opts = varargin{1};
@@ -3763,7 +3812,7 @@ classdef nanodiffraction < handle
             end
             
             % shorthands
-            [l_pre,l_post,l_sd,l_sampl,I0,bs_size,ap_size,ny,nz,px] = split_struct(opts,fields);
+            [l_pre,l_post,l_sd,l_sampl,I0,ap_size] = split_struct(opts,fields);
             
             n_slices_pre = round(l_pre / l_sampl);
             n_slices_post = round(l_post / l_sampl);
@@ -3777,7 +3826,7 @@ classdef nanodiffraction < handle
 %             r_det = sqrt(y_det.^2 + z_det.^2);
             r_det = obj.R;
 
-            bgr = zeros(nz,ny);
+            bgr = zeros(size(r_det));
             for i = 1:n_slices_pre
                 r_cone = ap_size/2 * (l_pre - i*l_sampl + l_sd ) / (l_pre - i*l_sampl);
                 bgr = bgr + (r_det < r_cone)*bgr_slice;
@@ -3820,7 +3869,7 @@ classdef nanodiffraction < handle
             
             % bs size in (mm) on detector
             bs_size_det = bs_size * obj.detDistance / bs_dist;
-            bs_size_det
+            
             % according q
             bs_size_det_q = obj.q_of_n(bs_size_det*0.5 / obj.pixelsize);
             

@@ -1,0 +1,304 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Getting Started &mdash; nanodiffraction 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Guide" href="../guide/guide.html" />
+    <link rel="prev" title="Documentation of the nanodiffraction toolbox" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> nanodiffraction
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reading-data">Reading data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#processing-data">Processing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#visualizing-data">Visualizing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Working with the nanodiffraction toolbox</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guide/guide.html">Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../geometry/geometry.html">Geometry</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">nanodiffraction</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Getting Started</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/getting_started/getting_started.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="getting-started">
+<span id="id1"></span><h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p>If you want to analyze scattering data, let’s get started!</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>The toolbox is available from GitHub, see <a class="reference external" href="http://irpgoe.github.io/nanodiffraction">http://irpgoe.github.io/nanodiffraction</a> for more information. Simply pull the toolbox into a directory of your choice and add the directory to your Matlab search path.</p>
+</div>
+<div class="section" id="reading-data">
+<h2>Reading data<a class="headerlink" href="#reading-data" title="Permalink to this headline">¶</a></h2>
+<p>A few words about the intended structure of the nanodiffraction toolbox. It is logically separated into three main modules, each dedicated to its own task. First, there is the <code class="docutils literal notranslate"><span class="pre">files</span></code> module. It can be initialized with the following line of code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">files</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Usually, the <code class="docutils literal notranslate"><span class="pre">files</span></code> module is used to read a detector image. For this purpose, we use the <code class="docutils literal notranslate"><span class="pre">read</span></code> method of the files module, as in the following example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="o">%</span> <span class="n">reads</span> <span class="n">the</span> <span class="n">first</span> <span class="n">frame</span>
+</pre></div>
+</div>
+<p>Now, a few questions arise: (1) What detector was used and (2) what does this number (1) stand for? If the files module is initialized as above, default values are used for the path to the location where the data is stored, the type of detector that was used, etc. Let us therefore look at a more realistic example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">files</span><span class="p">(</span> <span class="s1">&#39;beamline&#39;</span><span class="p">,</span><span class="s1">&#39;id13&#39;</span><span class="p">,</span><span class="o">...</span>
+<span class="go">       &#39;prepath&#39;,&#39;/home/Labdata-Archive/AG_Salditt/Messzeiten_Rohdaten/2018/extern/ESRF_ID13_ls2728_Jan2018/DATA/AUTO-TRANSFER/eiger1&#39;,...</span>
+<span class="go">       &#39;newfile&#39;,&#39;setup3&#39;,...</span>
+<span class="go">       &#39;detector&#39;,&#39;eiger&#39;,...</span>
+<span class="go">       &#39;scan&#39;,11);</span>
+</pre></div>
+</div>
+<p>This set of values is the essential minimum that the files module need to access the data. A complete description is given in the respective chapter on the files module.
+Now, you should be able to read a single detector frame using</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frame</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="o">%</span> <span class="n">reads</span> <span class="n">the</span> <span class="n">first</span> <span class="n">frame</span>
+</pre></div>
+</div>
+<p>The index, here 1, is the frame number, i.e. the n-th (here: first) frame acquired for a given <code class="docutils literal notranslate"><span class="pre">newfile</span></code>.</p>
+</div>
+<div class="section" id="processing-data">
+<h2>Processing data<a class="headerlink" href="#processing-data" title="Permalink to this headline">¶</a></h2>
+<p>To actually analyze the data, we need to have methods that can be applied to process the data obtained from <code class="docutils literal notranslate"><span class="pre">files</span></code>. We use the <code class="docutils literal notranslate"><span class="pre">nanodiffraction</span></code> module for this purpose. It is basically a collection of all geometrical and experimental parameters and related methods that can be used for batch processing of the data. This module can be either initialized with default values or directly with the appropriate experimental parameters, as in the following lines of code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">nanodiffraction</span><span class="p">(</span><span class="s1">&#39;energy&#39;</span><span class="p">,</span><span class="mf">13E3</span><span class="p">,</span><span class="o">...</span>
+<span class="go">       &#39;detDistance&#39;,0.971434,...</span>
+<span class="go">       &#39;pixelsize&#39;,75E-6,...</span>
+<span class="go">       &#39;Ny&#39;,2070,...</span>
+<span class="go">       &#39;Nz&#39;,2167,...</span>
+<span class="go">       &#39;pby&#39;,1468.934,...</span>
+<span class="go">       &#39;pbz&#39;,1315.318);</span>
+</pre></div>
+</div>
+<p>The parameters should in this case be rather self-explanatory. For a more in-depth explanation of each parameter, see the respective module description. Let us proceed to analyze a simple STXM (scanning transmission X-ray microscopy) scan. For this purpose, we want to go through all frames within a single scan and calculate the total number of scattered photons. First, we need to initialize the scan parameters with the following line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">set_scan_info</span><span class="p">(</span><span class="s1">&#39;SNy&#39;</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="s1">&#39;SNz&#39;</span><span class="p">,</span><span class="mi">100</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This defines the horizontal (SNy) and vertical (SNz) scan dimensions. We then simply need to call the most used method of this module, <code class="docutils literal notranslate"><span class="pre">analyze_scan</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">analyze_scan</span><span class="p">(</span><span class="s1">&#39;method&#39;</span><span class="p">,</span><span class="s1">&#39;stxm&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>But, hugh, it doesn’t work? That’s because the <code class="docutils literal notranslate"><span class="pre">nanodiffraction</span></code> module does not yet know, where to get the data from. The toolbox therefore contains a function that can link the processing module to the file reading module:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">link</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">e</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A full (but minimal) example might therefore look like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">files</span><span class="p">(</span><span class="o">...</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">nanodiffraction</span><span class="p">(</span><span class="o">...</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">link</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">e</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">set_scan_info</span><span class="p">(</span><span class="s1">&#39;SNy&#39;</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="s1">&#39;SNz&#39;</span><span class="p">,</span><span class="mi">100</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">analyze_scan</span><span class="p">(</span><span class="s1">&#39;method&#39;</span><span class="p">,</span><span class="s1">&#39;stxm&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="visualizing-data">
+<h2>Visualizing data<a class="headerlink" href="#visualizing-data" title="Permalink to this headline">¶</a></h2>
+<p>For simple visualization purposes, you might use built-in Matlab functions (imagesc, imshow, etc…). You could however also make use of the <code class="docutils literal notranslate"><span class="pre">display</span></code> module that contains pre-defined routines for visualization of diffraction data and resulting 2D maps of some structure parameter.</p>
+<p>In general, it is as simple as typing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">display</span><span class="p">();</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="o">.</span><span class="n">stxm</span><span class="p">(</span><span class="n">darkfield</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>The above is short description of how a simple use case of the nanodiffraction toolbox could look like. More information is given in the Guide section. In addition, each function contains a help block. The usage of each function can therefore be obtained in Matlab by typing</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span> <span class="n">pca</span>
+</pre></div>
+</div>
+<p>for the case of the function <code class="docutils literal notranslate"><span class="pre">pca</span></code>. You can also obtain help on a module</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span> <span class="n">nanodiffraction</span>
+</pre></div>
+</div>
+<p>or a method of a module</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span> <span class="n">files</span><span class="o">.</span><span class="n">show_configuration</span>
+</pre></div>
+</div>
+<p>In all other cases, feel free to contact the author of the toolbox directly.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../guide/guide.html" class="btn btn-neutral float-right" title="Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../index.html" class="btn btn-neutral float-left" title="Documentation of the nanodiffraction toolbox" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Jan-David Nicolas
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -206,7 +206,7 @@ classdef display<handle
             f.Position = pos;
         end
         
-        function ax = remove_axis(obj)
+        function ax = remove_axis(obj,varargin)
             % REMOVE_AXIS  removes the axis and ticks from the active
             % figure.
             %   
@@ -222,14 +222,31 @@ classdef display<handle
             % Output arguments:
             %   This function does not return any arguments.
             
+            opt = 'xy';
+            if nargin > 1
+                opt = varargin{1};
+            end
 
-            ax = gca;
-            ax.XTick = [];
-            ax.XTickLabel = [];
-            ax.YTick = [];
-            ax.YTickLabel = [];
-            ax.XLabel = [];
-            ax.YLabel = [];
+            
+            switch opt
+                case 'xy'
+                    ax = gca;
+                    ax.XTick = [];
+                    ax.XTickLabel = [];
+                    ax.YTick = [];
+                    ax.YTickLabel = [];
+                    ax.XLabel = [];
+                    ax.YLabel = [];
+                case 'all'
+                    ax = gca;
+                    ax.XTick = [];
+                    ax.XTickLabel = [];
+                    ax.YTick = [];
+                    ax.YTickLabel = [];
+                    ax.XLabel = [];
+                    ax.YLabel = [];
+                    colorbar(ax,'delete');
+            end
         end
         
         
@@ -503,17 +520,79 @@ classdef display<handle
         end
         
         
-        function add_title(obj,limits, sb_len)
+        function add_title(obj, varargin)
+            % ADD_TITLE  Adds a title to the image that includes the caxis
+            % range and the length of a scalebar.
+            %
+            %   add_title(opts)
+            %   
+            % The following arguments are supported:
+            %
+            %       opts:: [see default values below] (optional)
+            %           Structure that can contain the following fields.
+            %           Note, that all fields are optional. Default values
+            %           that are otherwise used are as used given in angle
+            %           brackets:
+            %
+            %           limits:: [auto]
+            %           Per default choses the limits of the current axis.
+            %           Otherwise, a two-element vector with a range can be
+            %           used, e.g. [1 2].
+            %
+            %           sb_len:: []
+            %           Length of the scale bar in µm.
+            %
+            %           subtitle:: [false]
+            %           The information can be plotted as a regular title
+            %           (false, the default)
+            %           to a figure or subplot or can be inserted as an
+            %           xlabel (true).
+            %
+            % Example:
+            %       d = display();
+            %       d.add_title(struct('sb_len',5,'subtitle',true));
+            %
+            % Output arguments:
+            %       This function does not return any arguments.
             
-            if isempty(limits)
-                ca = gca;
-                limits = ca.CLim;
-                title(sprintf('min: %g, max: %g, sb: %g um', limits(1), limits(2), sb_len));    
+            defaults = struct('limits','auto','sb_len',[],'subtitle',false);
+            fields = fieldnames(defaults);
+            if nargin > 1
+                opts = varargin{1};
+                for f = 1:numel(fields)
+                    if ~isfield(opts,fields{f})
+                        opts.(fields{f}) = defaults.(fields{f});
+                    end
+                end
             else
-                % requires limits (2x1 array) and sb length as input
-                title(sprintf('min: %g, max: %g, sb: %g um', limits(1), limits(2), sb_len));
+                opts = defaults;
             end
+            
+            title_fun = @title;
+            if opts.subtitle
+                title_fun = @xlabel;
+            end
+            
+            if strcmp(opts.limits,'auto')
+                ca = gca;
+                opts.limits = ca.CLim;
+            end
+            
+            if strcmp(opts.limits,'none')
+                limit_str = '';
+            else
+                limit_str = sprintf('%g -> %g', opts.limits(1), opts.limits(2));
+            end
+                
+            if ~isempty(opts.sb_len)
+                sb_str = sprintf('%g µm', opts.sb_len);
+            else
+                sb_str = '';
+            end
+            title_fun([limit_str ' : ' sb_str])
+            
         end
+
         
         function add_quiver(obj,orientation,varargin)
             % ADD_QUIVER  Adds quiver lines onto an image, based on the

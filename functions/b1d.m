@@ -79,7 +79,7 @@ function [results] = b1d(dat,mask,sel,grid,varargin)
     end
     
     % sort grid
-    x = grid(~(mask | ~sel))'; 
+    x = grid(~(mask | ~sel)); 
     [x, sortIndex] = sort(x);
     
     % binning of grid
@@ -91,9 +91,9 @@ function [results] = b1d(dat,mask,sel,grid,varargin)
     x = binEdge(1:sum(n~=0));
     
     % put intensity values into bins (each qr value has a bin associated) and take mean
-    aavg = dat(~(mask | ~sel))';
+    aavg = dat(~(mask | ~sel));
     aavg = aavg(sortIndex);
-    aavg = accumarray(bin',aavg,[],@mean,NaN);
+    aavg = accumarray(bin,aavg,[],@mean,NaN);
     
     % remove NaNs from intensity and bin index (NaNs appear where n is 0)
     n(isnan(aavg)) = [];
