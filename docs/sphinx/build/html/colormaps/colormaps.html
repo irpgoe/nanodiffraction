@@ -1,0 +1,233 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Colormaps &mdash; nanodiffraction 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Mex-functions" href="../mex/mex.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> nanodiffraction
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Working with the nanodiffraction toolbox</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../guide/guide.html">Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../geometry/geometry.html">Geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mex/mex.html">Mex-functions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Colormaps</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#visualizing-phase-angles">Visualizing phase angles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#visualizing-scattering-maps">Visualizing scattering maps</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">nanodiffraction</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Colormaps</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/colormaps/colormaps.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="colormaps">
+<span id="id1"></span><h1>Colormaps<a class="headerlink" href="#colormaps" title="Permalink to this headline">¶</a></h1>
+<p>Although the choice of a colormap is to a large degree arbitrary, it can be in some cases difficult to obtain a suitable colormap for a certain task. We have found it in particular difficult to obtain a suitable colormap for the visualization of orientations and phase angles. For this purpose, we have listed our personal choices for a specific coloring here. Note, that these functions have been written by other authors. We rely on the Matlab software packages written by Matteo Niccoli (<a class="reference external" href="https://de.mathworks.com/matlabcentral/fileexchange/28982-perceptually-improved-colormaps">https://de.mathworks.com/matlabcentral/fileexchange/28982-perceptually-improved-colormaps</a>), Matthias Geissbuehler (<a class="reference external" href="https://de.mathworks.com/matlabcentral/fileexchange/31761-colormaps-compatible-with-red-green-color-perception-deficiencies">https://de.mathworks.com/matlabcentral/fileexchange/31761-colormaps-compatible-with-red-green-color-perception-deficiencies</a>), and Peter Kovesi (<a class="reference external" href="https://peterkovesi.com/projects/colourmaps/index.html">https://peterkovesi.com/projects/colourmaps/index.html</a>). See the links for more information on the specific use of each package. The Matlab implementations can be found in <code class="docutils literal notranslate"><span class="pre">/colormaps/</span></code>.</p>
+<div class="section" id="visualizing-phase-angles">
+<h2>Visualizing phase angles<a class="headerlink" href="#visualizing-phase-angles" title="Permalink to this headline">¶</a></h2>
+<p>Phase angles are challenging to implement. We found the colormaps C2 and C8 implemented by Peter Kovesi to be especially smooth and eye-friendly. For a comparison with the standard Matlab colormap HSV, see the figure below. Note, that arrows have been added, as should usually be done since phase color maps can be challenging to interpret for colorblind individuals. The nanodiffraction toolbox offers the function <code class="docutils literal notranslate"><span class="pre">add_quiver</span></code> as part of the visualization module for this purpose.</p>
+<div class="figure" id="id2">
+<a class="reference internal image-reference" href="../_images/preferred_cyclic_colormaps.png"><img alt="Comparison of four colormaps used in representing phase angles." src="../_images/preferred_cyclic_colormaps.png" style="width: 792.5px; height: 630.0px;" /></a>
+<p class="caption"><span class="caption-text">The C2 and C8 colormaps by Peter Kovesi are especially well suited for the representation of phase angles. The nanodiffraction toolbox uses C2 by default.</span></p>
+</div>
+</div>
+<div class="section" id="visualizing-scattering-maps">
+<h2>Visualizing scattering maps<a class="headerlink" href="#visualizing-scattering-maps" title="Permalink to this headline">¶</a></h2>
+<p>There is a wide variety of suitable colormaps available for linear color scaling. The nanodiffraction toolbox offers two color schemes, the CubicYF colormap by Matteo Niccoli as well as the Matlab standard grayscale colormap. Maps of structure parameters are usually colored using the CubicYF colormap, while diffraction data is colored in gray. There are, however, other highly suited colormaps available, such as LinearL by Matteo Niccoli and Morgenstemning by Matthias Geissbuehler, see the Figure below.</p>
+<div class="figure" id="id3">
+<a class="reference internal image-reference" href="../_images/preferred_linear_colormaps.png"><img alt="Comparison of four colormaps used in representing scattering maps." src="../_images/preferred_linear_colormaps.png" style="width: 789.5px; height: 631.5px;" /></a>
+<p class="caption"><span class="caption-text">The LinearL and CubicYF colormaps by Peter Kovesi and Morgenstemning by Matthias Geissbuehler are especially well suited for the coloring of scattering maps. The nanodiffraction toolbox uses CubicYF by default.</span></p>
+</div>
+<p>Note, that a dark background can lead to a lot of toner being used when printed. To remove unnecessary background, all scan points/pixels from background regions can be colored in white. This is implemented in the functions <code class="docutils literal notranslate"><span class="pre">pca</span></code> and <code class="docutils literal notranslate"><span class="pre">stxm</span></code> (of the display module) as the <code class="docutils literal notranslate"><span class="pre">alpha</span></code> parameter. One example is shown below:</p>
+<div class="figure" id="id4">
+<a class="reference internal image-reference" href="../_images/masking_alpha_level.png"><img alt="Background masking." src="../_images/masking_alpha_level.png" style="width: 789.5px; height: 316.0px;" /></a>
+<p class="caption"><span class="caption-text">Background pixels can be masked in white for a more printer-friendly figure.</span></p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../mex/mex.html" class="btn btn-neutral float-left" title="Mex-functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Jan-David Nicolas
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

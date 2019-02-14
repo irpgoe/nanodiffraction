@@ -88,6 +88,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../geometry/geometry.html">Geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mex/mex.html">Mex-functions</a></li>
 </ul>
 
             
@@ -154,6 +155,164 @@
             
   <div class="section" id="guide">
 <span id="id1"></span><h1>Guide<a class="headerlink" href="#guide" title="Permalink to this headline">¶</a></h1>
+<p>In this guide we will analyze data available online <a class="reference internal" href="#nicolas2018" id="id2">[Nicolas2018]</a> and described in <a class="reference internal" href="#nicolas2018a" id="id3">[Nicolas2018a]</a>. Once the data was downloaded, we can start Matlab. At this stage, there is however already one important caveat. The available h5 files are compressed using LZ4 compression. This filter is not part of the standard filter set available from the h5 library, see <a class="reference external" href="https://support.hdfgroup.org/services/filters.html">https://support.hdfgroup.org/services/filters.html</a>. The filter is however available for download. On a linux machine, once the filter is downloaded, it has to be made available by exporting the path to the filter</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">HDF5_PLUGIN_PATH</span> <span class="o">=</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">plugin</span>
+</pre></div>
+</div>
+<p>Now, Matlab can be started as usual. Unfortunately, this procedure has only been tested for linux-based operating systems.</p>
+<p>Before proceeding any further, we add the nanodiffraction toolbox to the Matlab search path.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">addpath</span><span class="p">(</span><span class="n">genpath</span><span class="p">(</span><span class="s1">&#39;/path/to/nanodiffraction&#39;</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Let us now see, how the <code class="docutils literal notranslate"><span class="pre">files</span></code> module predefines certain folder structures for a given set of beamlines</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">files</span><span class="p">();</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">show_configuration</span><span class="p">(</span><span class="n">struct</span><span class="p">(</span><span class="s1">&#39;allDefaults&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Since it is reported that data was collected at beamline <code class="docutils literal notranslate"><span class="pre">id13</span></code> using an Eiger detector (Dectris, Switzerland), we have a closer look at the following line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="o">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eiger</span>           <span class="o">||</span>      <span class="n">id13</span>            <span class="o">||</span>      <span class="o">/&lt;</span><span class="n">testprepath</span><span class="o">&gt;/&lt;</span><span class="n">testnewfile</span><span class="o">&gt;</span><span class="n">_1_master</span><span class="o">.</span><span class="n">h5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">...</span>
+</pre></div>
+</div>
+<p>Then, we initialize the <code class="docutils literal notranslate"><span class="pre">files</span></code> module using the correct <code class="docutils literal notranslate"><span class="pre">prepath</span></code> argument, as suggested by the above line</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">files</span><span class="p">(</span> <span class="s1">&#39;beamline&#39;</span><span class="p">,</span><span class="s1">&#39;id13&#39;</span><span class="p">,</span><span class="o">...</span>
+<span class="go">       &#39;prepath&#39;,&#39;/path/to/data&#39;,...</span>
+<span class="go">       &#39;newfile&#39;,&#39;herz2_roi2&#39;,...</span>
+<span class="go">       &#39;detector&#39;,&#39;eiger&#39;,...</span>
+<span class="go">       &#39;scan&#39;,201);</span>
+</pre></div>
+</div>
+<p>and the <code class="docutils literal notranslate"><span class="pre">nanodiffraction</span></code> module</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">nanodiffraction</span><span class="p">(</span><span class="s1">&#39;energy&#39;</span><span class="p">,</span><span class="mf">14.6407E3</span><span class="p">,</span><span class="o">...</span>
+<span class="go">       &#39;detDistance&#39;,1.928650,...</span>
+<span class="go">       &#39;pixelsize&#39;,75E-6,...</span>
+<span class="go">       &#39;Ny&#39;,2070,...</span>
+<span class="go">       &#39;Nz&#39;,2167,...</span>
+<span class="go">       &#39;pby&#39;,1500.499,...</span>
+<span class="go">       &#39;pbz&#39;,1372.509);</span>
+</pre></div>
+</div>
+<p>and finally the <code class="docutils literal notranslate"><span class="pre">display</span></code> module</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">display</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Now, as already mentioned in the Getting Started section, we have to <cite>tell the nanodiffraction module where the data is stored</cite> using</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">link</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">e</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>as <cite>tell the visualization module what the scanning geometry was</cite> using</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">link</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="n">d</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Both lines can actually be combined into one:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">link</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="n">d</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Because no detector is perfect and contains some sort of artifacts, we have to mask out pixels with unwanted values. In this example, the detector contains modular gaps and hot pixels that we would like to mask out. Fortunately, this is easy to accomplish</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">set_mask</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">==</span><span class="p">(</span><span class="mi">2</span><span class="o">^</span><span class="mi">32</span><span class="o">-</span><span class="mi">1</span><span class="p">));</span> <span class="o">%</span> <span class="n">read</span> <span class="n">first</span> <span class="n">frame</span><span class="p">,</span> <span class="n">identify</span> <span class="nb">all</span> <span class="n">hot</span> <span class="n">pixels</span> <span class="ow">and</span> <span class="nb">set</span> <span class="n">this</span> <span class="n">logical</span> <span class="n">array</span> <span class="k">as</span> <span class="n">a</span> <span class="n">mask</span>
+</pre></div>
+</div>
+<p>The function <code class="docutils literal notranslate"><span class="pre">set_mask()</span></code> is used to store the detector mask for any later processing. It can always be retrieved using</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">current_mask</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">mask</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Following data masking we not only want to throw away unwanted pixels, we also would like to highlight which set of pixels should actually be analyzed. In diffraction, this is usually an azimuthal wedge or a radial section. In this example, we use a radial section. Only pixels between 86 and 230 (in radial pixel units) should be analyzed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">set_selection</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">radial_mask</span><span class="p">(</span><span class="s1">&#39;r1&#39;</span><span class="p">,</span><span class="mi">86</span><span class="p">,</span><span class="s1">&#39;r2&#39;</span><span class="p">,</span><span class="mi">230</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Here, we actually combined to important functions. The radial mask is defined using <code class="docutils literal notranslate"><span class="pre">radial_mask()</span></code>. <code class="docutils literal notranslate"><span class="pre">r1</span></code> and <code class="docutils literal notranslate"><span class="pre">r2</span></code> are in pixel units. If any other unit should be used, it is useful to have a look at the help function to understand the available options, see e.g.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span> <span class="n">e</span><span class="o">.</span><span class="n">radial_mask</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">%</span> <span class="n">help</span> <span class="n">nanodiffraction</span><span class="o">.</span><span class="n">radial_mask</span> <span class="n">also</span> <span class="n">works</span>
+</pre></div>
+</div>
+<p>At last, we want to bin data and only analyze data in a rectangular region-of-interest. This is done with the following line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">set_roi_and_binning</span><span class="p">(</span><span class="s1">&#39;binning&#39;</span><span class="p">,</span><span class="s1">&#39;on&#39;</span><span class="p">,</span><span class="o">...</span>
+<span class="go">    &#39;biny&#39;,4,&#39;binz&#39;,4,...</span>
+<span class="go">    &#39;detectorRoi&#39;,&#39;on&#39;,...</span>
+<span class="go">    &#39;detRoiY&#39;,around_y(200),...</span>
+<span class="go">    &#39;detRoiZ&#39;,around_z(200));</span>
+</pre></div>
+</div>
+<p>Binning and ROI’s slightly increase the complexity of the analysis. This is because the nanodiffraction class now actually needs to take care of two geometries, the original geometry and the <cite>virtual</cite> binned and cropped detector. Inspecting the current module</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>You can find e.g. the following lines:</dt>
+<dd>…
+pby: 1.4689e+03
+pbz: 1.3153e+03
+…
+pby_orig: 1.4689e+03
+pbz_orig: 1.3153e+03
+…</dd>
+</dl>
+<p>In general, this should not pose any difficulties. Whenever the function <code class="docutils literal notranslate"><span class="pre">set_roi_and_binning</span></code> is called, it automatically updates the geometry. Therefore, try the following line</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">set_roi_and_binning</span><span class="p">(</span><span class="s1">&#39;binning&#39;</span><span class="p">,</span><span class="s1">&#39;on&#39;</span><span class="p">,</span><span class="o">...</span>
+<span class="go">    &#39;biny&#39;,2,&#39;binz&#39;,2,...</span>
+<span class="go">    &#39;detectorRoi&#39;,&#39;on&#39;,...</span>
+<span class="go">    &#39;detRoiY&#39;,around_y(100),...</span>
+<span class="go">    &#39;detRoiZ&#39;,around_z(100));</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span>
+</pre></div>
+</div>
+<p>Did you see how the geometry was updated?</p>
+<p>Now, we can start analyzing the data. The last step before actually doing so requires to define the dimensions of the scan:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">set_scan_info</span><span class="p">(</span><span class="s1">&#39;SNy&#39;</span><span class="p">,</span><span class="mi">101</span><span class="p">,</span><span class="s1">&#39;SNz&#39;</span><span class="p">,</span><span class="mi">101</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The data can now be processed using the <code class="docutils literal notranslate"><span class="pre">analyze_scan</span></code> function, the most central piece of the nanodiffraction toolbox:</p>
+<blockquote>
+<div>%% analyze scan / methods can be combined using the ‘+’ notation
+% as methods: stxm | pca | crystal | symmetry | average | heal | sum can be
+% used
+&gt;&gt;&gt; result = e.analyze_scan(‘method’,’stxm+pca’);</div></blockquote>
+<p>The output of this function is structured and explained in the corresponding help section (<code class="docutils literal notranslate"><span class="pre">help</span> <span class="pre">e.analyze_scan</span></code>). The toolbox offers a helper function that can simplify the structure of the output slightly by splitting it up into separate variables, e.g.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">df</span><span class="p">,</span><span class="n">angle</span><span class="p">,</span><span class="n">w</span><span class="p">]</span> <span class="o">=</span> <span class="n">split_struct</span><span class="p">(</span><span class="n">result</span><span class="p">,{</span><span class="s1">&#39;df&#39;</span><span class="p">,</span><span class="s1">&#39;angle&#39;</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">});</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>Now we can visualize the data using</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">close</span> <span class="nb">all</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f1</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="o">.</span><span class="n">stxm</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">struct</span><span class="p">(</span><span class="s1">&#39;scale&#39;</span><span class="p">,</span><span class="mf">0.02</span><span class="p">,</span><span class="s1">&#39;sampl&#39;</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="s1">&#39;unit&#39;</span><span class="p">,</span><span class="s1">&#39;mm&#39;</span><span class="p">,</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span><span class="n">df</span><span class="o">&gt;</span><span class="mf">2e3</span><span class="p">));</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">caxis</span><span class="p">([</span><span class="mi">5000</span> <span class="mi">10000</span><span class="p">]);</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f2</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="o">.</span><span class="n">stxm</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span><span class="n">struct</span><span class="p">(</span><span class="s1">&#39;scale&#39;</span><span class="p">,</span><span class="mf">0.02</span><span class="p">,</span><span class="s1">&#39;sampl&#39;</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="s1">&#39;unit&#39;</span><span class="p">,</span><span class="s1">&#39;mm&#39;</span><span class="p">,</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span><span class="n">df</span><span class="o">&gt;</span><span class="mf">2e3</span><span class="p">));</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hold</span> <span class="n">on</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">angle</span><span class="p">);</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f3</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="o">.</span><span class="n">stxm</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span><span class="n">struct</span><span class="p">(</span><span class="s1">&#39;scale&#39;</span><span class="p">,</span><span class="mf">0.02</span><span class="p">,</span><span class="s1">&#39;sampl&#39;</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="s1">&#39;unit&#39;</span><span class="p">,</span><span class="s1">&#39;mm&#39;</span><span class="p">,</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span><span class="n">df</span><span class="o">&gt;</span><span class="mf">2e3</span><span class="p">));</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hold</span> <span class="n">on</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">pca</span><span class="o">.</span><span class="n">angle</span><span class="p">,</span><span class="n">struct</span><span class="p">(</span><span class="s1">&#39;quiver&#39;</span><span class="p">,</span><span class="s1">&#39;on&#39;</span><span class="p">));</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>In fact, the following line from the above block shows how almost all toolbox functions are structured:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="o">.</span><span class="n">stxm</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">struct</span><span class="p">(</span><span class="s1">&#39;scale&#39;</span><span class="p">,</span><span class="mf">0.02</span><span class="p">,</span><span class="s1">&#39;sampl&#39;</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="s1">&#39;unit&#39;</span><span class="p">,</span><span class="s1">&#39;mm&#39;</span><span class="p">,</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span><span class="n">df</span><span class="o">&gt;</span><span class="mf">2e3</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>All required arguments are passed directly as arguments to the function. It would therefore also suffice to use</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="o">.</span><span class="n">stxm</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which is in this case the bare minimum for a first output. To tune the output to the actual scanning dimensions and to mask out values that are outside the sample, additional arguments can be passed to the funtion in a single structure, that usually is pre-defined with default values. Note, that not all default values have to be overwritten. See the Matlab help (<code class="docutils literal notranslate"><span class="pre">help</span> <span class="pre">d.stxm</span></code>) for more information.</p>
+<table class="docutils citation" frame="void" id="nicolas2018" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[Nicolas2018]</a></td><td>Zenodo</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="nicolas2018a" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[Nicolas2018a]</a></td><td>Toolbox-paper</td></tr>
+</tbody>
+</table>
 </div>
 
 

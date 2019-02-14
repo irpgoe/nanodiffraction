@@ -6,7 +6,9 @@
 Documentation of the nanodiffraction toolbox
 ============================================
 
-The nanodiffraction toolbox is a set of Matlab classes and functions used for the analysis of scattering and diffraction data. It is primarily suited for the batch analysis of small-angle scattering data obtained in scanning experiments. It's main purpose is also described in Nicolas et al., J Synchrotron Radiat, 2018. 
+The nanodiffraction toolbox is a set of Matlab classes and functions used for the analysis of scattering and diffraction data. It is primarily suited for the batch analysis of small-angle scattering data obtained in scanning experiments. It's main purpose is also described in [Nicolas2018b]_.
+
+.. [Nicolas2018b] Nicolas et al., J Synchrotron Radiat, 2018. 
 
 .. toctree::
    :maxdepth: 2
@@ -19,8 +21,10 @@ The nanodiffraction toolbox is a set of Matlab classes and functions used for th
    :maxdepth: 2
    :caption: Working with the nanodiffraction toolbox
 
-   guide/guide
-   geometry/geometry
+   guide/guide.rst
+   geometry/geometry.rst
+   mex/mex.rst
+   colormaps/colormaps.rst
     
 
 Indices and tables

@@ -10,7 +10,11 @@ If you want to analyze scattering data, let's get started!
 Installation
 ============
 
-The toolbox is available from GitHub, see http://irpgoe.github.io/nanodiffraction for more information. Simply pull the toolbox into a directory of your choice and add the directory to your Matlab search path.
+The toolbox is available from GitHub, see http://irpgoe.github.io/nanodiffraction for more information. Simply clone the toolbox into a directory of your choice using
+
+    >>> git clone https://github.com/irpgoe/nanodiffraction.git
+
+and add the directory to your Matlab search path.
 
 
 Reading data
