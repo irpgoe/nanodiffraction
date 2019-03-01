@@ -12,10 +12,11 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
-
+import os
+import sys
+#sys.path.insert(0, os.path.abspath('.'))
+#sys.path.append('/home/AG_Salditt/Projects_cellular_diffraction_and_actin/nanodiffraction')
+sys.path.insert(0, os.path.abspath('../..'))
 
 # -- Project information -----------------------------------------------------
 
@@ -41,7 +42,14 @@ release = u'1.0'
 extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.githubpages',
+	'sphinx.ext.autodoc',
+    'sphinxcontrib.matlab',
 ]
+
+# matlab source code
+matlab_src_dir = '/home/AG_Salditt/Projects_cellular_diffraction_and_actin/nanodiffraction'
+
+primary_domain = 'mat'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -68,7 +76,9 @@ language = None
 exclude_patterns = []
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = None
+pygments_style = 'default'
+highlight_language = 'matlab'
+
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -100,6 +110,12 @@ html_theme_options = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+html_context = {
+    'css_files': [
+        '_static/theme_overrides.css',  # override wide tables in RTD theme
+        ],
+     }
+     
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
 #

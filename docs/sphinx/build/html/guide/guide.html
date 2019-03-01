@@ -33,6 +33,7 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Geometry" href="../geometry/geometry.html" />
@@ -84,11 +85,25 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/getting_started.html">Getting Started</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Working with the nanodiffraction toolbox</span></p>
+<p class="caption"><span class="caption-text">Working with the toolbox</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../geometry/geometry.html">Geometry</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../mex/mex.html">Mex-functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../colormaps/colormaps.html">Colormaps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Toolbox functionality</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../files/files.html">Files module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nanodiffraction/nanodiffraction.html">Nanodiffraction module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../display/display.html">Display module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../functions/functions.html">External functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dependencies/dependencies.html">External dependencies</a></li>
+</ul>
+<p class="caption"><span class="caption-text">References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references/references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../matlab/matlab.html">Matlab API</a></li>
 </ul>
 
             
@@ -155,7 +170,7 @@
             
   <div class="section" id="guide">
 <span id="id1"></span><h1>Guide<a class="headerlink" href="#guide" title="Permalink to this headline">¶</a></h1>
-<p>In this guide we will analyze data available online <a class="reference internal" href="#nicolas2018" id="id2">[Nicolas2018]</a> and described in <a class="reference internal" href="#nicolas2018a" id="id3">[Nicolas2018a]</a>. Once the data was downloaded, we can start Matlab. At this stage, there is however already one important caveat. The available h5 files are compressed using LZ4 compression. This filter is not part of the standard filter set available from the h5 library, see <a class="reference external" href="https://support.hdfgroup.org/services/filters.html">https://support.hdfgroup.org/services/filters.html</a>. The filter is however available for download. On a linux machine, once the filter is downloaded, it has to be made available by exporting the path to the filter</p>
+<p>In this guide we will analyze data available online <a class="reference internal" href="../references/references.html#nicolas2017b" id="id2">[Nicolas2017b]</a> and described in <a class="reference internal" href="../references/references.html#nicolas2017a" id="id3">[Nicolas2017a]</a>. Once the data was downloaded, we can start Matlab. At this stage, there is however already one important caveat. The available h5 files are compressed using LZ4 compression. This filter is not part of the standard filter set available from the h5 library, see <a class="reference external" href="https://support.hdfgroup.org/services/filters.html">https://support.hdfgroup.org/services/filters.html</a>. The filter is however available for download. On a linux machine, once the filter is downloaded, it has to be made available by exporting the path to the filter</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">HDF5_PLUGIN_PATH</span> <span class="o">=</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">plugin</span>
 </pre></div>
 </div>
@@ -301,18 +316,6 @@ pbz_orig: 1.3153e+03
 </pre></div>
 </div>
 <p>which is in this case the bare minimum for a first output. To tune the output to the actual scanning dimensions and to mask out values that are outside the sample, additional arguments can be passed to the funtion in a single structure, that usually is pre-defined with default values. Note, that not all default values have to be overwritten. See the Matlab help (<code class="docutils literal notranslate"><span class="pre">help</span> <span class="pre">d.stxm</span></code>) for more information.</p>
-<table class="docutils citation" frame="void" id="nicolas2018" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id2">[Nicolas2018]</a></td><td>Zenodo</td></tr>
-</tbody>
-</table>
-<table class="docutils citation" frame="void" id="nicolas2018a" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id3">[Nicolas2018a]</a></td><td>Toolbox-paper</td></tr>
-</tbody>
-</table>
 </div>
 
 

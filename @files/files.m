@@ -95,7 +95,7 @@ classdef files<handle
         fn;         % see help files
         fpf;        % see help files
         firstFile;  % file number of the first frame in a scan
-        slash;      % either '/' or '\' based on the system in use
+        slash;      % either / or \ based on the system in use
         
         % internal use only
         detectors = struct();
@@ -160,29 +160,29 @@ classdef files<handle
             % SHOW_CONFIGURATION  shows which detectors at which beamline
             % are currently implemented.
             %   
-            %   show_configuration(opts) 
+            %   ``show_configuration(opts)`` 
             %
             % The following options are supported:
-            %
-            %     opts:: [see default values below] (optional)
+            %   opts: [see default values below] (optional)
             %       Structure that can contain the following fields. Note,
             %       that all fields are optional. Default values that are
             %       otherwise used are as usual given in angle brackets:
             %
-            %           - allDefaults:: [0] 
+            %       allDefaults: [0] 
             %           Show all detectors at all beamlines that are
             %           currently implemented.
             %
-            %           - useDefaults:: [1]
+            %       useDefaults: [1]
             %           Use standard settings for the path, newfile, etc...
             %
             % Example:
-            %   f = files(); 
-            %   f.show_configuration(struct('allDefaults',1,'useDefaults',1));
+            %   See the following example for help::
+            %       f = files(); 
+            %       f.show_configuration(struct('allDefaults',1,'useDefaults',1));
             %
             % Output arguments:
             %   This function does not return any arguments.
-            
+            %           
 
             
             defaults = struct('useDefaults',1,'allDefaults',0);
@@ -248,19 +248,16 @@ classdef files<handle
             % for each beamline. This function should be adapted to ones
             % specific needs. 
             %   
-            %   configuration = path_by_beamline(beamline,detector,prepath,newfile,scannr) 
+            %   ``configuration = path_by_beamline(beamline,detector,prepath,newfile,scannr)`` 
             %
             % The following arguments are supported:
-            %     beamline:: [] (required)
-            %       Beamline short name. As described in help files.
-            %
-            %       Options: 'p10'|'id13'|'id02'|'bessy'
+            %     beamline: [] (required)
+            %       | Beamline short name. As described in help files.
+            %       | Options: 'p10'|'id13'|'id02'|'bessy'
             %
             %     detector: [] (required)
-            %       Detector. As described in help files.
-            %
-            %       Options:
-            %       'pilatus'|'eiger'|'pirra'|'rayonix'|'xia'|'spec'
+            %       | Detector. As described in help files.
+            %       | Options: 'eiger'|'pirra'|'rayonix'|'xia'|'spec'
             %
             %     prepath: [] (required)
             %       Path to data directory. 
@@ -275,8 +272,9 @@ classdef files<handle
             %   This function is only used internally.
             %
             % Output arguments:
-            %   configuration:: Configuration that is passed to the
-            %   respective detector module.
+            %   configuration: 
+            %       Configuration that is passed to the
+            %       respective detector module.
             %
             
     
@@ -378,18 +376,20 @@ classdef files<handle
         function set_eiger_scan(obj,newfile,scan)
             % SET_EIGER_SCAN  updates the eiger module.
             %   
-            %   set_eiger_scan(newfile, scan) 
+            %   ``set_eiger_scan(newfile, scan)`` 
             %
             % The following arguments are supported:
-            %     newfile:: [] (required)
+            %     newfile: [] (required)
             %       Scan name.
             %
-            %     scan:: [] (required)
+            %     scan: [] (required)
             %       Scan number.
             %
             % Example:
-            %   f = files(<some configuration>);
-            %   f.set_eiger_scan('raddamage1',44);
+            %   See the following example for help::
+            %
+            %      f = files(<some configuration>);
+            %      f.set_eiger_scan('raddamage1',44);
             %
             % Output arguments:
             %   This function does not return any arguments.
@@ -431,23 +431,25 @@ classdef files<handle
         function set_xia_scan(obj,newfile,scan,fpf)
             % SET_XIA_SCAN  updates the xia module.
             %   
-            %   set_xia_scan(newfile, scan, fpf) 
+            %   ``set_xia_scan(newfile, scan, fpf)`` 
             %
             % The following arguments are supported:
             %
-            %     newfile:: [] (required)
+            %     newfile: [] (required)
             %       Scan name.
             %
-            %     scan:: [] (required)
+            %     scan: [] (required)
             %       Scan number.
             %
-            %     fpf:: [] (required)
+            %     fpf: [] (required)
             %       Frames per xia-file. This is typically the number of
             %       scan points per fast axis.
             %
             % Example:
-            %   f = files(<some configuration>);
-            %   f.set_xia_scan('raddamage1',44,201);
+            %   See the following example for help::
+            %
+            %      f = files(<some configuration>);
+            %      f.set_xia_scan('raddamage1',44,201);
             %
             % Output arguments:
             %   This function does not return any arguments.
@@ -465,17 +467,18 @@ classdef files<handle
         function set_spec_scan(obj,newfile)
             % SET_SPEC_SCAN  updates the spec module.
             %   
-            %   SET_SPEC_SCAN(newfile) 
+            %   ``SET_SPEC_SCAN(newfile)`` 
             %
             % The following arguments are supported:
-            %
-            %     newfile:: [] (required)
+            %     newfile: [] (required)
             %       Scan name.
             %
             % Example:
-            %   f = files(<some configuration>);
-            %   f.set_spec_scan('raddamage1');
-            %   specdata = f.read(1); % reads scan #1 from spec-file
+            %   See the following example for help::
+            %
+            %      f = files(<some configuration>);
+            %       f.set_spec_scan('raddamage1');
+            %       specdata = f.read(1); % reads scan #1 from spec-file
             %
             % Output arguments:
             %   This function does not return any arguments.
@@ -488,23 +491,24 @@ classdef files<handle
         end
         
 
-        function [out_string] = remove_leading_trailing_slashes(~,string)
+        function [out_string] = remove_leading_trailing_slashes(obj,string)
             % REMOVE_LEADING_TRAILING_SLASHES  removes any leading or
             % trailing slashes from a given string. This function ensures,
             % that the user does need to worry about whether a string
             % should start or end with a slash or backslash character.
             %   
-            %   remove_leading_trailing_slashes(string) 
+            %   ``remove_leading_trailing_slashes(string)`` 
             %
             % The following arguments are supported:
-            %
-            %     string:: []
+            %     string: []
             %       Input string.
             %
             % Example:
-            %   f = files(<some configuration>);
-            %   out_string = ...
-            %       f.remove_leading_trailing_slashes('/home/testdir/raddamage1/');
+            %   See the following example for help::
+            %
+            %       f = files(<some configuration>);
+            %       out_string = ...
+            %           f.remove_leading_trailing_slashes('/home/testdir/raddamage1/');
             %
             % Output arguments:
             %   This function does not return any arguments.
@@ -515,10 +519,13 @@ classdef files<handle
                 return;
             end
             
-            if strcmp(string(1),'/') || strcmp(string(1),'\')
+            forw_sl = '/';
+            back_sl = '\';            
+            
+            if strcmp(string(1),forw_sl) || strcmp(string(1),back_sl)
                 string(1) = []; 
             end
-            if strcmp(string(end),'/') || strcmp(string(end),'\')
+            if strcmp(string(end),forw_sl) || strcmp(string(end),back_sl)
                 string(end) = []; 
             else
                 % nothing to do
@@ -589,10 +596,10 @@ classdef files<handle
         function data = read(obj,varargin)
             % READ  reads data frame from the requested detector module.
             %   
-            %   data = read(fn) 
+            %   ``data = read(fn)`` 
             %
             % The following arguments are supported:
-            %     fn:: []
+            %     fn: []
             %       File number. This number indicates the n'th frame that
             %       was collected within the session identified by the
             %       newfile name. It is NOT the frame number. The frame
@@ -601,11 +608,14 @@ classdef files<handle
             %       during one session). 
             %
             % Example:
-            %   f = files(<some settings>);
-            %   raw_data = f.read(19);
+            %   See the following example for help::
+            %
+            %      f = files(<some settings>);
+            %       raw_data = f.read(19);
             %
             % Output arguments:
-            %   data:: Raw detector frame.
+            %   data: 
+            %       Raw detector frame.
             %
             
             % if frame number is given
@@ -686,43 +696,49 @@ classdef files<handle
 %         end
            
         
-        function [string, slash] = which_slash(~, string)
+        function [string, slash] = which_slash(obj, string)
             % WHICH_SLASH  checks for slashes in a string. If the string 
             % contains slashes they have to conform to naming convenctions 
             % based on the system (unix, windows) in use
             %
-            %   [string,slash] = which_slash(string)
+            %   ``[string,slash] = which_slash(string)``
             %
             % The following arguments are supported:
-            %     string:: (required)
+            %     string: (required)
             %        This can be any string.
             %
             % Example:
-            %   f = files();
-            %   [out_string,sl] = f.which_slash('A test \ string /');
+            %   See the following example for help::
+            %
+            %      f = files();
+            %      [out_string,sl] = f.which_slash('A test \ string /');
             %
             % Output arguments:
-            %   string:: A string where all slashes or backslashes have
-            %   been replaced by the correct slash or backslash, based on
-            %   the computer system used (mac, pc, unix).
+            %   string: 
+            %       A string where all slashes or backslashes have
+            %       been replaced by the correct slash or backslash, based on
+            %       the computer system used (mac, pc, unix).
             %
-            %   slash:: The slash that should be used for paths to
-            %   directories of files, based on the computer system used 
-            %   (mac, pc, unix).
+            %   slash: 
+            %       The slash that should be used for paths to
+            %       directories of files, based on the computer system used 
+            %       (mac, pc, unix).
             %
             
+            forw_sl = '/';
+            back_sl = '\';                
             
             if ispc
-                slash = '\';
-                string = strrep(string, '/', '\');
+                slash = back_sl;
+                string = strrep(string, forw_sl, back_sl);
             elseif isunix
-                slash = '/';
-                string = strrep(string, '\', '/');
+                slash = forw_sl;
+                string = strrep(string, back_sl, forw_sl);
             elseif ismac
-                slash = '/';
-                string = strrep(string, '\', '/');
+                slash = forw_sl;
+                string = strrep(string, back_sl, forw_sl);
             else
-                slash = '/';
+                slash = forw_sl;
             end
         end
         

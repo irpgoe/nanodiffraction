@@ -1,0 +1,366 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Files module &mdash; nanodiffraction 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Nanodiffraction module" href="../nanodiffraction/nanodiffraction.html" />
+    <link rel="prev" title="Colormaps" href="../colormaps/colormaps.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> nanodiffraction
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Working with the toolbox</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guide/guide.html">Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../geometry/geometry.html">Geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mex/mex.html">Mex-functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../colormaps/colormaps.html">Colormaps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Toolbox functionality</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Files module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#initialization">Initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#detector-modules">Detector modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#methods">Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../nanodiffraction/nanodiffraction.html">Nanodiffraction module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../display/display.html">Display module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../functions/functions.html">External functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dependencies/dependencies.html">External dependencies</a></li>
+</ul>
+<p class="caption"><span class="caption-text">References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references/references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../matlab/matlab.html">Matlab API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">nanodiffraction</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Files module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/files/files.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="files-module">
+<span id="files"></span><h1>Files module<a class="headerlink" href="#files-module" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="initialization">
+<h2>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">files</span></code> module is initialized as in the following example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">files</span><span class="p">(</span> <span class="s1">&#39;beamline&#39;</span><span class="p">,</span><span class="s1">&#39;id13&#39;</span><span class="p">,</span><span class="o">...</span>
+<span class="go">       &#39;prepath&#39;,&#39;/path/to/data&#39;,...</span>
+<span class="go">       &#39;newfile&#39;,&#39;herz2_roi2&#39;,...</span>
+<span class="go">       &#39;detector&#39;,&#39;eiger&#39;,...</span>
+<span class="go">       &#39;scan&#39;,201);</span>
+</pre></div>
+</div>
+<p>By defining <code class="docutils literal notranslate"><span class="pre">eiger</span></code> as the type of detector used, the <code class="docutils literal notranslate"><span class="pre">eiger</span></code> module is loaded and initialized, see also <a class="reference internal" href="#sec-detector-modules"><span class="std std-ref">Detector modules</span></a>.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Assuming you would like to read the first frame that was acquired for a given file prefix (newfile). To do this, the above section of code would work. Typically, not more than that should be necessary to read data. Once, the files module has been initialized, data can be read using</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>While this is the most central function that the files class offers, another frequent function that has to be used is <code class="docutils literal notranslate"><span class="pre">files.set_&lt;detector&gt;_scan</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">files.set_eiger_scan</span></code>. These functions define which data set starting with a given prefix (newfile) should be analyzed.</p>
+</div>
+<div class="section" id="detector-modules">
+<span id="sec-detector-modules"></span><h2>Detector modules<a class="headerlink" href="#detector-modules" title="Permalink to this headline">¶</a></h2>
+<p>Assuming you would like to read the first frame that was acquired for a given file prefix (newfile). To do this, the above section of code would work. If you would like to refrain from using the <code class="docutils literal notranslate"><span class="pre">files</span></code> class, you can more directly use the eiger module instead. This should give you more flexibility if a different task not directly related to scanning experiments should be accomplished instead. For this purpose, you can initialize the eiger module as shown in the following example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">framesPerFile</span> <span class="o">=</span> <span class="mi">126</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">eiger</span><span class="p">(</span><span class="n">struct</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">,</span><span class="s1">&#39;/path/to/data&#39;</span><span class="p">)</span> <span class="p">,</span> <span class="n">framesPerFile</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>For a Pilatus detector, initialization would look something like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">pilatus</span><span class="p">(</span><span class="n">struct</span><span class="p">(</span><span class="s1">&#39;filename&#39;</span><span class="p">,</span><span class="s1">&#39;my_file_prefix&#39;</span><span class="p">,</span><span class="s1">&#39;path&#39;</span><span class="p">,</span><span class="s1">&#39;/path/to/data&#39;</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Both classes in this example have a method <code class="docutils literal notranslate"><span class="pre">read</span></code> that can be used to access the data. The usage is the same as using <code class="docutils literal notranslate"><span class="pre">files.read</span></code>, e.g.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">%</span> <span class="ow">or</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="colwidths-given docutils" id="id1">
+<caption><span class="caption-text">List of parameters used by the files module</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Comment</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>prepath</td>
+<td>Path to folder where the data is stored. The prepath depends on the beamline you choose. Check help <code class="docutils literal notranslate"><span class="pre">path_by_beamline</span></code> for more information on the default settings. Also check <code class="docutils literal notranslate"><span class="pre">show_configuration</span></code> for more information.</td>
+</tr>
+<tr class="row-odd"><td>newfile</td>
+<td>File name prefix.</td>
+</tr>
+<tr class="row-even"><td>beamline</td>
+<td>The beamline argument is necessary, because it is referred to when a certain standard file naming convention should be used. See the help on path_by_beamline for more information.</td>
+</tr>
+<tr class="row-odd"><td>detector</td>
+<td>Type of detector used in the experiment. Each detector is contained in a separate module, such that each module could also be used independently.</td>
+</tr>
+<tr class="row-even"><td>scan</td>
+<td>Number of the scan. Be aware, that SPEC or other logging software might use a different numbering scheme than the detector. The scan number always refers to the number that is appended to the filename.</td>
+</tr>
+<tr class="row-odd"><td>fn</td>
+<td>File number. Note, that some detectors start the numbering scheme with 1, while others start with 0.</td>
+</tr>
+<tr class="row-even"><td>fpf</td>
+<td>Frames per file. If a container format is used that collects a given number (the fpf) of scattering patterns, this number of frames per container is termed “frames per file”. E.g. the Eiger detector uses the hdf5 container format. fpf can be an arbitrary number, but usually it is the number of scan points along the fast axis.</td>
+</tr>
+<tr class="row-odd"><td>firstFile</td>
+<td>Defines the first file number that was part of a scan. Although, when the Eiger detector is used this number is usually 1, this is not necessarily the case. The Pilatus detector for example writes single frames instead of blocks and uses a consecutive numbering scheme. Therefore, the first file in the scan has to be indicated. Note that this value is usually set using <code class="docutils literal notranslate"><span class="pre">nanodiffraction.set_scan_info</span></code>.</td>
+</tr>
+<tr class="row-even"><td>slash</td>
+<td>Used only internally.</td>
+</tr>
+<tr class="row-odd"><td>detectors</td>
+<td>Used only internally.</td>
+</tr>
+<tr class="row-even"><td>debug</td>
+<td>0 by default. If set to 1 can print more information if e.g. a file cannot be read.</td>
+</tr>
+<tr class="row-odd"><td>implemented</td>
+<td>Used only internally.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="colwidths-given docutils" id="id2">
+<caption><span class="caption-text">List of methods implemented in the files module</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Method</th>
+<th class="head">Comment</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>read</td>
+<td>Reads a single file. Requires the file number. The file name and location will be determined from the given settings.</td>
+</tr>
+<tr class="row-odd"><td>set_eiger_scan</td>
+<td>Routine that updates the eiger class with new scan information.</td>
+</tr>
+<tr class="row-even"><td>set_spec_scan</td>
+<td>Routine that updates the spec class with new scan information.</td>
+</tr>
+<tr class="row-odd"><td>set_xia_scan</td>
+<td>Routine that updates the xia class with new scan information.</td>
+</tr>
+<tr class="row-even"><td>set_pilatus_scan</td>
+<td>Routine that updates the pilatus class with new scan information.</td>
+</tr>
+<tr class="row-odd"><td>which_slash</td>
+<td>Used only internally.</td>
+</tr>
+<tr class="row-even"><td>show_configuration</td>
+<td>Function that can be used to display the current path settings and all default settings.</td>
+</tr>
+<tr class="row-odd"><td>remove_leading_trailing_slashes</td>
+<td>Used only internally.</td>
+</tr>
+<tr class="row-even"><td>path_by_beamline</td>
+<td>Calculates the data path based on the beamline at which the experiment took place. Each beamline usually relies on their own folder structure. This function needs to be extended to accomodate for any uncommon directory structure.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../nanodiffraction/nanodiffraction.html" class="btn btn-neutral float-right" title="Nanodiffraction module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../colormaps/colormaps.html" class="btn btn-neutral float-left" title="Colormaps" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Jan-David Nicolas
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

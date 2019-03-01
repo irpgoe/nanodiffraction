@@ -33,6 +33,7 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Getting Started" href="getting_started/getting_started.html" /> 
@@ -83,12 +84,25 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="getting_started/getting_started.html">Getting Started</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Working with the nanodiffraction toolbox</span></p>
+<p class="caption"><span class="caption-text">Working with the toolbox</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="guide/guide.html">Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="geometry/geometry.html">Geometry</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mex/mex.html">Mex-functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="colormaps/colormaps.html">Colormaps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Toolbox functionality</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="files/files.html">Files module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nanodiffraction/nanodiffraction.html">Nanodiffraction module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="display/display.html">Display module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/functions.html">External functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dependencies/dependencies.html">External dependencies</a></li>
+</ul>
+<p class="caption"><span class="caption-text">References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="references/references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matlab/matlab.html">Matlab API</a></li>
 </ul>
 
             
@@ -155,13 +169,11 @@
             
   <div class="section" id="documentation-of-the-nanodiffraction-toolbox">
 <h1>Documentation of the nanodiffraction toolbox<a class="headerlink" href="#documentation-of-the-nanodiffraction-toolbox" title="Permalink to this headline">¶</a></h1>
-<p>The nanodiffraction toolbox is a set of Matlab classes and functions used for the analysis of scattering and diffraction data. It is primarily suited for the batch analysis of small-angle scattering data obtained in scanning experiments. It’s main purpose is also described in <a class="reference internal" href="#nicolas2018b" id="id1">[Nicolas2018b]</a>.</p>
-<table class="docutils citation" frame="void" id="nicolas2018b" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[Nicolas2018b]</a></td><td>Nicolas et al., J Synchrotron Radiat, 2018.</td></tr>
-</tbody>
-</table>
+<p>The nanodiffraction toolbox is a set of Matlab classes and functions used for the analysis of scattering and diffraction data. It is primarily suited for the batch analysis of small-angle scattering data obtained in scanning experiments. It’s main purpose is also described in <a class="reference internal" href="references/references.html#nicolas2017a" id="id1">[Nicolas2017a]</a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Nicolas et al. (2017), Scanning X-ray diffraction on cardiac tissue: automatized data analysis and processing, J Synchrotron Radiat 24, 1163-1172.</p>
+</div>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Getting Started</span></p>
 <ul>
@@ -176,7 +188,7 @@
 </ul>
 </div>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Working with the nanodiffraction toolbox</span></p>
+<p class="caption"><span class="caption-text">Working with the toolbox</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="guide/guide.html">Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="geometry/geometry.html">Geometry</a></li>
@@ -184,6 +196,51 @@
 <li class="toctree-l1"><a class="reference internal" href="colormaps/colormaps.html">Colormaps</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="colormaps/colormaps.html#visualizing-phase-angles">Visualizing phase angles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="colormaps/colormaps.html#visualizing-scattering-maps">Visualizing scattering maps</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Toolbox functionality</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="files/files.html">Files module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="files/files.html#initialization">Initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="files/files.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="files/files.html#detector-modules">Detector modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="files/files.html#parameters">Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="files/files.html#methods">Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nanodiffraction/nanodiffraction.html">Nanodiffraction module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nanodiffraction/nanodiffraction.html#initialization">Initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nanodiffraction/nanodiffraction.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nanodiffraction/nanodiffraction.html#parameters">Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nanodiffraction/nanodiffraction.html#methods">Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="display/display.html">Display module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="display/display.html#initialization">Initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="display/display.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="display/display.html#parameters">Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="display/display.html#methods">Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="functions/functions.html">External functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="functions/functions.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dependencies/dependencies.html">External dependencies</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="references/references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matlab/matlab.html">Matlab API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="matlab/files/filesAPI.html">Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matlab/nanodiffraction/nanodiffractionAPI.html">Nanodiffraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matlab/display/displayAPI.html">Display</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matlab/functions/functionsAPI.html">Functions</a></li>
 </ul>
 </li>
 </ul>

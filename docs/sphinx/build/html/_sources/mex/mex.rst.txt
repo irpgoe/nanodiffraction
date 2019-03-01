@@ -6,10 +6,10 @@ Mex-functions
 
 Mex-functions are pre-compiled C-functions that can significantly improve computational speed. Mex-functions are used primarily in the context of batch processing where a small increase in a single computation, e.g. the computation of the orientation of the scattering signal, can significantly impact overall computation time. At this time, there are only a small number of mex functions available, see the following list:
 
-    * STXM
-    * PCA
+1. STXM
+2. PCA
     
-Mex functions were compiled on a linux machine. Below is an example where we have compiled the function pca.c implementing a principal component analysis for the special case of scattering patterns. The C-function was compiled using the ``gcc```compiler and the following command:
+Mex functions were compiled on a linux machine. Below is an example where we have compiled the function pca.c implementing a principal component analysis for the special case of scattering patterns. The C-function was compiled using the ``gcc`` compiler and the following command:
 
     >>> gcc -Wall -fPIC -c pca.c -lgsl -lgslcblas -o pca.o
     

@@ -4,7 +4,7 @@
 Guide
 #####
 
-In this guide we will analyze data available online [Nicolas2018]_ and described in [Nicolas2018a]_. Once the data was downloaded, we can start Matlab. At this stage, there is however already one important caveat. The available h5 files are compressed using LZ4 compression. This filter is not part of the standard filter set available from the h5 library, see https://support.hdfgroup.org/services/filters.html. The filter is however available for download. On a linux machine, once the filter is downloaded, it has to be made available by exporting the path to the filter  
+In this guide we will analyze data available online [Nicolas2017b]_ and described in [Nicolas2017a]_. Once the data was downloaded, we can start Matlab. At this stage, there is however already one important caveat. The available h5 files are compressed using LZ4 compression. This filter is not part of the standard filter set available from the h5 library, see https://support.hdfgroup.org/services/filters.html. The filter is however available for download. On a linux machine, once the filter is downloaded, it has to be made available by exporting the path to the filter  
 
     >>> HDF5_PLUGIN_PATH = /path/to/plugin
     
@@ -149,9 +149,3 @@ All required arguments are passed directly as arguments to the function. It woul
     
 which is in this case the bare minimum for a first output. To tune the output to the actual scanning dimensions and to mask out values that are outside the sample, additional arguments can be passed to the funtion in a single structure, that usually is pre-defined with default values. Note, that not all default values have to be overwritten. See the Matlab help (``help d.stxm``) for more information.
 
-
-
-
-
-.. [Nicolas2018] Zenodo
-.. [Nicolas2018a] Toolbox-paper

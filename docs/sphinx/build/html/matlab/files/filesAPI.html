@@ -1,0 +1,585 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Files &mdash; nanodiffraction 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Nanodiffraction" href="../nanodiffraction/nanodiffractionAPI.html" />
+    <link rel="prev" title="Matlab API" href="../matlab.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> nanodiffraction
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started/getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Working with the toolbox</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/guide.html">Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../geometry/geometry.html">Geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../mex/mex.html">Mex-functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../colormaps/colormaps.html">Colormaps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Toolbox functionality</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../files/files.html">Files module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../nanodiffraction/nanodiffraction.html">Nanodiffraction module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../display/display.html">Display module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../functions/functions.html">External functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dependencies/dependencies.html">External dependencies</a></li>
+</ul>
+<p class="caption"><span class="caption-text">References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../references/references.html">References</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../matlab.html">Matlab API</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../nanodiffraction/nanodiffractionAPI.html">Nanodiffraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../display/displayAPI.html">Display</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../functions/functionsAPI.html">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">nanodiffraction</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../matlab.html">Matlab API</a> &raquo;</li>
+        
+      <li>Files</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/matlab/files/filesAPI.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-&#64;files">
+<span id="files"></span><span id="filesapi"></span><h1>Files<a class="headerlink" href="#module-@files" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="&#64;files.files">
+<em class="property">class </em><code class="descclassname">&#64;files.</code><code class="descname">files</code><span class="sig-paren">(</span><em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#@files.files" title="Permalink to this definition">¶</a></dt>
+<dd><p>FILES  Class to process file requests for nanodiffraction data.
+FILES accepts name value pairs and requires in general the path to
+certain scan parameters such as the directory of data storage, file
+naming conventions (prefixes and suffixes) and the type of detector
+used. Once initialized properly, it should be linked to a
+nanodiffraction class so that file reading will be done
+automatically based on the scan frame number. Use link() to connect a
+FILES class to a NANODIFFRACTION class.</p>
+<blockquote>
+<div><p>DATA = FILES(VARARGIN) creates a files object, with a list of 
+arguments provided in VARARGIN. VARARGIN consists of NAME - VALUE 
+pairs. NAME is a string describing the option and VALUE can be any 
+input. Typically, a specific input is requested by default and an 
+error is thrown if the types do not agree.</p>
+<p>The following options are supported:</p>
+<dl class="docutils">
+<dt>prepath:: [homegroups/Labdata-Archive/AG_Salditt/Messzeiten_Rohdaten/2016/extern/ESRF_ID13_SC4304/id13/inhouse/DATA/AUTO-TRANSFER/eiger1] </dt>
+<dd>Path to folder where the data is stored. The prepath depends 
+on the beamline you choose. Check help path_by_beamline for more
+information on the default settings.</dd>
+<dt>beamline:: [id13]</dt>
+<dd><p class="first">The beamline argument is necessary, because it is referred to
+when a certain standard file naming convention should be used.
+See the help on path_by_beamline for more information.</p>
+<blockquote class="last">
+<div>Options: ‘id13’|’p10’|’id02’|’bessy’|’none’</div></blockquote>
+</dd>
+<dt>newfile:: [detdistcalib] </dt>
+<dd>File name prefix.</dd>
+<dt>detector:: [eiger] </dt>
+<dd><p class="first">Type of detector used in the experiment.
+Each detector is currently contained in a separate module.</p>
+<blockquote class="last">
+<div>Options: ‘eiger’|’pilatus’|’rayonix’|’xia’</div></blockquote>
+</dd>
+<dt>fn:: [1]</dt>
+<dd>File number. Note, that some detectors start the numbering scheme
+with 1, while others start with 0.</dd>
+<dt>fpf:: [101]</dt>
+<dd>Frames per file. If a container format is used that collects a
+given number (the fpf) of scattering patterns, this number of
+frames per container is termed ‘’. E.g. the Eiger
+detector uses the hdf5 container format. fpf can be an arbitrary
+number, but usually it is the number of scan points along the 
+fast axis.</dd>
+<dt>scan:: [210]</dt>
+<dd>Number of the scan. Be aware, that SPEC or other logging software
+might use a different numbering scheme than the detector. The
+scan number always refers to the number that is appended to the
+filename.</dd>
+<dt>Example::</dt>
+<dd><dl class="first last docutils">
+<dt>fp = files( ‘beamline’,’id13’,…</dt>
+<dd>‘prepath’,[prepath ‘Labdata-Archive/AG_Salditt/Messzeiten_Rohdaten/2016/extern/ESRF_ID13_SC4304/id13/inhouse/DATA/AUTO-TRANSFER/eiger1’],…
+‘newfile’,’herz2_roi2’,…
+‘detector’,’eiger’,…
+‘scan’,201);</dd>
+</dl>
+</dd>
+<dt>Methods::</dt>
+<dd>See seperate help for each method.</dd>
+</dl>
+</div></blockquote>
+<dl class="method">
+<dt id="&#64;files.files.path_by_beamline">
+<code class="descname">path_by_beamline</code><span class="sig-paren">(</span><em>beamline</em>, <em>detector</em>, <em>prepath</em>, <em>newfile</em>, <em>scannr</em><span class="sig-paren">)</span><a class="headerlink" href="#@files.files.path_by_beamline" title="Permalink to this definition">¶</a></dt>
+<dd><p>PATH_BY_BEAMLINE  contains the appropriate folder structure
+for each beamline. This function should be adapted to ones
+specific needs.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">configuration</span> <span class="pre">=</span> <span class="pre">path_by_beamline(beamline,detector,prepath,newfile,scannr)</span></code></div></blockquote>
+<dl class="docutils">
+<dt>The following arguments are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>beamline: [] (required)</dt>
+<dd><div class="first last line-block">
+<div class="line">Beamline short name. As described in help files.</div>
+<div class="line">Options: ‘p10’|’id13’|’id02’|’bessy’</div>
+</div>
+</dd>
+<dt>detector: [] (required)</dt>
+<dd><div class="first last line-block">
+<div class="line">Detector. As described in help files.</div>
+<div class="line">Options: ‘eiger’|’pirra’|’rayonix’|’xia’|’spec’</div>
+</div>
+</dd>
+<dt>prepath: [] (required)</dt>
+<dd>Path to data directory.</dd>
+<dt>newfile: [] (required)</dt>
+<dd>Name of scan.</dd>
+<dt>scannr: [] (required)</dt>
+<dd>Scan number.</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd>This function is only used internally.</dd>
+<dt>Output arguments:</dt>
+<dd><dl class="first last docutils">
+<dt>configuration: </dt>
+<dd>Configuration that is passed to the
+respective detector module.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;files.files.read">
+<code class="descname">read</code><span class="sig-paren">(</span><em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#@files.files.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>READ  reads data frame from the requested detector module.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">data</span> <span class="pre">=</span> <span class="pre">read(fn)</span></code></div></blockquote>
+<dl class="docutils">
+<dt>The following arguments are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>fn: []</dt>
+<dd>File number. This number indicates the n’th frame that
+was collected within the session identified by the
+newfile name. It is NOT the frame number. The frame
+number represents the m’th frame collected during one
+scan (however, multiple scans could have been performed 
+during one session).</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="p">=</span> <span class="n">files</span><span class="p">(</span><span class="o">&lt;</span><span class="n">some</span> <span class="n">settings</span><span class="o">&gt;</span><span class="p">);</span>
+ <span class="n">raw_data</span> <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="mi">19</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd><dl class="first last docutils">
+<dt>data: </dt>
+<dd>Raw detector frame.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;files.files.remove_leading_trailing_slashes">
+<code class="descname">remove_leading_trailing_slashes</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="headerlink" href="#@files.files.remove_leading_trailing_slashes" title="Permalink to this definition">¶</a></dt>
+<dd><p>REMOVE_LEADING_TRAILING_SLASHES  removes any leading or
+trailing slashes from a given string. This function ensures,
+that the user does need to worry about whether a string
+should start or end with a slash or backslash character.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">remove_leading_trailing_slashes(string)</span></code></div></blockquote>
+<dl class="docutils">
+<dt>The following arguments are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>string: []</dt>
+<dd>Input string.</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="p">=</span> <span class="n">files</span><span class="p">(</span><span class="o">&lt;</span><span class="n">some</span> <span class="n">configuration</span><span class="o">&gt;</span><span class="p">);</span>
+<span class="n">out_string</span> <span class="p">=</span> <span class="c">...</span>
+    <span class="n">f</span><span class="p">.</span><span class="n">remove_leading_trailing_slashes</span><span class="p">(</span><span class="s">&#39;/home/testdir/raddamage1/&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;files.files.set_eiger_scan">
+<code class="descname">set_eiger_scan</code><span class="sig-paren">(</span><em>newfile</em>, <em>scan</em><span class="sig-paren">)</span><a class="headerlink" href="#@files.files.set_eiger_scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>SET_EIGER_SCAN  updates the eiger module.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">set_eiger_scan(newfile,</span> <span class="pre">scan)</span></code></div></blockquote>
+<dl class="docutils">
+<dt>The following arguments are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>newfile: [] (required)</dt>
+<dd>Scan name.</dd>
+<dt>scan: [] (required)</dt>
+<dd>Scan number.</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="p">=</span> <span class="n">files</span><span class="p">(</span><span class="o">&lt;</span><span class="n">some</span> <span class="n">configuration</span><span class="o">&gt;</span><span class="p">);</span>
+<span class="n">f</span><span class="p">.</span><span class="n">set_eiger_scan</span><span class="p">(</span><span class="s">&#39;raddamage1&#39;</span><span class="p">,</span><span class="mi">44</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;files.files.set_pilatus_scan">
+<code class="descname">set_pilatus_scan</code><span class="sig-paren">(</span><em>newfile</em><span class="sig-paren">)</span><a class="headerlink" href="#@files.files.set_pilatus_scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>SET_PILATUS_SCAN  updates the pilatus module.</p>
+<blockquote>
+<div>set_pilatus_scan(newfile)</div></blockquote>
+<p>The following arguments are supported:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>newfile:: [] (required)</dt>
+<dd>Scan name.</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Example:</dt>
+<dd>f = files(&lt;some configuration&gt;);
+f.set_pilatus_scan(‘raddamage1’);</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;files.files.set_spec_scan">
+<code class="descname">set_spec_scan</code><span class="sig-paren">(</span><em>newfile</em><span class="sig-paren">)</span><a class="headerlink" href="#@files.files.set_spec_scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>SET_SPEC_SCAN  updates the spec module.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">SET_SPEC_SCAN(newfile)</span></code></div></blockquote>
+<dl class="docutils">
+<dt>The following arguments are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>newfile: [] (required)</dt>
+<dd>Scan name.</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="p">=</span> <span class="n">files</span><span class="p">(</span><span class="o">&lt;</span><span class="n">some</span> <span class="n">configuration</span><span class="o">&gt;</span><span class="p">);</span>
+ <span class="n">f</span><span class="p">.</span><span class="n">set_spec_scan</span><span class="p">(</span><span class="s">&#39;raddamage1&#39;</span><span class="p">);</span>
+ <span class="n">specdata</span> <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="c">% reads scan #1 from spec-file</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;files.files.set_xia_scan">
+<code class="descname">set_xia_scan</code><span class="sig-paren">(</span><em>newfile</em>, <em>scan</em>, <em>fpf</em><span class="sig-paren">)</span><a class="headerlink" href="#@files.files.set_xia_scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>SET_XIA_SCAN  updates the xia module.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">set_xia_scan(newfile,</span> <span class="pre">scan,</span> <span class="pre">fpf)</span></code></div></blockquote>
+<p>The following arguments are supported:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>newfile: [] (required)</dt>
+<dd>Scan name.</dd>
+<dt>scan: [] (required)</dt>
+<dd>Scan number.</dd>
+<dt>fpf: [] (required)</dt>
+<dd>Frames per xia-file. This is typically the number of
+scan points per fast axis.</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Example:</dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="p">=</span> <span class="n">files</span><span class="p">(</span><span class="o">&lt;</span><span class="n">some</span> <span class="n">configuration</span><span class="o">&gt;</span><span class="p">);</span>
+<span class="n">f</span><span class="p">.</span><span class="n">set_xia_scan</span><span class="p">(</span><span class="s">&#39;raddamage1&#39;</span><span class="p">,</span><span class="mi">44</span><span class="p">,</span><span class="mi">201</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;files.files.show_configuration">
+<code class="descname">show_configuration</code><span class="sig-paren">(</span><em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#@files.files.show_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>SHOW_CONFIGURATION  shows which detectors at which beamline
+are currently implemented.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">show_configuration(opts)</span></code></div></blockquote>
+<dl class="docutils">
+<dt>The following options are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>opts: [see default values below] (optional)</dt>
+<dd><p class="first">Structure that can contain the following fields. Note,
+that all fields are optional. Default values that are
+otherwise used are as usual given in angle brackets:</p>
+<dl class="last docutils">
+<dt>allDefaults: [0] </dt>
+<dd>Show all detectors at all beamlines that are
+currently implemented.</dd>
+<dt>useDefaults: [1]</dt>
+<dd>Use standard settings for the path, newfile, etc…</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd><dl class="first last docutils">
+<dt>See the following example for help::</dt>
+<dd>f = files(); 
+f.show_configuration(struct(‘allDefaults’,1,’useDefaults’,1));</dd>
+</dl>
+</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;files.files.which_slash">
+<code class="descname">which_slash</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="headerlink" href="#@files.files.which_slash" title="Permalink to this definition">¶</a></dt>
+<dd><p>WHICH_SLASH  checks for slashes in a string. If the string 
+contains slashes they have to conform to naming convenctions 
+based on the system (unix, windows) in use</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">[string,slash]</span> <span class="pre">=</span> <span class="pre">which_slash(string)</span></code></div></blockquote>
+<dl class="docutils">
+<dt>The following arguments are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>string: (required)</dt>
+<dd>This can be any string.</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="p">=</span> <span class="n">files</span><span class="p">();</span>
+<span class="p">[</span><span class="n">out_string</span><span class="p">,</span><span class="n">sl</span><span class="p">]</span> <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="n">which_slash</span><span class="p">(</span><span class="s">&#39;A test \ string /&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd><dl class="first last docutils">
+<dt>string: </dt>
+<dd>A string where all slashes or backslashes have
+been replaced by the correct slash or backslash, based on
+the computer system used (mac, pc, unix).</dd>
+<dt>slash: </dt>
+<dd>The slash that should be used for paths to
+directories of files, based on the computer system used 
+(mac, pc, unix).</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../nanodiffraction/nanodiffractionAPI.html" class="btn btn-neutral float-right" title="Nanodiffraction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../matlab.html" class="btn btn-neutral float-left" title="Matlab API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Jan-David Nicolas
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

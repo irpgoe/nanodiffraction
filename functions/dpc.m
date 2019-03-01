@@ -1,4 +1,4 @@
-function [dpcx, dpcy] = CM_nano(Mass)
+function [dpcx, dpcy] = dpc(Mass)
 % R = [Spalte,Zeile]
 % calculates center of mass for an image
 %

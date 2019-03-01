@@ -1,0 +1,1126 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Display &mdash; nanodiffraction 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Functions" href="../functions/functionsAPI.html" />
+    <link rel="prev" title="Nanodiffraction" href="../nanodiffraction/nanodiffractionAPI.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> nanodiffraction
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started/getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Working with the toolbox</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/guide.html">Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../geometry/geometry.html">Geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../mex/mex.html">Mex-functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../colormaps/colormaps.html">Colormaps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Toolbox functionality</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../files/files.html">Files module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../nanodiffraction/nanodiffraction.html">Nanodiffraction module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../display/display.html">Display module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../functions/functions.html">External functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dependencies/dependencies.html">External dependencies</a></li>
+</ul>
+<p class="caption"><span class="caption-text">References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../references/references.html">References</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../matlab.html">Matlab API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../files/filesAPI.html">Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../nanodiffraction/nanodiffractionAPI.html">Nanodiffraction</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Display</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../functions/functionsAPI.html">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">nanodiffraction</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../matlab.html">Matlab API</a> &raquo;</li>
+        
+      <li>Display</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/matlab/display/displayAPI.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-&#64;display">
+<span id="display"></span><span id="displayapi"></span><h1>Display<a class="headerlink" href="#module-@display" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="&#64;display.display">
+<em class="property">class </em><code class="descclassname">&#64;display.</code><code class="descname">display</code><span class="sig-paren">(</span><em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#@display.display" title="Permalink to this definition">¶</a></dt>
+<dd><p>DISPLAY  Class for displaying standard STXM and XRF maps.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">d</span> <span class="pre">=</span> <span class="pre">display()</span></code></div></blockquote>
+<p>Note, that the display class should be linked to an instance of the
+nanodiffraction class either through</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">d.exp</span> <span class="pre">=</span> <span class="pre">(handle</span> <span class="pre">to</span> <span class="pre">nanodiffraction</span> <span class="pre">class);</span></code></div></blockquote>
+<p>or by using the <code class="docutils literal notranslate"><span class="pre">link()</span></code> function (see help link for usage information).</p>
+<dl class="docutils">
+<dt>The following arguments are accepted:</dt>
+<dd><blockquote class="first">
+<div><dl class="docutils">
+<dt>axis:: [‘image’]</dt>
+<dd><p class="first">Default axis of images plotted</p>
+<p class="last">Options: Default Matlab options.</p>
+</dd>
+<dt>cmap:: [{gray,inverse}]</dt>
+<dd>Default colormap</dd>
+<dt>figure:: [1]</dt>
+<dd>Figure number</dd>
+<dt>colorbar:: [‘on’]</dt>
+<dd><p class="first">Adds a colorbar by default</p>
+<p class="last">Options: ‘on’|’off’</p>
+</dd>
+<dt>caxis:: [‘auto’]</dt>
+<dd>Automatic color scaling by default. Another useful option is to
+use the helper function autoc which scales to the 5 - 95
+percentile.</dd>
+<dt>xlabel:: [‘’]</dt>
+<dd>Standard x-label.</dd>
+<dt>ylabel:: [‘’]</dt>
+<dd>Standard y-label.</dd>
+<dt>zlabel:: [‘’]</dt>
+<dd>Standard z-label.</dd>
+</dl>
+</div></blockquote>
+<dl class="last docutils">
+<dt>It contains the following functionality:</dt>
+<dd><dl class="first last docutils">
+<dt>add_circle():</dt>
+<dd>adds circles at certain q_r to the diffraction pattern</dd>
+<dt>add_line():</dt>
+<dd>adds a vertical line to a SAXS curve</dd>
+<dt>add_quiver():</dt>
+<dd>superimposes a PCA result with quiver lines
+indicating the orientation of the scattering of the structure
+orientation.</dd>
+<dt>autoc():</dt>
+<dd>Auto-contrast based on the 5% percentile.</dd>
+<dt>autonorm(): </dt>
+<dd>Normalizes a distribution (z-transform).</dd>
+<dt>azimuthal_colormap(): </dt>
+<dd>Several colormaps to plot phase angles are
+available.</dd>
+<dt>cluster(): </dt>
+<dd>shows the result of a cluster analysis.</dd>
+<dt>composite(): </dt>
+<dd>displays a composite image.</dd>
+<dt>diffraction(): </dt>
+<dd>shows a diffraction pattern</dd>
+<dt>imlap(): </dt>
+<dd>processes an image and then displays it on a log. scale.</dd>
+<dt>image_overlay(): </dt>
+<dd>Overlays an image with a transparent second image.</dd>
+<dt>saxs(): </dt>
+<dd>shows one or more 1d saxs curves</dd>
+<dt>scalebar(): </dt>
+<dd>Adds a scalebar (in pixel units) to an image.</dd>
+<dt>show_location(): </dt>
+<dd>Highlights a scan point in a map based on its
+linear index.</dd>
+<dt>stxm(): </dt>
+<dd>displays darkfield images</dd>
+<dt>pca(): </dt>
+<dd>shows a darkfield with arrows superimposed to indicate the
+director of the anisotropic field</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining 
+a copy of this software and associated documentation files (the ‘’), 
+to deal in the Software without restriction, including without limitation 
+the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+and/or sell copies of the Software, and to permit persons to whom the 
+Software is furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included 
+in all copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED ‘’, WITHOUT WARRANTY OF ANY KIND, 
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
+OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+<dl class="method">
+<dt id="&#64;display.display.add_circle">
+<code class="descname">add_circle</code><span class="sig-paren">(</span><em>qCircles</em>, <em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#@display.display.add_circle" title="Permalink to this definition">¶</a></dt>
+<dd><p>ADD_CIRCLE  Superimposes circles on a diffraction pattern.
+Multiple circle radii can be given to the function. The radii
+are expected in units of rec. nanometers.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">add_circle(qCircles,</span> <span class="pre">opts)</span></code></div></blockquote>
+<dl class="docutils">
+<dt>The following arguments are accepted:</dt>
+<dd><dl class="first last docutils">
+<dt>qCircles: [] (required)</dt>
+<dd>One-dimensional array of circle radii in units of the
+reciprocal wavevector (inverse nanometers).</dd>
+<dt>opts: [see default values below] </dt>
+<dd><p class="first">Structure that can contain the following fields. Note
+that all fields are optional. Default values that are
+otherwise used are given as usual in angle brackets
+below:</p>
+<dl class="last docutils">
+<dt>circleColor:: [black]</dt>
+<dd>Color of the circles to be plotted. Any default Matlab
+color can be chosen.</dd>
+<dt>wedge:: [0 360] </dt>
+<dd>One-dimensional array of circle radii in units of the
+reciprocal wavevector (inverse nanometers).</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+<span class="n">e</span> <span class="p">=</span> <span class="n">nanodiffraction</span><span class="p">();</span> 
+<span class="n">frame</span> <span class="p">=</span> <span class="n">e</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">d</span><span class="p">.</span><span class="n">diffraction</span><span class="p">(</span><span class="n">frame</span><span class="p">);</span>
+<span class="n">d</span><span class="p">.</span><span class="n">add_circle</span><span class="p">([</span><span class="mf">0.2</span> <span class="mf">0.6</span> <span class="mf">1.2</span><span class="p">],</span><span class="s">&#39;white&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;display.display.add_line">
+<code class="descname">add_line</code><span class="sig-paren">(</span><em>qr_values</em><span class="sig-paren">)</span><a class="headerlink" href="#@display.display.add_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>ADD_LINE  plots a vertical line at a specific location given
+in units of the reciprocal wavevector (inverse nanometers).
+This function is used to plot vertical lines in SAXS plots.
+The vertical lines run through the entire y-range.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">add_line(qr_values)</span></code></div></blockquote>
+<p>The following arguments are supported:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>qr_values: [] (required)</dt>
+<dd>A one-dimensional vector of values in units of inverse
+nanometers. Each entry specifies the location of a
+vertical line that is superimposed onto the current
+plot.</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Example:</dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+<span class="n">d</span><span class="p">.</span><span class="n">saxs</span><span class="p">(</span><span class="n">some_saxs_data</span><span class="p">);</span>
+<span class="n">d</span><span class="p">.</span><span class="n">add_line</span><span class="p">([</span><span class="mf">0.2</span> <span class="mf">0.6</span> <span class="mf">1.2</span><span class="p">]);</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;display.display.add_quiver">
+<code class="descname">add_quiver</code><span class="sig-paren">(</span><em>orientation</em>, <em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#@display.display.add_quiver" title="Permalink to this definition">¶</a></dt>
+<dd><p>ADD_QUIVER  Adds quiver lines onto an image, based on the
+orientation.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">add_quiver(orientation,</span> <span class="pre">opts)</span></code></div></blockquote>
+<dl class="docutils">
+<dt>The following arguments are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>orientation: [] (required)</dt>
+<dd>2d-array that contains angles in degrees confined
+to the interval [-90 90].</dd>
+<dt>opts: [see default values below] (optional)</dt>
+<dd><p class="first">Structure that can contain the following fields.
+Note, that all fields are optional. Default values
+that are otherwise used are as used given in angle
+brackets:</p>
+<dl class="last docutils">
+<dt>sampling: [1]</dt>
+<dd>plot quiver lines every n-th pixel/scan point.</dd>
+<dt>scale: [0.1]</dt>
+<dd>length of quiver lines.</dd>
+<dt>selection: []</dt>
+<dd>display quiver lines only on selected
+scanpoints. selection is a 2d logical array.</dd>
+<dt>dir: [‘v2’]</dt>
+<dd>Can either be set to ‘v2’ or ‘v1’ where ‘v2’
+denotes the fiber direction and ‘v1’ the scattering
+direction, respectively.</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+<span class="n">d</span><span class="p">.</span><span class="n">add_quiver</span><span class="p">(</span><span class="n">orientation</span><span class="p">,</span><span class="n">struct</span><span class="p">(</span><span class="s">&#39;sampling&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="s">&#39;scale&#39;</span><span class="p">,</span><span class="mf">0.1</span><span class="p">));</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;display.display.add_scalebar">
+<code class="descname">add_scalebar</code><span class="sig-paren">(</span><em>sl_pixel</em>, <em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#@display.display.add_scalebar" title="Permalink to this definition">¶</a></dt>
+<dd><p>ADD_SCALEBAR  adds a scale bar to the current figure.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">add_scalebar(sl_pixel,</span> <span class="pre">opts)</span></code></div></blockquote>
+<dl class="docutils">
+<dt>The following options are accepted:</dt>
+<dd><dl class="first last docutils">
+<dt>sl_pixel: [] (required)</dt>
+<dd>Scale bar length in pixel units.</dd>
+<dt>opts: [see default values below] (optional)</dt>
+<dd><p class="first">Structure that can contain the following fields. Note,
+that all fields are optional. Default values that are
+otherwise used are as usual given in angle brackets:</p>
+<dl class="last docutils">
+<dt>sb_height: [0.2]</dt>
+<dd>height of the scalebar in figure units.</dd>
+<dt>margin_right: [0.05]</dt>
+<dd>right margin of the scalebar in figure units.</dd>
+<dt>margin_bottom: [0.05]</dt>
+<dd>bottom margin of the scalebar in figure units.</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+<span class="n">d</span><span class="p">.</span><span class="n">stxm</span><span class="p">(</span><span class="n">some_map</span><span class="p">);</span>
+<span class="n">d</span><span class="p">.</span><span class="n">add_scalebar</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span> <span class="c">% scale bar length = 100 scan points * 2 µm steps</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;display.display.add_title">
+<code class="descname">add_title</code><span class="sig-paren">(</span><em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#@display.display.add_title" title="Permalink to this definition">¶</a></dt>
+<dd><p>ADD_TITLE  Adds a title to the image that includes the caxis
+range and the length of a scalebar.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">add_title(opts)</span></code></div></blockquote>
+<dl class="docutils">
+<dt>The following arguments are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>opts: [see default values below] (optional)</dt>
+<dd><p class="first">Structure that can contain the following fields.
+Note, that all fields are optional. Default values
+that are otherwise used are as used given in angle
+brackets:</p>
+<dl class="last docutils">
+<dt>limits: [auto]</dt>
+<dd>Per default choses the limits of the current axis.
+Otherwise, a two-element vector with a range can be
+used, e.g. [1 2].</dd>
+<dt>sb_len: []</dt>
+<dd>Length of the scale bar in µm.</dd>
+<dt>subtitle: [false]</dt>
+<dd>The information can be plotted as a regular title
+(false, the default)
+to a figure or subplot or can be inserted as an
+xlabel (true).</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+<span class="n">d</span><span class="p">.</span><span class="n">add_title</span><span class="p">(</span><span class="n">struct</span><span class="p">(</span><span class="s">&#39;sb_len&#39;</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="s">&#39;subtitle&#39;</span><span class="p">,</span><span class="n">true</span><span class="p">));</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="&#64;display.display.autoc">
+<code class="descname">autoc</code><em class="property"> = u'&#64;(im) caxis([prctile(reshape(im,1,[]),5) prctile(reshape(im,1,[]),95)])'</em><a class="headerlink" href="#@display.display.autoc" title="Permalink to this definition">¶</a></dt>
+<dd><p>autocontrast</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="&#64;display.display.autonorm">
+<code class="descname">autonorm</code><em class="property"> = u'&#64;(im) (im - mean(reshape(im,1,[])))/(std(reshape(im,1,[])))'</em><a class="headerlink" href="#@display.display.autonorm" title="Permalink to this definition">¶</a></dt>
+<dd><p>autonormalization</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;display.display.azimuthal_colormap">
+<code class="descname">azimuthal_colormap</code><span class="sig-paren">(</span><em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#@display.display.azimuthal_colormap" title="Permalink to this definition">¶</a></dt>
+<dd><p>AZIMUTHAL_COLORMAP  Returns a colormap suitable for
+orientation visualization. Note, that by default, hsv is used
+as colormap, however, the more uniform colormap by Peter
+Kovesi is recommended.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">azimuthal_colormap(colormap_name)</span></code></div></blockquote>
+<dl class="docutils">
+<dt>The following arguments are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>colormap_name: [‘hsv’] (required)</dt>
+<dd><p class="first">The following colormap names are currently implemented:</p>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">‘pmkmp’:</th><td class="field-body">based on the matlab package 
+‘Perceptually improved colormaps’ by 
+Matteo Niccoli and the adaptation by 
+Mike Bostock
+(<a class="reference external" href="https://bl.ocks.org/mbostock/310c99e53880faec2434">https://bl.ocks.org/mbostock/310c99e53880faec2434</a>)
+(<a class="reference external" href="https://github.com/d3/d3-scale">https://github.com/d3/d3-scale</a>)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">‘isoAz’:</th><td class="field-body">uses pmkmp</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">‘peterkovesi’:</th><td class="field-body">Based on “Peter Kovesi. Good Colour
+Maps: How to Design Them. 
+arXiv:1509.03700 [cs.GR] 2015”</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+<span class="n">d</span><span class="p">.</span><span class="n">stxm</span><span class="p">(</span><span class="n">some_stxm_map</span><span class="p">);</span>
+<span class="n">d</span><span class="p">.</span><span class="n">remove_axis</span><span class="p">();</span>
+<span class="n">cmap</span> <span class="p">=</span> <span class="n">d</span><span class="p">.</span><span class="n">azimuthal_colormap</span><span class="p">(</span><span class="s">&#39;pmkmp&#39;</span><span class="p">);</span>
+<span class="n">colormap</span><span class="p">(</span><span class="n">gca</span><span class="p">,</span><span class="n">cmap</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd><dl class="first last docutils">
+<dt>new_map: </dt>
+<dd>Colormap based on the choice made using the
+colormap name.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;display.display.composite">
+<code class="descname">composite</code><span class="sig-paren">(</span><em>comp</em>, <em>p</em><span class="sig-paren">)</span><a class="headerlink" href="#@display.display.composite" title="Permalink to this definition">¶</a></dt>
+<dd><p>COMPOSITE  shows a collection of diffraction patterns as a
+composite with default styling.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">composite(comp,</span> <span class="pre">p)</span></code></div></blockquote>
+<dl class="docutils">
+<dt>The following options are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>composite: [] (required)</dt>
+<dd>A two-dimensional composite image.</dd>
+<dt>p: [see default values below] (required)</dt>
+<dd><p class="first">Parameters that were used for composite calculation.
+p is obtained as a second argument from
+e.calculate_composite(). It can also be defined
+manually. p is a structure that can contain the
+following fields:</p>
+<dl class="last docutils">
+<dt>Ny: [] (required)</dt>
+<dd>Number of pixels along the horizontal dimension of a 
+single frame.</dd>
+<dt>Nz: [] (required)</dt>
+<dd>Number of pixels along the vertical dimension of a 
+single frame.</dd>
+<dt>imsY: [] (required)</dt>
+<dd>Number of images displayed along the horizontal
+dimension of the composite image.</dd>
+<dt>imsZ: [] (required)</dt>
+<dd>Number of images displayed along the vertical
+dimension of the composite image.</dd>
+<dt>yCrop: [1 obj.scan.SNy] (optional)</dt>
+<dd>Description. This value is optional, but useful for 
+future reference.</dd>
+<dt>zCrop: [1 obj.scan.SNz] (optional)</dt>
+<dd>Description. This value is optional, but useful for 
+future reference.</dd>
+<dt>ySkip: [1] (optional)</dt>
+<dd>Description. This value is optional, but useful for 
+future reference.</dd>
+<dt>zSkip: [1] (optional)</dt>
+<dd>Description. This value is optional, but useful for 
+future reference.</dd>
+<dt>correction: [‘off’] (optional)</dt>
+<dd>Description. This value is optional, but useful for 
+future reference.</dd>
+<dt>emptySub: [‘off’] (optional)</dt>
+<dd>Description. This value is optional, but useful for 
+future reference.</dd>
+<dt>empty: [] (optional)</dt>
+<dd>Description. This value is optional, but useful for 
+future reference.</dd>
+<dt>heal: [‘off’] (optional)</dt>
+<dd>Switch that toggled healing on or off for the 
+calculation of the composite image. This value is 
+optional, but useful for future reference.</dd>
+<dt>healmask: [] (optional)</dt>
+<dd>Mask that has been used for healing of the diffraction
+patterns. This value is optional, but useful for future
+reference.</dd>
+<dt>binning: [] (optional)</dt>
+<dd>Description. This value is optional, but useful for 
+future reference.</dd>
+<dt>detRoiY: [] (optional)</dt>
+<dd>Description. This value is optional, but useful for 
+future reference.</dd>
+<dt>detRoiZ: [] (optional)</dt>
+<dd>Description. This value is optional, but useful for 
+future reference.</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="p">=</span> <span class="n">nanodiffraction</span><span class="p">(</span><span class="o">&lt;</span><span class="n">some</span> <span class="n">settings</span> <span class="n">here</span><span class="o">&gt;</span><span class="p">);</span>
+<span class="n">e</span><span class="p">.</span><span class="n">set_scan_info</span><span class="p">(</span><span class="o">&lt;</span><span class="n">some</span> <span class="n">settings</span> <span class="n">here</span><span class="o">&gt;</span><span class="p">);</span>
+<span class="p">[</span><span class="n">comp</span><span class="p">,</span><span class="n">p</span><span class="p">]</span> <span class="p">=</span> <span class="n">e</span><span class="p">.</span><span class="n">calculate_composite</span><span class="p">(</span><span class="c">...</span>
+                <span class="n">struct</span><span class="p">(</span><span class="s">&#39;ySkip&#39;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="s">&#39;zSkip&#39;</span><span class="p">,</span><span class="mi">4</span><span class="p">));</span>
+<span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+<span class="n">d</span><span class="p">.</span><span class="n">composite</span><span class="p">(</span><span class="n">comp</span><span class="p">,</span><span class="n">p</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;display.display.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#@display.display.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>COPY  Makes a copy of a handle object. This keeps track of 
+all the given parameters so that multiple instances of a 
+display module can be used.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">new_instance</span> <span class="pre">=</span> <span class="pre">copy(display_object)</span></code></div></blockquote>
+<p>The following arguments are supported:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>display_object: [] (required)</dt>
+<dd>This function requires a display object that should be
+copied.</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Example:</dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d_generic</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+<span class="n">d_saxsdata</span> <span class="p">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">d_generic</span><span class="p">);</span>
+<span class="n">d_waxsdata</span> <span class="p">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">d_generic</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd><dl class="first last docutils">
+<dt>new_instance: </dt>
+<dd>A copy of the initial display_object.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;display.display.diffraction">
+<code class="descname">diffraction</code><span class="sig-paren">(</span><em>data</em>, <em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#@display.display.diffraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>DIFFRACTION  Displays a diffraction patterns with pre-defined
+settings. Simplifies the correct addition of labels to the x-
+and y-axis of the figure. By default, diffraction patterns
+are shown in log-scale and display in grayscale (a linear
+scale that does not highlight any particular q-range).</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">diffraction(data,</span> <span class="pre">opts)</span></code></div></blockquote>
+<dl class="docutils">
+<dt>The following arguments are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>data: [] (required)</dt>
+<dd>A two-dimensional diffraction pattern. By default,
+this diffraction pattern is automatically processed
+to be in accordance with the currently active
+settings for a detector ROI and a binning factor.
+Processing can however be switched off using the
+second optional argument ‘opts’.</dd>
+<dt>opts: [see default values below] (optional)</dt>
+<dd><p class="first">Structure that can contain the following fields.
+Note, that all fields are optional. Default values
+that are otherwise used are as usual given in angle
+brackets:</p>
+<dl class="last docutils">
+<dt>process: [‘on’] </dt>
+<dd>Either ‘on’ or ‘off’. If activated
+(‘on’), then data of the size of a raw detector
+frame is expected and the data will be
+automatically binned and cropped based on the
+detector roi and binning settings</dd>
+<dt>qRange: [-max(max(e.qr)) max(max(e.qr))]</dt>
+<dd>Lower and upper limit for the detector q-range to 
+be plotted on the axis of the figure. Typically,
+the full q-range of the detector is used. The
+q-range of the currently linked nanodiffraction
+object (shorthand: e) is used for this purpose.</dd>
+<dt>qSteps: [round((2*max(max(obj.exp.qr)))) / 10]</dt>
+<dd>Distance between ticks in units of the radial 
+wavevector transfer. The q-range of the currently 
+linked nanodiffraction object (shorthand: e) is 
+used for this purpose.</dd>
+<dt>alpha: []</dt>
+<dd>A two-dimensional alpha map.</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+<span class="n">e</span> <span class="p">=</span> <span class="n">nanodiffraction</span><span class="p">();</span>
+<span class="n">frame</span> <span class="p">=</span> <span class="n">e</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> 
+<span class="n">d</span><span class="p">.</span><span class="n">diffraction</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span><span class="n">struct</span><span class="p">(</span><span class="s">&#39;process&#39;</span><span class="p">,</span><span class="s">&#39;off&#39;</span><span class="p">,</span><span class="s">&#39;qSteps&#39;</span><span class="p">,</span><span class="mi">5</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="&#64;display.display.exp">
+<code class="descname">exp</code><em class="property"> = u'nanodiffraction'</em><a class="headerlink" href="#@display.display.exp" title="Permalink to this definition">¶</a></dt>
+<dd><p>link to experiment for acces to axes and so forth</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;display.display.image_overlay">
+<code class="descname">image_overlay</code><span class="sig-paren">(</span><em>im1</em>, <em>im2</em>, <em>transp</em><span class="sig-paren">)</span><a class="headerlink" href="#@display.display.image_overlay" title="Permalink to this definition">¶</a></dt>
+<dd><p>IMAGE_OVERLAY  Overlays two images. The second image is 
+placed on top of the first image, and the transparency 
+channel of the second image can be tuned for overlay.
+Note, that the images should be given in rgb color. To create 
+rgb images use e.g.:</p>
+<blockquote>
+<div>rgbimage1 = ind2rgb(round(mat2gray(data)*63 + 1),gray);</div></blockquote>
+<p>or for a single color overlay</p>
+<blockquote>
+<div>rgbimage2 = ind2rgb(ones(256)*16,gray);</div></blockquote>
+<p>a colormap can be defined by e.g.:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span>    <span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+    <span class="n">testColormap</span> <span class="p">=</span> <span class="n">d</span><span class="p">.</span><span class="n">single_hue_colormap</span><span class="p">(</span><span class="mi">265</span><span class="p">,</span><span class="mf">0.4</span><span class="p">,</span><span class="n">gray</span><span class="p">);</span>
+
+``<span class="n">image_overlay</span><span class="p">(</span><span class="n">image1</span><span class="p">,</span> <span class="n">image2</span><span class="p">,</span> <span class="n">transparency</span><span class="p">)</span>``
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>The following arguments are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>image1: [] (required)</dt>
+<dd>Base image.</dd>
+<dt>image2: [] (required)</dt>
+<dd>Overlay image.</dd>
+<dt>transparency: []</dt>
+<dd>Transparency of image2. Values should range within
+the interval (0,1).</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd>Example is missing.</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;display.display.imlap">
+<code class="descname">imlap</code><span class="sig-paren">(</span><em>frame</em><span class="sig-paren">)</span><a class="headerlink" href="#@display.display.imlap" title="Permalink to this definition">¶</a></dt>
+<dd><p>IMLAP  Displays a detector image in logscale. The detector
+image is hearby automatically processed, based on the currect
+setting of the detector ROI and binning factors.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">imlap(frame)</span></code></div></blockquote>
+<dl class="docutils">
+<dt>The following arguments are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>frame: [] (required)</dt>
+<dd>Detector image. The image should have identical
+dimensions as the detector.</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+<span class="n">e</span> <span class="p">=</span> <span class="n">nanodiffraction</span><span class="p">();</span>
+<span class="n">frame</span> <span class="p">=</span> <span class="n">e</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">d</span><span class="p">.</span><span class="n">imlap</span><span class="p">(</span><span class="n">frame</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="&#64;display.display.lims">
+<code class="descname">lims</code><em class="property"> = u&quot;&#64;(xlow,xhigh,ylow,yhigh) set(gca,'XLim',[xlow xhigh],'YLim',[ylow yhigh])&quot;</em><a class="headerlink" href="#@display.display.lims" title="Permalink to this definition">¶</a></dt>
+<dd><p>wrapper for limits</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="&#64;display.display.p">
+<code class="descname">p</code><em class="property"> = u'struct'</em><a class="headerlink" href="#@display.display.p" title="Permalink to this definition">¶</a></dt>
+<dd><p>holds parameters for plotting</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;display.display.pca">
+<code class="descname">pca</code><span class="sig-paren">(</span><em>angle</em>, <em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#@display.display.pca" title="Permalink to this definition">¶</a></dt>
+<dd><p>PCA  Creates a visual representation of the map of
+orientations. By default, angles are visualized using color,
+however, lines can be superimposed. Color can also be
+weighted by saturation.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">pca(angle,</span> <span class="pre">opts)</span></code></div></blockquote>
+<dl class="docutils">
+<dt>The following arguments are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>angle: [] (required)</dt>
+<dd>Map of angles that is e.g. output from a PCA analysis.</dd>
+<dt>opts: [see default values below] (optional)</dt>
+<dd><p class="first">Structure that can contain the following fields. Note,
+that all fields are optional. Default values that are
+otherwise used are as usual givin in angle brackets.</p>
+<dl class="last docutils">
+<dt>dir: [‘v2’]</dt>
+<dd>By default, the input angle represents the
+orientation of the diffraction
+streak/modulation/peak. However, by default, the
+angle is rotated by 90 degrees to reflect the
+orientation of the fibre axis.
+Using the ‘dir’ option, one can choose ‘v2’ or ‘v1’
+as options that indicate which eigenvector
+direction should be used.</dd>
+<dt>quiver: [‘off’]</dt>
+<dd>If set to ‘on’ quiver lines will be superimposed on
+each data point to indicate fibre or streak 
+orientation.
+Note, that default quiver arguments are used. For a
+more custom quiver display, please use
+display.add_quiver.</dd>
+<dt>alpha: []</dt>
+<dd>alpha can be given a map of alpha values that can
+be used for mapping color saturation to another
+parameter map. If an alpha map is given, it will be
+automatically used.</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="p">.</span><span class="n">display</span><span class="p">();</span>
+ <span class="n">d</span><span class="p">.</span><span class="n">pca</span><span class="p">(</span><span class="n">some_orientation_map</span><span class="p">,</span><span class="n">struct</span><span class="p">(</span><span class="s">&#39;quiver&#39;</span><span class="p">,</span><span class="s">&#39;on&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;display.display.remove_axis">
+<code class="descname">remove_axis</code><span class="sig-paren">(</span><em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#@display.display.remove_axis" title="Permalink to this definition">¶</a></dt>
+<dd><p>REMOVE_AXIS  removes the axis and ticks from the active
+figure.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">remove_axis()</span></code></div></blockquote>
+<p>The function does not require any arguments.</p>
+<dl class="docutils">
+<dt>Example:</dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+<span class="n">d</span><span class="p">.</span><span class="n">stxm</span><span class="p">(</span><span class="n">some_map</span><span class="p">);</span>
+<span class="n">d</span><span class="p">.</span><span class="n">remove_axis</span><span class="p">();</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;display.display.round_limits">
+<code class="descname">round_limits</code><span class="sig-paren">(</span><em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#@display.display.round_limits" title="Permalink to this definition">¶</a></dt>
+<dd><p>ROUND_LIMITS  rounds the caxis limits of the current figure to 
+a given decimal digit level:</p>
+<div class="line-block">
+<div class="line">e.g.: round(1342,-3) =&gt; 1000</div>
+<div class="line">e.g.: round(0.042,2) =&gt; 0.04</div>
+</div>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">round_limits(level)</span></code></div></blockquote>
+<dl class="docutils">
+<dt>The following arguments are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>level: [1] (optional)</dt>
+<dd>The rounding level. The same level as used in the
+Matlab-round function.</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+<span class="n">d</span><span class="p">.</span><span class="n">stxm</span><span class="p">(</span><span class="n">some_map</span><span class="p">);</span>
+<span class="n">d</span><span class="p">.</span><span class="n">round_limits</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;display.display.saxs">
+<code class="descname">saxs</code><span class="sig-paren">(</span><em>saxsresult</em>, <em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#@display.display.saxs" title="Permalink to this definition">¶</a></dt>
+<dd><p>SAXS  Creates a loglog or semilog plot of the one-dimensional
+structure factor I(qr) with default labeling of x- and
+y-axis.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">saxs(sf,</span> <span class="pre">opts)</span></code></div></blockquote>
+<dl class="docutils">
+<dt>The following arguments are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>sf: [] (required)</dt>
+<dd>Structure factor, given as a structure that contains at
+least the fields “dat_1d” and ‘’. Both fields should
+contain a one-dimensional array that should have the
+same lengths. A cell array of structures is also
+supported if multiple one-dimensional saxs curves
+should be plotted.</dd>
+<dt>opts: [see default values below] (optional)</dt>
+<dd><p class="first">Structure that can contain the following fields. Note,
+that all fields are optional. Default values that are
+otherwise used are as usual given in angle brackets:</p>
+<dl class="last docutils">
+<dt>limits: []</dt>
+<dd>Limits [xlow xhigh ylow yhigh]. By default, this is set
+to ‘’.</dd>
+<dt>pixel: [‘off’]</dt>
+<dd>If the structure factor should be plotted as a function
+of detector pixel, ‘pixel’ should be set to ‘’. In 
+this case, the SF should contain a field ‘’.</dd>
+<dt>mode: [‘semilogy’]</dt>
+<dd>Either ‘semilogy’ or ‘loglog’ are accepted.</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+<span class="n">d</span><span class="p">.</span><span class="n">saxs</span><span class="p">({</span><span class="n">my_1d_averaged_data</span><span class="p">,</span><span class="c">...</span>
+   <span class="n">struct</span><span class="p">(</span><span class="s">&#39;dat_1d&#39;</span><span class="p">,</span><span class="n">some_1d_data</span><span class="p">,</span><span class="s">&#39;qr&#39;</span><span class="p">,</span><span class="n">some_qr_axis</span><span class="p">)},</span><span class="c">...</span>
+   <span class="n">struct</span><span class="p">(</span><span class="s">&#39;mode&#39;</span><span class="p">,</span><span class="s">&#39;loglog&#39;</span><span class="p">));</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;display.display.show_location">
+<code class="descname">show_location</code><span class="sig-paren">(</span><em>scanpoint</em>, <em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#@display.display.show_location" title="Permalink to this definition">¶</a></dt>
+<dd><p>SHOW_LOCATION  highlights the location of a given scanpoint
+in a two-dimensional parameter map.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">show_location(scanpoint,</span> <span class="pre">opts)</span></code></div></blockquote>
+<dl class="docutils">
+<dt>The following options are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>scanpoint: [] (required)</dt>
+<dd>A single index, corresponding to the location in the
+scan. Note, that the index starts with 1 in the
+top-left corner of the scan.</dd>
+<dt>opts: [] (optional)</dt>
+<dd><p class="first">Structure that can contain the following field. Note 
+that currently, only a single field can be set, which
+is likely to be made more flexible in the future.</p>
+<dl class="last docutils">
+<dt>dir: [‘row’]</dt>
+<dd>Specifies the direction along the single index should
+be incremented. Either ‘col’ or ‘row’ are allowed.</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Example: </dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+<span class="n">imagesc</span><span class="p">(</span><span class="nb">rand</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span><span class="mi">21</span><span class="p">));</span>
+<span class="n">d</span><span class="p">.</span><span class="n">show_location</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span><span class="n">struct</span><span class="p">(</span><span class="s">&#39;dir&#39;</span><span class="p">,</span><span class="s">&#39;row&#39;</span><span class="p">));</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;display.display.stxm">
+<code class="descname">stxm</code><span class="sig-paren">(</span><em>data</em>, <em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#@display.display.stxm" title="Permalink to this definition">¶</a></dt>
+<dd><p>STXM  plots parameter maps with with pre-defined settings.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">stxm(data,</span> <span class="pre">opts)</span></code></div></blockquote>
+<p>The following options are supported:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>data: [] (required)</dt>
+<dd>Parameter map.</dd>
+<dt>opts: [see default values below] (optional)</dt>
+<dd><p class="first">Structure that can contain the following fields. Note,
+that all fields are optional. Default values that are
+otherwise used are as usual given in angle brackets:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt>sampl: [100] </dt>
+<dd>A tick is added to every N-th pixel/scan point.</dd>
+<dt>scale: [1]</dt>
+<dd>Length of one pixel/scan point in units ‘unit’.</dd>
+<dt>unit: [mm]</dt>
+<dd>Either ‘um’ or ‘mm’.</dd>
+<dt>alpha: []</dt>
+<dd>An alpha/transparency map, values of the map should
+range within (0,1).</dd>
+</dl>
+</div></blockquote>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Example:</dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+<span class="n">d</span><span class="p">.</span><span class="n">stxm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">struct</span><span class="p">(</span><span class="s">&#39;sampl&#39;</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="c">...</span>
+                   <span class="s">&#39;scale&#39;</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="c">...</span>
+                   <span class="s">&#39;unit&#39;</span><span class="p">,</span><span class="s">&#39;um&#39;</span><span class="p">));</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../functions/functionsAPI.html" class="btn btn-neutral float-right" title="Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../nanodiffraction/nanodiffractionAPI.html" class="btn btn-neutral float-left" title="Nanodiffraction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Jan-David Nicolas
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

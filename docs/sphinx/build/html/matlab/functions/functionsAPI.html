@@ -1,0 +1,525 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Functions &mdash; nanodiffraction 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="Display" href="../display/displayAPI.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> nanodiffraction
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started/getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Working with the toolbox</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/guide.html">Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../geometry/geometry.html">Geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../mex/mex.html">Mex-functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../colormaps/colormaps.html">Colormaps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Toolbox functionality</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../files/files.html">Files module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../nanodiffraction/nanodiffraction.html">Nanodiffraction module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../display/display.html">Display module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../functions/functions.html">External functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dependencies/dependencies.html">External dependencies</a></li>
+</ul>
+<p class="caption"><span class="caption-text">References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../references/references.html">References</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../matlab.html">Matlab API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../files/filesAPI.html">Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../nanodiffraction/nanodiffractionAPI.html">Nanodiffraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../display/displayAPI.html">Display</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">nanodiffraction</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../matlab.html">Matlab API</a> &raquo;</li>
+        
+      <li>Functions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/matlab/functions/functionsAPI.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-functions">
+<span id="functions"></span><span id="functionsapi"></span><h1>Functions<a class="headerlink" href="#module-functions" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="functions.pca">
+<code class="descclassname">functions.</code><code class="descname">pca</code><span class="sig-paren">(</span><em>dat</em>, <em>qy</em>, <em>qz</em>, <em>mask</em>, <em>sel</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.pca" title="Permalink to this definition">¶</a></dt>
+<dd><p>PCA  calculates the covariance of the diffraction pattern and determines the eigenvalues of the scattering distribution.</p>
+<blockquote>
+<div>result = pca(data,qy,qz,mask,selection)</div></blockquote>
+<dl class="docutils">
+<dt>The following arguments are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>data:: [] (required)</dt>
+<dd>Diffraction pattern.</dd>
+<dt>qy:: [] (required)</dt>
+<dd>2d array of horizontal momentum transfer. The array has to
+match the dimensions of data.</dd>
+<dt>qz:: [] (required)</dt>
+<dd>2d array of vertical momentum transfer. The array has to match 
+the dimensions of data.</dd>
+<dt>mask:: [] (required)</dt>
+<dd>Mask that defines which pixels are considered bad. The mask can
+be an empty matrix. In this case, it is assumed that all pixels
+are valid. The array has to math the dimensions of data.</dd>
+<dt>selection:: [] (required)</dt>
+<dd>Data selection matrix. The selection can be an empty matrix. In
+this case, it is assumed that all pixels should be selected. 
+The array has to match the dimensions of data.</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd>pca_result = pca(a_2d_diffraction_pattern,qy,qz,mask,[]);</dd>
+<dt>Output arguments:</dt>
+<dd><dl class="first last docutils">
+<dt>result:: A structure that contains the following fields:</dt>
+<dd><ul class="first last simple">
+<li>w:: Anisotropy of the data.</li>
+<li>angle:: Orientation angle of the largest component.</li>
+<li>lambda_1:: Eigenvalue of the largest component.</li>
+<li>lambda_2:: Eigenvalue of the smallest component.</li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="functions.stxm">
+<code class="descclassname">functions.</code><code class="descname">stxm</code><span class="sig-paren">(</span><em>data</em>, <em>mask</em>, <em>sel</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.stxm" title="Permalink to this definition">¶</a></dt>
+<dd><p>STXM  Sums a 2d array. In addition, it takes into
+account a minimum and maximum q_r value for integration</p>
+<blockquote>
+<div>result = stxm(data,mask,selection)</div></blockquote>
+<dl class="docutils">
+<dt>The following arguments are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>data:: [] (required) </dt>
+<dd>A two-dimensional diffraction pattern.</dd>
+<dt>mask:: [] (required)</dt>
+<dd>Mask that defines which pixels are bad and should not be taken
+into account. The mask can be an empty matrix. In this case, it
+is assumed that all pixels are valid. The dimensions of mask
+have to match the size of data.</dd>
+<dt>selection:: [] (required)</dt>
+<dd>Data selection, defines which pixels should be taken into
+account. The selection can be an empty matrix. In this case, it
+is assumed that all pixels should be selected. The dimensions
+of mask have to match the size of data.</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd>stxm_result = stxm(a_2d_diffraction_pattern,mask,[]);</dd>
+<dt>Output arguments:</dt>
+<dd>result:: The integrated intensity of data.</dd>
+</dl>
+<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="functions.baseline">
+<code class="descclassname">functions.</code><code class="descname">baseline</code><span class="sig-paren">(</span><em>data</em>, <em>winSize</em>, <em>iterations</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.baseline" title="Permalink to this definition">¶</a></dt>
+<dd><p>BASELINE  Description.</p>
+<blockquote>
+<div>data = baseline(data, winSize, iterations)</div></blockquote>
+<p>The following arguments are supported:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>data::</dt>
+<dd>The data that will be processed.</dd>
+<dt>winSize::</dt>
+<dd>Integer &gt; 0</dd>
+<dt>iterations::</dt>
+<dd>Integer &gt; 0</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Example:</dt>
+<dd>Example missing.</dd>
+<dt>Output arguments:</dt>
+<dd>Description.</dd>
+</dl>
+<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="functions.autoc">
+<code class="descclassname">functions.</code><code class="descname">autoc</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.autoc" title="Permalink to this definition">¶</a></dt>
+<dd><p>AUTOC  estimates the contrast of an image to lie within the 5 and 95
+percentile of an image. Data will be clipped to the according value</p>
+<blockquote>
+<div><p>[DATA,LOW,HIGH] = AUTOC(DATA)</p>
+<dl class="docutils">
+<dt>The following arguments are required:</dt>
+<dd><dl class="first last docutils">
+<dt>DAT:: ()</dt>
+<dd>Diffraction pattern.</dd>
+<dt>LOW:: ()</dt>
+<dd>lower percentile.</dd>
+<dt>HIGH:: ()</dt>
+<dd>upper percentile.</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="functions.binning_2d">
+<code class="descclassname">functions.</code><code class="descname">binning_2d</code><span class="sig-paren">(</span><em>image</em>, <em>binx</em>, <em>biny</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.binning_2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>BINNING_2D  takes in an image and bins it according to the binning
+factors BINX and BINY.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>Usage:</dt>
+<dd>BINNED_IMAGE = BINNING_2D(IMAGE, BINX, BINY)</dd>
+<dt>Arguments:</dt>
+<dd><dl class="first last docutils">
+<dt>image:: [no default]</dt>
+<dd>2d array.</dd>
+<dt>binx:: [no default]</dt>
+<dd>Integer binning factor along the horizontal dimension.</dd>
+<dt>biny:: [no default]</dt>
+<dd>Integer binning factor along the vertical dimension.</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="functions.dpc">
+<code class="descclassname">functions.</code><code class="descname">dpc</code><span class="sig-paren">(</span><em>Mass</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.dpc" title="Permalink to this definition">¶</a></dt>
+<dd><p>R = [Spalte,Zeile]
+calculates center of mass for an image</p>
+<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="functions.get_index">
+<code class="descclassname">functions.</code><code class="descname">get_index</code><span class="sig-paren">(</span><em>y</em>, <em>val</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.get_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>GET_INDEX  calculates the index whos data entry is closest to a query
+value VAL in a given array.</p>
+<blockquote>
+<div><p>[I,X] = GET_INDEX(Y,VAL)</p>
+<dl class="docutils">
+<dt>The following arguments are required:</dt>
+<dd><dl class="first last docutils">
+<dt>Y:: ()</dt>
+<dd>Data vector.</dd>
+<dt>VAL:: ()</dt>
+<dd>Query value.</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="functions.imla">
+<code class="descclassname">functions.</code><code class="descname">imla</code><span class="sig-paren">(</span><em>dat</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.imla" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="functions.link">
+<code class="descclassname">functions.</code><code class="descname">link</code><span class="sig-paren">(</span><em>classA</em>, <em>classB</em>, <em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.link" title="Permalink to this definition">¶</a></dt>
+<dd><p>LINK  links class A to class B</p>
+<blockquote>
+<div><p>LINK(CLASSA,CLASSB,VARARGIN)</p>
+<dl class="docutils">
+<dt>The following arguments are required:</dt>
+<dd><dl class="first last docutils">
+<dt>CLASSA:: ()</dt>
+<dd>Class that will be linked from.</dd>
+<dt>CLASSA:: ()</dt>
+<dd>Class that will be linked to.</dd>
+<dt>VARARGIN:: ()</dt>
+<dd>Additional class pairs can be given.</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>These combinations are possible</dt>
+<dd>fpath &gt; nanodiffraction (tells nanodiffraction where the data is)
+nanodiffraction &gt; visualization (tells visualization how the
+experiment was done)</dd>
+</dl>
+<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="functions.split_struct">
+<code class="descclassname">functions.</code><code class="descname">split_struct</code><span class="sig-paren">(</span><em>struct_name</em>, <em>arglist</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.split_struct" title="Permalink to this definition">¶</a></dt>
+<dd><p>SPLIT_STRUCT  Description.</p>
+<blockquote>
+<div>result = split_struct(structure, cell_array_of_arguments)</div></blockquote>
+<dl class="docutils">
+<dt>The following arguments are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>structure:: [] (required)</dt>
+<dd>A structure containing multiple fields.</dd>
+<dt>cell_array_of_arguments:: [] (required)</dt>
+<dd>A cell array of field names. If a field name was found in the
+structure, it is added to the output argument list.</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd>pca_result = pca(a_2d_diffraction_pattern,qy,qz,mask,[]);
+[w,angle] = split_struct(pca_result,{‘w’,’angle’});</dd>
+<dt>Output arguments:</dt>
+<dd>This function outputs a variable number of arguments, based on the
+number of query field names.</dd>
+</dl>
+<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="functions.symmetry">
+<code class="descclassname">functions.</code><code class="descname">symmetry</code><span class="sig-paren">(</span><em>data</em>, <em>bgr</em>, <em>sigma</em>, <em>noise_level</em>, <em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.symmetry" title="Permalink to this definition">¶</a></dt>
+<dd><p>SYMMETRY  identifies peaks in the image and determines whether n-fold
+rotational symmetry exists.</p>
+<blockquote>
+<div><p>LN = SYMMETRY(DAT,BGR,SIGMA,NOISELEVEL,OBJ)</p>
+<dl class="docutils">
+<dt>The following arguments are required:</dt>
+<dd><dl class="first last docutils">
+<dt>DAT:: ()</dt>
+<dd>Diffraction pattern.</dd>
+<dt>BGR:: ()</dt>
+<dd>Background, that will be subtracted from diffraction pattern.</dd>
+<dt>SIGMA:: ()</dt>
+<dd>Parameter of Gaussian filter.</dd>
+<dt>NOISELEVEL:: ()</dt>
+<dd>SNR level that functions as a threshold for peak detection.</dd>
+<dt>OBJ:: ()</dt>
+<dd>Object that contains detector coordinates.</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="functions.prepare_averaging">
+<code class="descclassname">functions.</code><code class="descname">prepare_averaging</code><span class="sig-paren">(</span><em>grid</em>, <em>mask</em>, <em>sel</em>, <em>bins</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.prepare_averaging" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="functions.crystals">
+<code class="descclassname">functions.</code><code class="descname">crystals</code><span class="sig-paren">(</span><em>data</em>, <em>mask</em>, <em>sel</em>, <em>threshold</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.crystals" title="Permalink to this definition">¶</a></dt>
+<dd><p>CRYSTAL  Calculates Signal-to-Noise Ratio and
+summarizes reflection intensity (in between qr_min and qr_max if
+requested)</p>
+<blockquote>
+<div><p>[RESULT] = GET_INDEX(DATA,MASK,SEL,THRESHOLD)</p>
+<dl class="docutils">
+<dt>The following arguments are required:</dt>
+<dd><dl class="first last docutils">
+<dt>DATA:: ()</dt>
+<dd>Data (2d array).</dd>
+<dt>MASK:: ()</dt>
+<dd>Bad pixels.</dd>
+<dt>SEL:: ()</dt>
+<dd>Good pixels.</dd>
+<dt>THRESHOLD:: ()</dt>
+<dd>Maximal qr value to be taken into account.</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../display/displayAPI.html" class="btn btn-neutral float-left" title="Display" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Jan-David Nicolas
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

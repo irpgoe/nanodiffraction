@@ -1,0 +1,529 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Nanodiffraction module &mdash; nanodiffraction 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Display module" href="../display/display.html" />
+    <link rel="prev" title="Files module" href="../files/files.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> nanodiffraction
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Working with the toolbox</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guide/guide.html">Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../geometry/geometry.html">Geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mex/mex.html">Mex-functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../colormaps/colormaps.html">Colormaps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Toolbox functionality</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../files/files.html">Files module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Nanodiffraction module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#initialization">Initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#methods">Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../display/display.html">Display module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../functions/functions.html">External functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dependencies/dependencies.html">External dependencies</a></li>
+</ul>
+<p class="caption"><span class="caption-text">References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references/references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../matlab/matlab.html">Matlab API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">nanodiffraction</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Nanodiffraction module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/nanodiffraction/nanodiffraction.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="nanodiffraction-module">
+<span id="nanodiffraction"></span><h1>Nanodiffraction module<a class="headerlink" href="#nanodiffraction-module" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="initialization">
+<h2>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">nanodiffraction</span></code> module is initialized as in the following example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">nanodiffraction</span><span class="p">(</span><span class="s1">&#39;energy&#39;</span><span class="p">,</span><span class="mf">14.85E3</span><span class="p">,</span><span class="o">...</span>
+<span class="go">                &#39;detDistance&#39;,0.971434,...</span>
+<span class="go">                &#39;pixelsize&#39;,75E-6,...</span>
+<span class="go">                &#39;Ny&#39;,2070,...</span>
+<span class="go">                &#39;Nz&#39;,2167,...</span>
+<span class="go">                &#39;pby&#39;,1468.934,...</span>
+<span class="go">                &#39;pbz&#39;,1315.318);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="colwidths-given docutils" id="id1">
+<caption><span class="caption-text">List of parameters used by the nanodiffraction module</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Comment</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>data</td>
+<td>Contains a handle to a <code class="docutils literal notranslate"><span class="pre">files</span></code> class. This handle is set using the function <code class="docutils literal notranslate"><span class="pre">link</span></code> or could be set manually.</td>
+</tr>
+<tr class="row-odd"><td>helper</td>
+<td>Structure containing short helper functions that have proven useful in analyzing data and as shorthand notations.</td>
+</tr>
+<tr class="row-even"><td>scan</td>
+<td>Structure containing scan parameters. The values in this structure are defined using <code class="docutils literal notranslate"><span class="pre">nanodiffraction.set_scan_info</span></code>.</td>
+</tr>
+<tr class="row-odd"><td>energy</td>
+<td>Energy of the X-radiation in eV.</td>
+</tr>
+<tr class="row-even"><td>wavelength</td>
+<td>Wavelength  of the X-radiation in m.</td>
+</tr>
+<tr class="row-odd"><td>wavenumber</td>
+<td>Wavenumber of the X-radiation in m⁻¹.</td>
+</tr>
+<tr class="row-even"><td>yaxis</td>
+<td>Detector y-axis in pixel units.</td>
+</tr>
+<tr class="row-odd"><td>zaxis</td>
+<td>Detector z-axis in pixel units.</td>
+</tr>
+<tr class="row-even"><td>R</td>
+<td>2D array storing the pixel-wise distance to the primary beam in pixel units.</td>
+</tr>
+<tr class="row-odd"><td>theta</td>
+<td>2D array storing the pixel-wise scattering angle with respect to the primary beam in radians.</td>
+</tr>
+<tr class="row-even"><td>Ny</td>
+<td>Number of pixels along y coordinate.</td>
+</tr>
+<tr class="row-odd"><td>Nz</td>
+<td>Number of pixels along z coordinate.</td>
+</tr>
+<tr class="row-even"><td>pby</td>
+<td>Primary beam position along y coordinate in pixels.</td>
+</tr>
+<tr class="row-odd"><td>pbz</td>
+<td>Primary beam position along z coordinate in pixels.</td>
+</tr>
+<tr class="row-even"><td>pixelsize</td>
+<td>Size of a single (square) pixel in m.</td>
+</tr>
+<tr class="row-odd"><td>detDistance</td>
+<td>Focus to detector distance.</td>
+</tr>
+<tr class="row-even"><td>qyaxis</td>
+<td>y-axis of the detector in units of m⁻¹.</td>
+</tr>
+<tr class="row-odd"><td>qzaxis</td>
+<td>z-axis of the detector in units of m⁻¹.</td>
+</tr>
+<tr class="row-even"><td>qr</td>
+<td>2D array storing the pixel-wise distance to the primary beam in units of m⁻¹.</td>
+</tr>
+<tr class="row-odd"><td>phi</td>
+<td>2D array storing the pixel-wise azimuthal angle with respect to the -y coordinate in degrees [0 to 360 degrees].</td>
+</tr>
+<tr class="row-even"><td>phi2</td>
+<td>2D array storing the pixel-wise azimuthal angle with respect to the -y coordinate [0 to 180 degrees].</td>
+</tr>
+<tr class="row-odd"><td>Ny_orig</td>
+<td>Number of pixels along y coordinate of the raw data (without binning or cropping of the detector).</td>
+</tr>
+<tr class="row-even"><td>Nz_orig</td>
+<td>Number of pixels along z coordinate of the raw data (without binning or cropping of the detector).</td>
+</tr>
+<tr class="row-odd"><td>pby_orig</td>
+<td>Primary beam position along y coordinate in pixels (without binning or cropping of the detector).</td>
+</tr>
+<tr class="row-even"><td>pbz_orig</td>
+<td>Primary beam position along z coordinate in pixels (without binning or cropping of the detector).</td>
+</tr>
+<tr class="row-odd"><td>pixelsize_orig</td>
+<td>Size of a single (square) pixel in m (without binning or cropping of the detector).</td>
+</tr>
+<tr class="row-even"><td>mask</td>
+<td>2D logical array defining bad pixels in the detector images. A (1) corresponds to an invalid detector pixel, while a (0) corresponds to a valid detector pixel. The mask is set using <code class="docutils literal notranslate"><span class="pre">nanodiffraction.set_mask</span></code>.</td>
+</tr>
+<tr class="row-odd"><td>sels</td>
+<td>3D logical array defining valid pixels that should be taken into account for the anlysis. Invalid pixels (0) are not analyzed. A selection is initially defined using <code class="docutils literal notranslate"><span class="pre">nanodiffraction.set_selection</span></code>. More selections can be added using <code class="docutils literal notranslate"><span class="pre">ǹanodiffraction.add_selection</span></code>.</td>
+</tr>
+<tr class="row-even"><td>corr</td>
+<td>2D array that can be multiplied with the original data frame to correct for the absorption by semi-transparent objects such as beamstop holders. The correction matrix is set using <code class="docutils literal notranslate"><span class="pre">nanodiffraction.set_correction</span></code>.</td>
+</tr>
+<tr class="row-odd"><td>mask_orig</td>
+<td>Same as mask, however, with the size of the original data frame (without binning or cropping of the detector).</td>
+</tr>
+<tr class="row-even"><td>sels_orig</td>
+<td>Same as sels, however, with the size of the original data frame (without binning or cropping of the detector).</td>
+</tr>
+<tr class="row-odd"><td>corr_orig</td>
+<td>Same as corr, however, with the size of the original data frame (without binning or cropping of the detector).</td>
+</tr>
+<tr class="row-even"><td>empty</td>
+<td>Detector image that should only contain background signal that can be subtracted from the raw data upon batch analysis. The empty image is set using <code class="docutils literal notranslate"><span class="pre">nanodiffraction.set_empty</span></code>.</td>
+</tr>
+<tr class="row-odd"><td>detectorRoi</td>
+<td>Can be either ‘on’ or ‘off’. If set to ‘on’, every data frame will be automatically cropped to a region defined by ‘detRoiY’ and ‘detRoiY’.</td>
+</tr>
+<tr class="row-even"><td>binning</td>
+<td>Can be either ‘on’ or ‘off’. If set to ‘on’, every data frame will be automatically binned using the binning ratio defined by ‘biny’ and ‘binz’.</td>
+</tr>
+<tr class="row-odd"><td>biny</td>
+<td>Integer binning ratio along y-axis.</td>
+</tr>
+<tr class="row-even"><td>binz</td>
+<td>Integer binning ratio along z-axis.</td>
+</tr>
+<tr class="row-odd"><td>detRoiY</td>
+<td>Two element vector containing the cropping limits along the y-axis. The largest possible value is [1 Ny].</td>
+</tr>
+<tr class="row-even"><td>detRoiZ</td>
+<td>Two element vector containing the cropping limits along the z-axis. The largest possible value is [1 Nz].</td>
+</tr>
+<tr class="row-odd"><td>fluoCounters</td>
+<td>Cell array of counters that define regions of interests for certain elements in a 1D fluorescence detector. In units of channel numbers. E.g. <code class="docutils literal notranslate"><span class="pre">fluoCounters</span> <span class="pre">=</span> <span class="pre">{{'total',100,2600},{'feka',450,500}};</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="colwidths-given docutils" id="id2">
+<caption><span class="caption-text">List of methods implemented in the nanodiffraction module</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Method</th>
+<th class="head">Comment</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>add_selection</td>
+<td>Can be used once <code class="docutils literal notranslate"><span class="pre">set_selection</span></code> was used to initially define a selection. Adds a selection to the set of selections. In batch processing, all selections are sequentially applied on the same data frame such that different regions on the detector can be analyzed at once, without reloading of data.</td>
+</tr>
+<tr class="row-odd"><td>analyze_scan</td>
+<td>Performs batch processing of a scan with scan dimensions set by <code class="docutils literal notranslate"><span class="pre">nanodiffraction.set_scan_info</span></code>. Loops through all data frames, performs the required analysis routines for each selection separately and returns a structured data output.</td>
+</tr>
+<tr class="row-even"><td>around_y</td>
+<td>Useful shorthand routine when e.g. setting a detector roi. Returns a two-element vector with entries [pby-X pby+X], where X is an integer value in pixel units.</td>
+</tr>
+<tr class="row-odd"><td>around_z</td>
+<td>Useful shorthand routine when e.g. setting a detector roi. Returns a two-element vector with entries [pbz-X pbz+X], where X is an integer value in pixel units.</td>
+</tr>
+<tr class="row-even"><td>azimuthal_mask</td>
+<td>Defines an azimuthal mask with start and end values ‘phi1’ and ‘phi2’ in degrees.</td>
+</tr>
+<tr class="row-odd"><td>azimuthal_spread</td>
+<td>Interpolates a one-dimensional curve onto the detector by azimuthal spreading.</td>
+</tr>
+<tr class="row-even"><td>calculate_composite</td>
+<td>Calculates a composite image. Usually visualized in conjunction with <code class="docutils literal notranslate"><span class="pre">display.composite</span></code></td>
+</tr>
+<tr class="row-odd"><td>calculate_empty</td>
+<td>Wrapper for <code class="docutils literal notranslate"><span class="pre">nanodiffraction.analyze_scan</span></code> that can be used to calculate an average image. This image can be used as an empty image within <code class="docutils literal notranslate"><span class="pre">nanodiffraction.analyze_scan</span></code> using <code class="docutils literal notranslate"><span class="pre">nanodiffraction.set_empty</span></code>.</td>
+</tr>
+<tr class="row-even"><td>clicktool</td>
+<td>One a STXM map is visualized in the active figure, clicktool can be executed which activates a mouse courses such that one can click into the 2D map. By clicking onto a scan point in the map, a diffraction image will be displayed that was collected at this location.</td>
+</tr>
+<tr class="row-odd"><td>copy</td>
+<td>The nanodiffraction class can be copied. As an example, one could create a template class <code class="docutils literal notranslate"><span class="pre">templ</span> <span class="pre">=</span> <span class="pre">nanodiffraction(...)</span></code> and from this template, a SAXS and a WAXS class can be obtained <code class="docutils literal notranslate"><span class="pre">saxs</span> <span class="pre">=</span> <span class="pre">copy(templ)</span></code> or <code class="docutils literal notranslate"><span class="pre">waxs</span> <span class="pre">=</span> <span class="pre">copy(templ)</span></code>.</td>
+</tr>
+<tr class="row-even"><td>get_index</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>get_location_in_frame</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>get_parameters</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>heal</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>ind2sub</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>make_mask_symmetric</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>moment_from_selection</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>n_of_q</td>
+<td>Converts q coordinates into pixel coordinates.</td>
+</tr>
+<tr class="row-even"><td>process</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>process_mask</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>q_of_n</td>
+<td>Converts pixel coordinates into q coordinates.</td>
+</tr>
+<tr class="row-odd"><td>qr_tilt</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>radial_mask</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>read</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>readm</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>readp</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>refresh</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>remove_semitransparent_object</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>set_corr</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>set_empty</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>set_mask</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>set_roi_and_binning</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>set_scan_info</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>set_selection</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>simulate_actomyosin</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>simulate_agbh</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>simulate_airscattering</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>simulate_bs</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>simulate_streak</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>stitch</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>strip</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>sub2ind</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>verify_array</td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../display/display.html" class="btn btn-neutral float-right" title="Display module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../files/files.html" class="btn btn-neutral float-left" title="Files module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Jan-David Nicolas
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
