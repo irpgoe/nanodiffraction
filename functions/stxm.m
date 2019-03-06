@@ -48,10 +48,10 @@ function result = stxm(data,mask,sel)
 % OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     if isempty(sel)
-        sel = ones(size(dat));
+        sel = ones(size(data));
     end
     if isempty(mask)
-        mask = zeros(size(dat));
+        mask = zeros(size(data));
     end
 
     result = sum(sum(data(~mask & sel)));

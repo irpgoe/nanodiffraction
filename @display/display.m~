@@ -16,6 +16,9 @@ classdef display<handle
     %   cmap:: [{gray,inverse}]
     %       Default colormap
     %
+    %   figure:: [1]
+    %       Figure number
+    %
     %   colorbar:: ['on']
     %       Adds a colorbar by default
     %
@@ -51,6 +54,8 @@ classdef display<handle
     %   azimuthal_colormap(): 
     %       Several colormaps to plot phase angles are
     %       available.
+    %   cluster(): 
+    %       shows the result of a cluster analysis.
     %   composite(): 
     %       displays a composite image.
     %   diffraction(): 
@@ -93,20 +98,15 @@ classdef display<handle
     % OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     
     properties (Access = private)
-        exp = [];               % handle to experiment class
+        exp = nanodiffraction; % link to experiment for acces to axes and so forth
     end
     
     properties (Access = public)
-        p = struct;             % holds parameters for plotting
+        p = struct; % holds parameters for plotting
         
         axis = 'image';
         cmap = {'gray','inverse'};
-        colorbar = 'on';
-        caxis = [];
-        xlabel = '';
-        ylabel = '';
-        zlabel = '';
-        scale = 'log';
+        
         
         lims = @(xlow,xhigh,ylow,yhigh) set(gca,'XLim',[xlow xhigh],'YLim',[ylow yhigh]); % wrapper for limits
         autoc = @(im) caxis([prctile(reshape(im,1,[]),5) prctile(reshape(im,1,[]),95)]); % autocontrast
@@ -121,8 +121,11 @@ classdef display<handle
             % set defaults and add optional arguments
             addOptional(p,'axis','image');
             addOptional(p,'cmap',{'gray','inverse'});
+            addOptional(p,'figure',1);
+            addOptional(p,'q',1);
+            addOptional(p,'title','');
             addOptional(p,'colorbar','on');
-            addOptional(p,'caxis',[]);
+            addOptional(p,'cAxis',[]);
             addOptional(p,'xlabel','');
             addOptional(p,'ylabel','');
             addOptional(p,'zlabel','');
@@ -130,11 +133,10 @@ classdef display<handle
             
             % parse arguments
             parse(p,varargin{:});
-            
-            % copy structure fields to properties of class
+            % copy p.Results to obj.p
             names = fieldnames(p.Results);
             for ii = 1:numel(names)
-                obj.(names{ii}) = p.Results.(names{ii});
+                obj.p.(names{ii}) = p.Results.(names{ii});
             end
         end
         
@@ -165,7 +167,9 @@ classdef display<handle
             
             
             % Instantiate new object of the same class.
+%             fprintf(1,'/* (ignore) ');
             new = feval(class(obj));
+%             fprintf(1,'\b */\n');
             
             % Copy all non-hidden properties.
             prop = properties(obj);
@@ -365,7 +369,55 @@ classdef display<handle
                  '-', 'color', opts.color, 'LineWidth', sb_height);
             hold off;
         end
-
+        
+        
+%         function cluster(obj,cluster_data,varargin)
+%             % CLUSTER  plots cluster map with relative contributions.
+%             %   
+%             %   CLUSTER(CLUSTER_DATA, MEANS) 
+%             %
+%             %   The following options are supported:
+%             %
+%             %     CLUSTER_DATA:: []
+%             %       Cluster map.
+%             %
+%             %     MEANS:: [] (optional)
+%             %       Means of each cluster.
+%             %
+% 
+%             if nargin == 3
+%                 means = varargin{1};
+%             end
+%             
+%             % number of clusters
+%             n_clusters = max(cluster_data(:));
+%             
+%             % show cluster as map
+%             subplot(1,2,1);
+%             imagesc(clusterres.clusters);
+%             colormap(pmkmp(n_clusters));
+%             axis image; 
+%             c=colorbar;
+%             ylabel(c,'cluster label');
+% 
+%             % show result as bar plot
+%             ax2 = subplot(1,2,2);
+%             colormap(ax2,gray(n_clusters));
+%             b = bar(means,'stacked');
+%             ylim([0 1]);
+%             xlim([0 n_clusters+1]);
+%             title('contribution of coefficients to clusters');xlabel('cluster label');ylabel('percentage'); 
+%             
+%             % calculate legend
+%             l_content = cell(1,n_clusters);
+%             for ii = 1:n_clusters
+%                 l_content(ii) = sprintf('c_%d',ii-1);
+%             end
+%             l = legend(l_content);
+%             set(l,'Location','EastOutside');
+%             
+%         end
+        
         
         function stxm(obj, data, varargin)
             % STXM  plots parameter maps with with pre-defined settings.
@@ -928,7 +980,7 @@ classdef display<handle
                 opts.process = 'off';
             end
             
-            switch obj.scale
+            switch obj.p.scale
                 case 'log'
                     im = @(data) imla(data);
                 case 'lin'
@@ -957,10 +1009,10 @@ classdef display<handle
             xlabel('$\mathrm{q_r}$ ($\mathrm{nm^{-1}}$)','Interpreter','Latex')
             ylabel('$\mathrm{q_r}$ ($\mathrm{nm^{-1}}$)','Interpreter','Latex')
             axis image;
-            if isempty(obj.caxis)
+            if isempty(obj.p.cAxis)
                 caxis('auto');
             else
-                caxis(obj.caxis);
+                caxis(obj.p.cAxis);
             end
             ax = gca;
             ax.XTick = Ny;
@@ -974,8 +1026,8 @@ classdef display<handle
             end
             
             % save data size that is currently holded
-%             obj.p.cols = size(data,2);
-%             obj.p.rows = size(data,1);
+            obj.p.cols = size(data,2);
+            obj.p.rows = size(data,1);
         end
         
         
@@ -1246,6 +1298,46 @@ classdef display<handle
             legend(legendstr);
         end
         
+%         function cmap = single_hue_colormap(obj,hue,sat,cmap) 
+%             % SINGLE_HUE_COLORMAP  Creates a colormap based on a single hue
+%             % value. 
+%             %
+%             %   single_hue_colormap(hue, saturation, colormap)
+%             %
+%             % The following arguments are accepted:
+%             %   hue:: [] (required)
+%             %       Hue given in degrees.
+%             %
+%             %   saturation:: [] (required)
+%             %       Saturation is given a value between 0 and 1.
+%             %
+%             %   colormap:: [] (required)
+%             %       Description missing.
+%             %
+%             % Example:
+%             %   Example missing.
+%             %
+%             % Output arguments:
+%             %   This function does not return any arguments.
+%             %
+%             
+% %             h = ones(n,1).*hue/360;
+% %             s = ones(n,1).*sat;
+% %             v = linspace(0,1,n)';
+% %             s = linspace(1,0,n)';
+% %             cmap = [h s v];
+%             
+%             test = rgb2hsv(rgb2gray(cmap));
+%             test(:,1) = hue/360; test(:,2) = sat;
+%             
+%             % shorten
+%             test(1:32,:) = test(1:2:end,:);
+%             test(33:end,:) = test(1:2:end,:);
+%             test(33:end,2) = linspace(sat,0,32);
+%             test(33:end,3) = 1;
+% 
+%             cmap = hsv2rgb(test);
+%         end
         
         function newmap = azimuthal_colormap(obj,varargin)
             % AZIMUTHAL_COLORMAP  Returns a colormap suitable for
@@ -1259,7 +1351,6 @@ classdef display<handle
             %   colormap_name: ['hsv'] (required)
             %       The following colormap names are currently implemented:
             %
-            %       :'hsv': default HSV colormap
             %       :'pmkmp': based on the matlab package 
             %                 'Perceptually improved colormaps' by 
             %                 Matteo Niccoli and the adaptation by 
@@ -1307,6 +1398,12 @@ classdef display<handle
                     newmap = [Hold;H];
                 case 'isoAz'
                     newmap = pmkmp(180,'IsoAZ').^0.7;
+                case 'custom'
+                    newmap = customangles;
+                case 'custom2'
+                    newmap = customangles2;
+                case 'aike'
+                    newmap = aikescolor;
                 case 'peterkovesi'
                     newmap = cmap('C2');
                 otherwise
@@ -1429,10 +1526,10 @@ classdef display<handle
             % real or reciprocal space direction?
             if normDir
                 caxis([-90 90]);
-                ylabel(c,'fibre orientation (degrees)','Interpreter','Latex');
+                ylabel(c,'fibre orientation [degrees]');
             else
                 caxis([0 180]);
-                ylabel(c,'reflex orientation (degrees)','Interpreter','Latex');
+                ylabel(c,'reflex orientation [degrees]');
             end
 
             % add quiver lines

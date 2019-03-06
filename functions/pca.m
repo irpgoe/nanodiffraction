@@ -64,7 +64,7 @@ function [results] = pca(dat,qy,qz,mask,sel)
         mask = zeros(size(dat));
     end
     if isempty(sel)
-        mask = ones(size(dat));
+        sel = ones(size(dat));
     end
     dat = abs(dat.*(~mask & sel));
     

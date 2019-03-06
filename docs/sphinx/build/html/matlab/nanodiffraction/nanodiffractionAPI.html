@@ -186,13 +186,9 @@ calculates geometrical parameters accordingly.
 The key method is ‘’ that is used to process x-ray 
 diffraction data obtained from scanning experiments.</p>
 <blockquote>
-<div><code class="docutils literal notranslate"><span class="pre">EXPERIMENT</span> <span class="pre">=</span> <span class="pre">NANODIFFRACTION(ARGLIST)</span></code> creates an object, an
-experiment, with a list of key-value pairs provided in ARGLIST.
-ARGLIST consists of NAME - VALUE pairs. NAME is a string describing 
-the option and VALUE can be any input. See help inputParser for 
-more information and an example below. Typically, a specific input 
-is requested by default and an error is thrown if the types do not
-agree.</div></blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">EXPERIMENT</span> <span class="pre">=</span> <span class="pre">NANODIFFRACTION()</span></code> creates an object, an
+experiment, with a list of key-value pairs. See further below for a
+list of keys and possible values.</div></blockquote>
 <p>The nanodiffraction class holds two types of parameters,
 experiment-specific parameters and scan parameters. In
 addition, it contains smaller useful helper functions such as 
@@ -260,10 +256,9 @@ deviation of a distribution x.</dd>
 </dl>
 <p>In order to perform calculations on real data, one has to couple
 the nanodiffraction class to the files class to “tell the
-experiment, where the data is stored”. This can be achieved by
-setting EXPERIMENT.data = [handle to files class] or by using the
-helper function link([handle to files class],[handle to helper
-class]). See help link for more information.</p>
+experiment, where the data is stored”. This can be achieved by using 
+the function <code class="docutils literal notranslate"><span class="pre">nanodiffraction.attach()</span></code> (see <code class="docutils literal notranslate"><span class="pre">help</span> <span class="pre">attach</span></code> for 
+usage information).</p>
 <p>Furthermore, three other properties of the nanodiffraction class
 are of interest:</p>
 <blockquote>
@@ -311,9 +306,6 @@ top-left corner (when viewed along beam propagation direction)</dd>
 <dt>fluoCounters: [{}]</dt>
 <dd>Cell array of thresholds to generate maps of different element 
 distributions</dd>
-<dt>data: [{}]</dt>
-<dd>files-class handle. This handle can also be set using the link()
-function.</dd>
 </dl>
 </dd>
 <dt>Example:</dt>
@@ -791,7 +783,8 @@ vertical)</p>
 <dl class="method">
 <dt id="&#64;nanodiffraction.nanodiffraction.around_y">
 <code class="descname">around_y</code><span class="sig-paren">(</span><em>pixel</em><span class="sig-paren">)</span><a class="headerlink" href="#@nanodiffraction.nanodiffraction.around_y" title="Permalink to this definition">¶</a></dt>
-<dd><p>AROUND_Y  Description.</p>
+<dd><p>AROUND_Y  Returns a two-element array with a lower and upper
+bound centered around the horizontal primary beam position.</p>
 <blockquote>
 <div><code class="docutils literal notranslate"><span class="pre">roi</span> <span class="pre">=</span> <span class="pre">around_y(pixel)</span></code></div></blockquote>
 <dl class="docutils">
@@ -803,7 +796,10 @@ vertical)</p>
 </dd>
 <dt>Example:</dt>
 <dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">Example</span> <span class="n">missing</span><span class="p">.</span>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="p">=</span> <span class="n">nanodiffraction</span><span class="p">();</span>
+<span class="c">...</span>
+<span class="n">n</span><span class="p">.</span><span class="n">set_roi_and_binning</span><span class="p">(</span><span class="s">&#39;detectorRoi&#39;</span><span class="p">,</span><span class="s">&#39;on&#39;</span><span class="p">,</span><span class="c">...</span>
+    <span class="s">&#39;detRoiY&#39;</span><span class="p">,</span><span class="n">n</span><span class="p">.</span><span class="n">around_y</span><span class="p">(</span><span class="mi">150</span><span class="p">),</span><span class="c">...);</span>
 </pre></div>
 </div>
 </dd>
@@ -819,7 +815,8 @@ vertical)</p>
 <dl class="method">
 <dt id="&#64;nanodiffraction.nanodiffraction.around_z">
 <code class="descname">around_z</code><span class="sig-paren">(</span><em>pixel</em><span class="sig-paren">)</span><a class="headerlink" href="#@nanodiffraction.nanodiffraction.around_z" title="Permalink to this definition">¶</a></dt>
-<dd><p>AROUND_Z  Description.</p>
+<dd><p>AROUND_Z  Returns a two-element array with a lower and upper
+bound centered around the vertical primary beam position.</p>
 <blockquote>
 <div><code class="docutils literal notranslate"><span class="pre">roi</span> <span class="pre">=</span> <span class="pre">around_z(pixel)</span></code></div></blockquote>
 <dl class="docutils">
@@ -831,7 +828,11 @@ vertical)</p>
 </dd>
 <dt>Example:</dt>
 <dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">Example</span> <span class="n">missing</span><span class="p">.</span>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="p">=</span> <span class="n">nanodiffraction</span><span class="p">();</span>
+<span class="c">...</span>
+<span class="n">n</span><span class="p">.</span><span class="n">set_roi_and_binning</span><span class="p">(</span><span class="s">&#39;detectorRoi&#39;</span><span class="p">,</span><span class="s">&#39;on&#39;</span><span class="p">,</span><span class="c">...</span>
+    <span class="s">&#39;detRoiY&#39;</span><span class="p">,</span><span class="n">n</span><span class="p">.</span><span class="n">around_y</span><span class="p">(</span><span class="mi">150</span><span class="p">),</span><span class="c">...</span>
+    <span class="s">&#39;detRoiZ&#39;</span><span class="p">,</span><span class="n">n</span><span class="p">.</span><span class="n">around_z</span><span class="p">(</span><span class="mi">150</span><span class="p">));</span>
 </pre></div>
 </div>
 </dd>
@@ -841,6 +842,32 @@ vertical)</p>
 <dd>Description.</dd>
 </dl>
 </dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;nanodiffraction.nanodiffraction.attach">
+<code class="descname">attach</code><span class="sig-paren">(</span><em>files_handle</em><span class="sig-paren">)</span><a class="headerlink" href="#@nanodiffraction.nanodiffraction.attach" title="Permalink to this definition">¶</a></dt>
+<dd><p>ATTACH  Attaches a files-module to this class.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">attach(files_handle)</span></code></div></blockquote>
+<dl class="docutils">
+<dt>The following arguments are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>files_handle: [] (required)</dt>
+<dd>Handle to a files-module.</dd>
+</dl>
+</dd>
+<dt>Example: </dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="p">=</span> <span class="n">nanodiffraction</span><span class="p">(</span><span class="c">...);</span>
+<span class="n">f</span> <span class="p">=</span> <span class="n">files</span><span class="p">(</span><span class="c">...);</span>
+<span class="n">e</span><span class="p">.</span><span class="n">attach</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
 </dl>
 </dd></dl>
 
@@ -1091,12 +1118,6 @@ nanodiffraction_object.</dd>
 </dl>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="&#64;nanodiffraction.nanodiffraction.data">
-<code class="descname">data</code><em class="property"> = u'files'</em><a class="headerlink" href="#@nanodiffraction.nanodiffraction.data" title="Permalink to this definition">¶</a></dt>
-<dd><p>holds link to the data</p>
 </dd></dl>
 
 <dl class="method">

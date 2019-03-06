@@ -185,10 +185,8 @@
 <blockquote>
 <div><code class="docutils literal notranslate"><span class="pre">d</span> <span class="pre">=</span> <span class="pre">display()</span></code></div></blockquote>
 <p>Note, that the display class should be linked to an instance of the
-nanodiffraction class either through</p>
-<blockquote>
-<div><code class="docutils literal notranslate"><span class="pre">d.exp</span> <span class="pre">=</span> <span class="pre">(handle</span> <span class="pre">to</span> <span class="pre">nanodiffraction</span> <span class="pre">class);</span></code></div></blockquote>
-<p>or by using the <code class="docutils literal notranslate"><span class="pre">link()</span></code> function (see help link for usage information).</p>
+nanodiffraction class by using the <code class="docutils literal notranslate"><span class="pre">display.attach()</span></code> function (see
+<code class="docutils literal notranslate"><span class="pre">help</span> <span class="pre">attach</span></code> for usage information).</p>
 <dl class="docutils">
 <dt>The following arguments are accepted:</dt>
 <dd><blockquote class="first">
@@ -199,8 +197,6 @@ nanodiffraction class either through</p>
 </dd>
 <dt>cmap:: [{gray,inverse}]</dt>
 <dd>Default colormap</dd>
-<dt>figure:: [1]</dt>
-<dd>Figure number</dd>
 <dt>colorbar:: [‘on’]</dt>
 <dd><p class="first">Adds a colorbar by default</p>
 <p class="last">Options: ‘on’|’off’</p>
@@ -235,8 +231,6 @@ orientation.</dd>
 <dt>azimuthal_colormap(): </dt>
 <dd>Several colormaps to plot phase angles are
 available.</dd>
-<dt>cluster(): </dt>
-<dd>shows the result of a cluster analysis.</dd>
 <dt>composite(): </dt>
 <dd>displays a composite image.</dd>
 <dt>diffraction(): </dt>
@@ -476,6 +470,32 @@ xlabel (true).</dd>
 <dd><p class="first">See the following example for help:</p>
 <div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
 <span class="n">d</span><span class="p">.</span><span class="n">add_title</span><span class="p">(</span><span class="n">struct</span><span class="p">(</span><span class="s">&#39;sb_len&#39;</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="s">&#39;subtitle&#39;</span><span class="p">,</span><span class="n">true</span><span class="p">));</span>
+</pre></div>
+</div>
+</dd>
+<dt>Output arguments:</dt>
+<dd>This function does not return any arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="&#64;display.display.attach">
+<code class="descname">attach</code><span class="sig-paren">(</span><em>nanodiffraction_handle</em><span class="sig-paren">)</span><a class="headerlink" href="#@display.display.attach" title="Permalink to this definition">¶</a></dt>
+<dd><p>ATTACH  Attaches a nanodiffraction-module to this class.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">attach(nanodiffraction_handle)</span></code></div></blockquote>
+<dl class="docutils">
+<dt>The following arguments are supported:</dt>
+<dd><dl class="first last docutils">
+<dt>files_handle: [] (required)</dt>
+<dd>Handle to a files-module.</dd>
+</dl>
+</dd>
+<dt>Example: </dt>
+<dd><p class="first">See the following example for help:</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="p">=</span> <span class="n">nanodiffraction</span><span class="p">(</span><span class="c">...);</span>
+<span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">(</span><span class="c">...);</span>
+<span class="n">d</span><span class="p">.</span><span class="n">attach</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
 </pre></div>
 </div>
 </dd>
@@ -736,12 +756,6 @@ used for this purpose.</dd>
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="&#64;display.display.exp">
-<code class="descname">exp</code><em class="property"> = u'nanodiffraction'</em><a class="headerlink" href="#@display.display.exp" title="Permalink to this definition">¶</a></dt>
-<dd><p>link to experiment for acces to axes and so forth</p>
 </dd></dl>
 
 <dl class="method">

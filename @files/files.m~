@@ -85,15 +85,11 @@ classdef files<handle
     %
     
     properties (Access = private)
-        slash;      % either / or \ based on the system in use
-        detectors = struct();
-        debug = 0;  
-        implemented = containers.Map(...
-            {'eiger', 'pilatus', 'xeuss', 'pirra','talos','rayonix','spec','xia'},...
-            {{'p10','id13','none'}, {'p10'}, {'inhouse'}, {'p10'},{'none'},{'id02','bessy'},{'id13','p10'},{'id13'}});        
+        data = [];       % holds link to the data
     end
     
-    properties (Access = public)
+    properties
+        
         prepath;    % see help files
         newfile;    % see help files
         beamline;   % see help files
@@ -102,6 +98,15 @@ classdef files<handle
         fn;         % see help files
         fpf;        % see help files
         firstFile;  % file number of the first frame in a scan
+        slash;      % either / or \ based on the system in use
+        
+        % internal use only
+        detectors = struct();
+        debug = 0;  
+        implemented = containers.Map(...
+            {'eiger', 'pilatus', 'xeuss', 'pirra','talos','rayonix','spec','xia'},...
+            {{'p10','id13','none'}, {'p10'}, {'inhouse'}, {'p10'},{'none'},{'id02','bessy'},{'id13','p10'},{'id13'}});
+            
     end
     methods
 
@@ -109,11 +114,11 @@ classdef files<handle
             
         	p = inputParser;
             % set defaults and add optional arguments
-            addOptional(p,'prepath','nanodiffraction/initialize/data');
-            addOptional(p,'newfile','unit_test');
+            addOptional(p,'prepath','homegroups/Labdata-Archive/AG_Salditt/Messzeiten_Rohdaten/2016/extern/ESRF_ID13_SC4304/id13/inhouse/DATA/AUTO-TRANSFER/eiger1');
+            addOptional(p,'newfile','detdistcalib');
             addOptional(p,'detector','eiger');
-            addOptional(p,'beamline','none');
-            addOptional(p,'scan',1);
+            addOptional(p,'beamline','id13');
+            addOptional(p,'scan',210);
             addOptional(p,'fn',1);
             addOptional(p,'fpf',101);
             
@@ -283,23 +288,23 @@ classdef files<handle
             config = struct();
             switch setting
                 case 'eiger_p10'
-                    config.path = [prepath...
+                    config.path = [sl prepath...
                         sl 'detectors'...
                         sl 'eiger'...
                         sl newfile...
                         sl newfile '_'...
                         sprintf('%05i',scannr) '_master.h5'];
                 case 'eiger_id13'
-                    config.path = [prepath...
+                    config.path = [sl prepath...
                         sl newfile '_'...
                         num2str(scannr) '_master.h5'];                    
                 case 'eiger_none'
-                    config.path = [prepath...
+                    config.path = [sl prepath...
                         sl newfile '_'...
-                        sprintf('%05i',scannr) '_master.h5'];
+                        sprintf('%i',scannr) '_master.h5'];
                 case 'pilatus_p10'
                     if ~ispc
-                        prepath = [prepath];
+                        prepath = [sl prepath];
                     end
                     config.path = [prepath...
                         sl 'detectors'...
@@ -309,7 +314,7 @@ classdef files<handle
                     config.filename = @(pre,n) [pre sprintf('%05i',n) '.cbf'];
                 case 'xeuss_inhouse'
                     if ~ispc
-                        prepath = [prepath];
+                        prepath = [sl prepath];
                     end
                     config.path = [prepath...
                         sl newfile...
@@ -319,7 +324,7 @@ classdef files<handle
                     config.Ny = 1043; 
                 case 'pirra_p10'
                     if ~ispc
-                        prepath = [prepath];
+                        prepath = [sl prepath];
                     end
                     config.path = [prepath...
                         sl 'detectors'...
@@ -329,7 +334,7 @@ classdef files<handle
                     config.filename = @(pre,n) [pre sprintf('%i',n) '.tif'];    
                 case 'talos_none'
                     if ~ispc
-                        prepath = [prepath];
+                        prepath = [sl prepath];
                     end                    
                     config.path = [prepath...
                         sl 'detectors'...
@@ -338,33 +343,33 @@ classdef files<handle
                         sl newfile '_'];
                     config.filename = @(pre,n) [pre sprintf('%04i',n) '.tif']; 
                 case 'rayonix_id02'
-                    config.path = [prepath...
+                    config.path = [sl prepath...
                         sl newfile '_'];        
                     config.filename = @(pre,n) [pre sprintf('%05i',n) '_raw.edf'];
                     config.N = 960;
                 case 'rayonix_bessy'
-                    config.path = [prepath...
+                    config.path = [sl prepath...
                         sl newfile '_' sprintf('%05i',scannr) '_'];        
                     config.filename = @(pre,n) [pre sprintf('%05i',n) '.mccd'];
                     config.N = 3072;
                 case 'spec_id13'        
-                    config.path = [prepath...
+                    config.path = [sl prepath...
                         sl newfile...
                         sl newfile '.dat'];     
                     config.beamline = 'id13';
                 case 'spec_p10'
-                    config.path = [prepath...
+                    config.path = [sl prepath...
                         sl newfile];   
                     config.beamline = 'p10';
                 case 'xia_id13'        
-                    config.path = [prepath...
+                    config.path = [sl prepath...
                         sl newfile...
                         sl 'xia'...
                         sl 'xia'...
                         '_xia02_' sprintf('%04i',scannr) '_0000_'];     
                     config.filename = @(pre,n) [pre sprintf('%04i',n) '.edf'];
                 case 'default'
-                    config.path = [prepath...
+                    config.path = [sl prepath...
                         sl newfile '_'...
                         sprintf('%05i',scannr) '_master.h5'];                    
             end            
@@ -521,8 +526,7 @@ classdef files<handle
             back_sl = '\';            
             
             if strcmp(string(1),forw_sl) || strcmp(string(1),back_sl)
-%                 string(1) = []; 
-                string(1) = obj.slash;
+                string(1) = []; 
             end
             if strcmp(string(end),forw_sl) || strcmp(string(end),back_sl)
                 string(end) = []; 

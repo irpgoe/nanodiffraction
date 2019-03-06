@@ -185,65 +185,85 @@
 FILES accepts name value pairs and requires in general the path to
 certain scan parameters such as the directory of data storage, file
 naming conventions (prefixes and suffixes) and the type of detector
-used. Once initialized properly, it should be linked to a
+used. Once initialized properly, it should be attached to a
 nanodiffraction class so that file reading will be done
-automatically based on the scan frame number. Use link() to connect a
-FILES class to a NANODIFFRACTION class.</p>
+automatically based on the scan frame number.</p>
 <blockquote>
-<div><p>DATA = FILES(VARARGIN) creates a files object, with a list of 
-arguments provided in VARARGIN. VARARGIN consists of NAME - VALUE 
-pairs. NAME is a string describing the option and VALUE can be any 
-input. Typically, a specific input is requested by default and an 
-error is thrown if the types do not agree.</p>
+<div><code class="docutils literal notranslate"><span class="pre">DATA</span> <span class="pre">=</span> <span class="pre">FILES()</span></code> creates a files module, with a list of 
+key-value pairs. See further below for a
+list of keys and possible values.</div></blockquote>
 <p>The following options are supported:</p>
-<dl class="docutils">
-<dt>prepath:: [homegroups/Labdata-Archive/AG_Salditt/Messzeiten_Rohdaten/2016/extern/ESRF_ID13_SC4304/id13/inhouse/DATA/AUTO-TRANSFER/eiger1] </dt>
+<blockquote>
+<div><dl class="docutils">
+<dt>prepath: [homegroups/Labdata-Archive/AG_Salditt/Messzeiten_Rohdaten/2016/extern/ESRF_ID13_SC4304/id13/inhouse/DATA/AUTO-TRANSFER/eiger1] </dt>
 <dd>Path to folder where the data is stored. The prepath depends 
 on the beamline you choose. Check help path_by_beamline for more
 information on the default settings.</dd>
-<dt>beamline:: [id13]</dt>
+<dt>beamline: [id13]</dt>
 <dd><p class="first">The beamline argument is necessary, because it is referred to
 when a certain standard file naming convention should be used.
 See the help on path_by_beamline for more information.</p>
 <blockquote class="last">
 <div>Options: ‘id13’|’p10’|’id02’|’bessy’|’none’</div></blockquote>
 </dd>
-<dt>newfile:: [detdistcalib] </dt>
+<dt>newfile: [detdistcalib] </dt>
 <dd>File name prefix.</dd>
-<dt>detector:: [eiger] </dt>
+<dt>detector: [eiger] </dt>
 <dd><p class="first">Type of detector used in the experiment.
 Each detector is currently contained in a separate module.</p>
 <blockquote class="last">
 <div>Options: ‘eiger’|’pilatus’|’rayonix’|’xia’</div></blockquote>
 </dd>
-<dt>fn:: [1]</dt>
+<dt>fn: [1]</dt>
 <dd>File number. Note, that some detectors start the numbering scheme
 with 1, while others start with 0.</dd>
-<dt>fpf:: [101]</dt>
+<dt>fpf: [101]</dt>
 <dd>Frames per file. If a container format is used that collects a
 given number (the fpf) of scattering patterns, this number of
 frames per container is termed ‘’. E.g. the Eiger
 detector uses the hdf5 container format. fpf can be an arbitrary
 number, but usually it is the number of scan points along the 
 fast axis.</dd>
-<dt>scan:: [210]</dt>
+<dt>scan: [210]</dt>
 <dd>Number of the scan. Be aware, that SPEC or other logging software
 might use a different numbering scheme than the detector. The
 scan number always refers to the number that is appended to the
 filename.</dd>
-<dt>Example::</dt>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Example:</dt>
 <dd><dl class="first last docutils">
-<dt>fp = files( ‘beamline’,’id13’,…</dt>
+<dt>See the following example for help::    </dt>
+<dd><dl class="first last docutils">
+<dt>f = files( ‘beamline’,’id13’,…</dt>
 <dd>‘prepath’,[prepath ‘Labdata-Archive/AG_Salditt/Messzeiten_Rohdaten/2016/extern/ESRF_ID13_SC4304/id13/inhouse/DATA/AUTO-TRANSFER/eiger1’],…
 ‘newfile’,’herz2_roi2’,…
 ‘detector’,’eiger’,…
 ‘scan’,201);</dd>
 </dl>
 </dd>
-<dt>Methods::</dt>
+</dl>
+</dd>
+<dt>Methods:</dt>
 <dd>See seperate help for each method.</dd>
 </dl>
-</div></blockquote>
+<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining 
+a copy of this software and associated documentation files (the ‘’), 
+to deal in the Software without restriction, including without limitation 
+the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+and/or sell copies of the Software, and to permit persons to whom the 
+Software is furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included 
+in all copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED ‘’, WITHOUT WARRANTY OF ANY KIND, 
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
+OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <dl class="method">
 <dt id="&#64;files.files.path_by_beamline">
 <code class="descname">path_by_beamline</code><span class="sig-paren">(</span><em>beamline</em>, <em>detector</em>, <em>prepath</em>, <em>newfile</em>, <em>scannr</em><span class="sig-paren">)</span><a class="headerlink" href="#@files.files.path_by_beamline" title="Permalink to this definition">¶</a></dt>

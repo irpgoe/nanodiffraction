@@ -231,15 +231,15 @@ classdef nanodiffraction < handle
             
         	pin = inputParser;
             % set defaults and add optional arguments
-            addOptional(pin,'energy',13E3);
+            addOptional(pin,'energy',13.8e3);
             addOptional(pin,'wavenumber',0);
             addOptional(pin,'wavelength',0);
-            addOptional(pin,'detDistance',0.971434);
-            addOptional(pin,'pixelsize',75E-6);
-            addOptional(pin,'Ny',2070);
-            addOptional(pin,'Nz',2167);
-            addOptional(pin,'pby',1468.934);
-            addOptional(pin,'pbz',1315.318);
+            addOptional(pin,'detDistance',5);
+            addOptional(pin,'pixelsize',172E-6);
+            addOptional(pin,'Ny',487);
+            addOptional(pin,'Nz',619);
+            addOptional(pin,'pby',1);
+            addOptional(pin,'pbz',1);
             addOptional(pin,'fluoCounters',{'total',60,2300},@iscell);
             
             % parse arguments
@@ -4072,8 +4072,7 @@ classdef nanodiffraction < handle
         
         
         function roi = around_y(obj,pixel)
-            % AROUND_Y  Returns a two-element array with a lower and upper
-            % bound centered around the horizontal primary beam position.
+            % AROUND_Y  Ret.
             %
             %   ``roi = around_y(pixel)``
             %
@@ -4084,10 +4083,7 @@ classdef nanodiffraction < handle
             % Example:
             %   See the following example for help::
             %
-            %       n = nanodiffraction();
-            %       ...
-            %       n.set_roi_and_binning('detectorRoi','on',...
-            %           'detRoiY',n.around_y(150),...);
+            %       Example missing.
             %
             % Output arguments:
             %   roi: 
@@ -4098,8 +4094,7 @@ classdef nanodiffraction < handle
         end
         
         function roi = around_z(obj,pixel)
-            % AROUND_Z  Returns a two-element array with a lower and upper
-            % bound centered around the vertical primary beam position.
+            % AROUND_Z  Description.
             %
             %   ``roi = around_z(pixel)``
             %
@@ -4110,11 +4105,7 @@ classdef nanodiffraction < handle
             % Example:
             %   See the following example for help::
             %
-            %       n = nanodiffraction();
-            %       ...
-            %       n.set_roi_and_binning('detectorRoi','on',...
-            %           'detRoiY',n.around_y(150),...
-            %           'detRoiZ',n.around_z(150));
+            %       Example missing.
             %
             % Output arguments:
             %   roi: 
