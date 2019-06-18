@@ -2,30 +2,46 @@ function [data,low,high] = autoc(data)
 % AUTOC  estimates the contrast of an image to lie within the 5 and 95
 % percentile of an image. Data will be clipped to the according value
 %
-%   [DATA,LOW,HIGH] = AUTOC(DATA)
+%   ``[DATA,LOW,HIGH] = AUTOC(DATA)``
 %
-%   The following arguments are required:
-%       DAT:: ()
-%           Diffraction pattern.
+% Parameters
+% ----------
+%   data: Numeric array
+%       Numeric array of any dimension
 %
-%       LOW:: ()
-%           lower percentile.
+% Returns
+% -------
+%   data: Numeric array
+%       Input data clipped at the lower and upper percentile
 %
-%       HIGH:: ()
-%           upper percentile.
+%   low: Floating-point number
+%       Value of the lower (5%) percentile
 %
-% Copyright 2017 Institute for X-ray Physics (University of Göttingen)
+%   high: Floating-point number
+%       Value of the upper (95%) percentile
+%
+% Notes
+% -----
+% Example 1:
+%
+% .. code-block:: matlab
+%   
+%       data = magic(256);
+%       [data_clipped,low,high] = autoc(data);
+%
 
+% Copyright 2017 Institute for X-ray Physics (University of Göttingen)
+%
 % Permission is hereby granted, free of charge, to any person obtaining 
 % a copy of this software and associated documentation files (the "Software"), 
 % to deal in the Software without restriction, including without limitation 
 % the rights to use, copy, modify, merge, publish, distribute, sublicense, 
 % and/or sell copies of the Software, and to permit persons to whom the 
 % Software is furnished to do so, subject to the following conditions:
-
+%
 % The above copyright notice and this permission notice shall be included 
 % in all copies or substantial portions of the Software.
-
+%
 % THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
 % EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
 % MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 

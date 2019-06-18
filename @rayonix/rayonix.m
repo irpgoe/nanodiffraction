@@ -19,16 +19,29 @@
 % OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 classdef rayonix<handle
     properties
-        c;
+        path;
+        size;
+        Ny;
+        Nz;
+        filename;
     end
     methods
         function obj = rayonix(config)
+            
+            defaults = struct('path','',...
+                'size',[3072 3072],...
+                'filename',@(pre,n) [pre sprintf('%05i',n) '_raw.edf']);
+            config = update_defaults(defaults,config);
+
             % get configuration
-            obj.c = config;
+            [obj.path, obj.size, obj.filename] = split_struct(config,{'path','size','filename'});
+            obj.Ny = obj.size(1);
+            obj.Nz = obj.size(2);
+            
         end
         function data = read(obj,fn)
             % compile filepath
-            filepath = obj.c.filename(obj.c.path,fn);
+            filepath = obj.filename(obj.path,fn);
             
             % open file
             fid = fopen(filepath);
@@ -36,14 +49,14 @@ classdef rayonix<handle
                 error(['File not found: ' filepath]);
             end
             fseek(fid, 8*512,'bof');
-            data = flipud(rot90(reshape(fread(fid,obj.c.N*obj.c.N, 'uint16',0,'l'),obj.c.N,obj.c.N)));
+            data = flipud(rot90(reshape(fread(fid,obj.Ny*obj.Nz, 'uint16',0,'l'),obj.Ny,obj.Nz)));
             fclose(fid);
                     
             % read data
             try
 	            fid = fopen(filepath);
                fseek(fid, 8*512,'bof');
-               data = flipud(rot90(reshape(fread(fid,obj.c.N*obj.c.N, 'uint16',0,'l'),obj.c.N,obj.c.N)));
+               data = flipud(rot90(reshape(fread(fid,obj.Ny*obj.Nz, 'uint16',0,'l'),obj.Ny,obj.Nz)));
                fclose(fid); 
             catch e
                 warning(e.message);

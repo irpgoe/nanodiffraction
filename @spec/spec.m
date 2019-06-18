@@ -19,13 +19,19 @@
 % OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 classdef spec<handle
     properties
-        prepath;
-        c;
+        path;
+        beamline;
     end
     methods
         function obj = spec(config)
-            obj.c = config;
-            obj.prepath = config.path;
+            
+            defaults = struct('path','',...
+                'beamline','p10');
+            config = update_defaults(defaults,config);
+
+            % get configuration
+            [obj.path, obj.beamline] = split_struct(config,{'path','beamline'});
+            
         end
         
         function [data,header,scaninfo] = read(obj,specNr,varargin)
@@ -44,7 +50,7 @@ classdef spec<handle
             %     specfile:: [] (not required)
             %       Spec filename.
 
-            switch obj.c.beamline
+            switch obj.beamline
                 case 'id13'
                     [data,header,scaninfo] = obj.read_id13(specNr,varargin{:});
                 case 'p10'
@@ -72,7 +78,7 @@ classdef spec<handle
             if nargin > 2
                 specfile = varargin{1};
             else 
-                specfile = obj.prepath;
+                specfile = obj.path;
             end
             
             % specfile
@@ -164,7 +170,7 @@ classdef spec<handle
             if nargin > 2
                 specfile = varargin{1};
             else 
-                specfile = obj.prepath;
+                specfile = obj.path;
             end
 
             % specfile

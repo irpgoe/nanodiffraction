@@ -43,6 +43,7 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.githubpages',
 	'sphinx.ext.autodoc',
+	'sphinx.ext.napoleon',
     'sphinxcontrib.matlab',
 ]
 

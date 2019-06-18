@@ -1,61 +1,69 @@
 function [results] = b1d(dat,mask,sel,grid,varargin)
 % B1D  performs an angular average based on histogramming the intensity of
-% each pixel in a certain radial interval. B1D stands for *binning 1D* and
+% each pixel in a certain radial interval. b1d is short for one-dimensional binning and
 % is considered to be a rather simple but fast method to get accurate
 % angular averages.
 %   
-%   result = b1d(data,mask,selection,grid,bins) 
+%   ``result = b1d(data,mask,selection,grid,bins)``
 %
-% The following arguments are supported:
-%     data:: [] (required)
-%       The data that will be processed.
+% Parameters
+% ----------
+%   data: Two-dimensional numeric array
+%       Diffraction pattern
 %
-%     mask:: [] (required)
-%       A logical mask that identifies all values that should not be taken 
-%       into account during rebinning.
+%   mask: logical array, default = []
+%       Logical array of the size of the input data that defines which pixels are considered bad (1 = bad, 0 = valid)
 %
-%     selection:: [] (required)
-%       A logical array that selects all pixels that should be taken into
-%       account. A pixel is taken into account if it is identified in the
-%       selection as 1.
+%   selection: logical array, default = []
+%       Logical array of the size of the input data that defines which pixels should be analyzed (1 = valid, 0 = invalid)
 %
-%     grid:: [] (required)
-%       Usually, Qr is expected to be used, however, any radial grid can be
-%       used here.
+%   grid: Two-dimensional numeric array
+%       Usually, the radial wavevector transfer is expected to be used, however, any radially symmetric grid can be
+%       used here
 %
-%     bins:: [360] (optional)
-%       Number of bins.
+%   bins: Numeric value, default = 360, optional
+%       Number of bins used for histogramming
 %
-% Example:
-%   testavg = b1d(2d_diffraction_pattern,detector_mask,[],qr_map,512);
+% Returns
+% -------
+%   result: structure
+%       Structure with the following fields:
 %
-% Output arguments:
-%   result:: Structure than contains the following fields:
-%
-%       - dat_1d:: One-dimensinoal azimuthally integrated data.
-%
-%       - qr:: X-axis, dependent on the grid used, however, it is usually
+%       - dat_1d: One-dimensional azimuthally integrated data
+%       - qr: X-axis, dependent on the grid used, however, it is usually
 %       expected in units of the reciprocal wavevector qr (inv. nanometers)
-%       and hence named qr.
+%       and hence named qr
+%       - y: A short-hand for dat_1d
+%    	- x: A short-hand for qr. Also, independent of a specified grid
+%       - error: Propagated measurement error, calculated from the square
+%       root of the average intensity I, divided by the square root of the
+%       number of data points n averaged in each bin: sqrt(I)/sqrt(n)
+%       [point-wise division]
 %
-%       - y:: A short-hand for dat_1d.
+% Notes
+% -----
+% Example 1:
 %
-%    	- x:: A short-hand for qr. Also, independent of a specified grid.
+% .. code-block:: matlab
 %
-%       - error:: Propagated measurement error.
+%   e = nanodiffraction();
+%   testdata = e.qr;
+%   testavg = b1d(testdata,[],[],e.qr,512);
 %
-% Copyright 2017 Institute for X-ray Physics (University of Göttingen)
+% See also B1D_INIT, B1D_FAST, ANALYZE_SCAN
 
+% Copyright 2017 Institute for X-ray Physics (University of Göttingen)
+%
 % Permission is hereby granted, free of charge, to any person obtaining 
 % a copy of this software and associated documentation files (the "Software"), 
 % to deal in the Software without restriction, including without limitation 
 % the rights to use, copy, modify, merge, publish, distribute, sublicense, 
 % and/or sell copies of the Software, and to permit persons to whom the 
 % Software is furnished to do so, subject to the following conditions:
-
+%
 % The above copyright notice and this permission notice shall be included 
 % in all copies or substantial portions of the Software.
-
+%
 % THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
 % EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
 % MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
@@ -97,6 +105,7 @@ function [results] = b1d(dat,mask,sel,grid,varargin)
     
     % remove NaNs from intensity and bin index (NaNs appear where n is 0)
     n(isnan(aavg)) = [];
+    x(isnan(aavg)) = [];
     aavg(isnan(aavg)) = [];
     
     % save results
@@ -105,4 +114,5 @@ function [results] = b1d(dat,mask,sel,grid,varargin)
     results.y = aavg;
     results.x = x;
     results.error = sqrt(aavg)./sqrt(n');
+    results.n = n';
 end

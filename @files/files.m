@@ -102,20 +102,41 @@ classdef files<handle
         fn;         % see help files
         fpf;        % see help files
         firstFile;  % file number of the first frame in a scan
+        eigerConfig;
+        pilatusConfig;
+        rayonixConfig;
+        pirraConfig;
+        talosConfig;
+        xiaConfig;
+        specConfig;
+        xeussConfig;
     end
     methods
 
         function obj = files(varargin)
             
+            % prepare absolute path
+            path_to_script = which('initialize.m');
+            path_to_script = fileparts(path_to_script);
+            path_to_dataset = fullfile(path_to_script,'data',filesep);
+            
         	p = inputParser;
             % set defaults and add optional arguments
-            addOptional(p,'prepath','nanodiffraction/initialize/data');
+            addOptional(p,'prepath',path_to_dataset);
             addOptional(p,'newfile','unit_test');
             addOptional(p,'detector','eiger');
             addOptional(p,'beamline','none');
             addOptional(p,'scan',1);
             addOptional(p,'fn',1);
-            addOptional(p,'fpf',101);
+            addOptional(p,'fpf',128);
+            addOptional(p,'eigerConfig',struct('path','','size',[2070 2167],'fpf',128,'fast_comp',true),@isstruct);
+            addOptional(p,'pilatusConfig',struct(),@isstruct);
+            addOptional(p,'rayonixConfig',struct(),@isstruct);
+            addOptional(p,'pirraConfig',struct(),@isstruct);
+            addOptional(p,'talosConfig',struct(),@isstruct);
+            addOptional(p,'xiaConfig',struct(),@isstruct);
+            addOptional(p,'specConfig',struct(),@isstruct);
+            addOptional(p,'xeussConfig',struct(),@isstruct);
             
             % parse arguments
             parse(p,varargin{:});
@@ -125,31 +146,55 @@ classdef files<handle
                 obj.(names{ii}) = p.Results.(names{ii});
             end
             
+            eigerDefaults   = struct('path','','size',[2070 2167],'fpf',128,'fast_comp',true);
+            pilatusDefaults = struct('path','','size',[487 619],'filename',@(pre,n) [pre sprintf('%05i',n) '.cbf']);
+            rayonixDefaults = struct('path','','size',[3072 3072],'filename',@(pre,n) [pre sprintf('%05i',n) '_raw.edf']);
+            pirraDefaults   = struct('path','','filename',@(pre,n) [pre sprintf('%i',n) '.tif']);
+            talosDefaults   = struct('path','','filename',@(pre,n) [pre sprintf('%04i',n) '.tif']);
+            xiaDefaults     = struct('path','','fpf',128,'filename',@(pre,n) [pre sprintf('%04i',n) '.edf']);
+            specDefaults    = struct('path','','beamline','p10');
+            xeussDefaults   = struct('path','','size',[981 1043],'filename',@(pre,n) [pre sprintf('%05i',n) '.edf']);
+            obj.eigerConfig     = update_defaults(eigerDefaults,    obj.eigerConfig);
+            obj.pilatusConfig   = update_defaults(pilatusDefaults,  obj.pilatusConfig);
+            obj.rayonixConfig   = update_defaults(rayonixDefaults,  obj.rayonixConfig);
+            obj.pirraConfig     = update_defaults(pirraDefaults,    obj.pirraConfig);
+            obj.talosConfig     = update_defaults(talosDefaults,    obj.talosConfig);
+            obj.xiaConfig       = update_defaults(xiaDefaults,      obj.xiaConfig);
+            obj.specConfig      = update_defaults(specDefaults,     obj.specConfig);
+            obj.xeussConfig     = update_defaults(xeussDefaults,    obj.xeussConfig);
+            
             
             % check path
             [obj.prepath,obj.slash] = obj.which_slash(obj.prepath);
-            obj.prepath = obj.remove_leading_trailing_slashes(obj.prepath);
-
+            obj.prepath = obj.add_leading_trailing_slashes(obj.prepath);
             
             % get file information by beamline and detector
-            config = obj.path_by_beamline(obj.beamline,p.Results.detector,obj.prepath,obj.newfile,obj.scan);
+            config = obj.path_by_beamline(obj.beamline,obj.detector,obj.prepath,obj.newfile,obj.scan);
 
-            switch p.Results.detector
+            switch obj.detector
                 case 'eiger'
-                    obj.detectors.eiger = eiger(config,obj.fpf);
+                    config = update_defaults(obj.eigerConfig,config);
+                    obj.detectors.eiger = eiger(config);
                 case 'rayonix'
+                    config = update_defaults(obj.rayonixConfig,config);
                     obj.detectors.rayonix = rayonix(config);            
                 case 'xeuss'
+                    config = update_defaults(obj.xeussConfig,config);
                     obj.detectors.xeuss = xeuss(config);            
                 case 'pilatus'
+                    config = update_defaults(obj.pilatusConfig,config);
                     obj.detectors.pilatus = pilatus(config);            
                 case 'pirra'
+                    config = update_defaults(obj.pirraConfig,config);
                     obj.detectors.pirra = pirra(config);         
                 case 'talos'
+                    config = update_defaults(obj.talosConfig,config);
                     obj.detectors.talos = talos(config);                       
                 case 'xia'
-                    obj.detectors.xia = xia(config,obj.fpf);
+                    config = update_defaults(obj.xiaConfig,config);
+                    obj.detectors.xia = xia(config);
                 case 'spec'
+                    config = update_defaults(obj.specConfig,config);
                     obj.detectors.spec = spec(config);
             end
         end
@@ -314,9 +359,7 @@ classdef files<handle
                     config.path = [prepath...
                         sl newfile...
                         sl newfile '_0_'];
-                    config.filename = @(pre,n) [pre sprintf('%05i',n) '.edf'];                    
-                    config.Nx = 981;
-                    config.Ny = 1043; 
+                    config.filename = @(pre,n) [pre sprintf('%05i',n) '.edf'];
                 case 'pirra_p10'
                     if ~ispc
                         prepath = [prepath];
@@ -341,12 +384,12 @@ classdef files<handle
                     config.path = [prepath...
                         sl newfile '_'];        
                     config.filename = @(pre,n) [pre sprintf('%05i',n) '_raw.edf'];
-                    config.N = 960;
+                    config.size = [960 960];
                 case 'rayonix_bessy'
                     config.path = [prepath...
                         sl newfile '_' sprintf('%05i',scannr) '_'];        
                     config.filename = @(pre,n) [pre sprintf('%05i',n) '.mccd'];
-                    config.N = 3072;
+                    config.size = [3072 3072];
                 case 'spec_id13'        
                     config.path = [prepath...
                         sl newfile...
@@ -397,7 +440,7 @@ classdef files<handle
             obj.scan = scan;
             
             config = obj.path_by_beamline(obj.beamline,'eiger',obj.prepath,obj.newfile,obj.scan);
-            obj.detectors.eiger = eiger(config,obj.fpf);
+            obj.detectors.eiger = eiger(config);
         end
         
         
@@ -458,7 +501,8 @@ classdef files<handle
             obj.fpf = fpf;
             
             config = obj.path_by_beamline(obj.beamline,'xia',obj.prepath,obj.newfile,obj.scan);
-            obj.detectors.xia = xia(config,fpf);
+            config.fpf = fpf;
+            obj.detectors.xia = xia(config);
         end
         
         
@@ -489,7 +533,7 @@ classdef files<handle
         end
         
 
-        function [out_string] = remove_leading_trailing_slashes(obj,string)
+        function [out_string] = add_leading_trailing_slashes(obj,string)
             % REMOVE_LEADING_TRAILING_SLASHES  removes any leading or
             % trailing slashes from a given string. This function ensures,
             % that the user does need to worry about whether a string
@@ -515,21 +559,51 @@ classdef files<handle
             if isempty(string)
                 out_string = string;
                 return;
-            end
+            end        
             
-            forw_sl = '/';
-            back_sl = '\';            
-            
-            if strcmp(string(1),forw_sl) || strcmp(string(1),back_sl)
-%                 string(1) = []; 
-                string(1) = obj.slash;
+            if ~strcmp(string(1),filesep)
+                string = [filesep string]; 
             end
-            if strcmp(string(end),forw_sl) || strcmp(string(end),back_sl)
-                string(end) = []; 
-            else
-                % nothing to do
+            if ~strcmp(string(end),filesep)
+                string = [string filesep];  
             end
             out_string = string;
+        end
+        
+                
+        function [string, slash] = which_slash(obj, string)
+            % WHICH_SLASH  checks for slashes in a string. If the string 
+            % contains slashes they have to conform to naming convenctions 
+            % based on the system (unix, windows) in use
+            %
+            %   ``[string,slash] = which_slash(string)``
+            %
+            % The following arguments are supported:
+            %     string: (required)
+            %        This can be any string.
+            %
+            % Example:
+            %   See the following example for help::
+            %
+            %      f = files();
+            %      [out_string,sl] = f.which_slash('A test \ string /');
+            %
+            % Output arguments:
+            %   string: 
+            %       A string where all slashes or backslashes have
+            %       been replaced by the correct slash or backslash, based on
+            %       the computer system used (mac, pc, unix).
+            %
+            %   slash: 
+            %       The slash that should be used for paths to
+            %       directories of files, based on the computer system used 
+            %       (mac, pc, unix).
+            %
+                       
+            
+            string = strrep(string, '/', filesep);
+            string = strrep(string, '\', filesep);
+            slash = filesep;
         end
         
         
@@ -694,52 +768,7 @@ classdef files<handle
 %             f
 %         end
            
-        
-        function [string, slash] = which_slash(obj, string)
-            % WHICH_SLASH  checks for slashes in a string. If the string 
-            % contains slashes they have to conform to naming convenctions 
-            % based on the system (unix, windows) in use
-            %
-            %   ``[string,slash] = which_slash(string)``
-            %
-            % The following arguments are supported:
-            %     string: (required)
-            %        This can be any string.
-            %
-            % Example:
-            %   See the following example for help::
-            %
-            %      f = files();
-            %      [out_string,sl] = f.which_slash('A test \ string /');
-            %
-            % Output arguments:
-            %   string: 
-            %       A string where all slashes or backslashes have
-            %       been replaced by the correct slash or backslash, based on
-            %       the computer system used (mac, pc, unix).
-            %
-            %   slash: 
-            %       The slash that should be used for paths to
-            %       directories of files, based on the computer system used 
-            %       (mac, pc, unix).
-            %
-            
-            forw_sl = '/';
-            back_sl = '\';                
-            
-            if ispc
-                slash = back_sl;
-                string = strrep(string, forw_sl, back_sl);
-            elseif isunix
-                slash = forw_sl;
-                string = strrep(string, back_sl, forw_sl);
-            elseif ismac
-                slash = forw_sl;
-                string = strrep(string, back_sl, forw_sl);
-            else
-                slash = forw_sl;
-            end
-        end
+
         
         
 %         function result = read_from_dada(~, varargin)

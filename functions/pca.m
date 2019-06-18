@@ -1,63 +1,72 @@
 function [results] = pca(dat,qy,qz,mask,sel)
-% PCA  calculates the covariance of the diffraction pattern and determines the eigenvalues of the scattering distribution.
+% PCA calculates the covariance of the diffraction pattern and determines the eigenvalues of the
+% scattering distribution
 %
-%   result = pca(data,qy,qz,mask,selection)
+%   ``result = pca(data, qy, qz, mask, selection)``
 %
-% The following arguments are supported:
-%       data:: [] (required)
-%           Diffraction pattern.
+% In a principal component analysis of a scattering distribution, the covariance matrix of the
+% distribution is calculated and orthogonalized. The procedure is described in more detail in
+% Bernhardt et al., 2016.
 %
-%       qy:: [] (required)
-%           2d array of horizontal momentum transfer. The array has to
-%           match the dimensions of data.
+% Parameters
+% ----------
+% data: numerical array
+%   Diffraction pattern
 %
-%       qz:: [] (required)
-%           2d array of vertical momentum transfer. The array has to match 
-%           the dimensions of data.
+% qy: numerical array
+%   Numerical array of the size of the input data that contains the horizontal momentum transfer
 %
-%       mask:: [] (required)
-%           Mask that defines which pixels are considered bad. The mask can
-%           be an empty matrix. In this case, it is assumed that all pixels
-%           are valid. The array has to math the dimensions of data.
+% qz: numerical array
+%   Numerical array of the size of the input data that contains the vertical momentum transfer
 %
-%       selection:: [] (required)
-%           Data selection matrix. The selection can be an empty matrix. In
-%           this case, it is assumed that all pixels should be selected. 
-%           The array has to match the dimensions of data.
+% mask: logical array, default = []
+%   Logical array of the size of the input data that defines which pixels are considered bad (1 =
+%   bad, 0 = valid)
 %
-% Example:
-%   pca_result = pca(a_2d_diffraction_pattern,qy,qz,mask,[]);
+% selection: logical array, default = []
+%   Logical array of the size of the input data that defines which pixels should be analyzed (1 =
+%   valid, 0 = invalid)
 %
-% Output arguments:
-%   result:: A structure that contains the following fields:
-%       - w:: Anisotropy of the data.
+% Returns
+% -------
+% result: structure
+%   Structure with the following fields:
 %
-%       - angle:: Orientation angle of the largest component.
+%   - w: Anisotropy of the data
+%   - angle: Orientation of the first principal component. Note that 0 degrees is along the -y axis and the angle is defined counter-clockwise 
+%   - lambda_1: Eigenvalue of the first principal component
+%   - lambda_2: Eigenvalue of the second principal component
 %
-%       - lambda_1:: Eigenvalue of the largest component.
+% Notes
+% -----
+% Example 1:
 %
-%       - lambda_2:: Eigenvalue of the smallest component.
+% .. code-block:: matlab
 %
+%       e = nanodiffraction();
+%       streak = e.simulate_streak();
+%       QY = ;
+%       QZ = ;
+%       pca_result = pca(streak,QY,QZ,[],[]);
 %
+% See also EIG
+
 % Copyright 2017 Institute for X-ray Physics (University of Göttingen)
-
-% Permission is hereby granted, free of charge, to any person obtaining 
-% a copy of this software and associated documentation files (the "Software"), 
-% to deal in the Software without restriction, including without limitation 
-% the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-% and/or sell copies of the Software, and to permit persons to whom the 
-% Software is furnished to do so, subject to the following conditions:
-
-% The above copyright notice and this permission notice shall be included 
-% in all copies or substantial portions of the Software.
-
-% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
-% EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
-% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-% IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
-% DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
-% TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
-% OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+%
+% Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+% associated documentation files (the "Software"), to deal in the Software without restriction,
+% including without limitation the rights to use, copy, modify, merge, publish, distribute,
+% sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+% furnished to do so, subject to the following conditions:
+%
+% The above copyright notice and this permission notice shall be included in all copies or
+% substantial portions of the Software.
+%
+% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+% NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+% NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+% DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
+% OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     % apply (pca) mask
     if isempty(mask)

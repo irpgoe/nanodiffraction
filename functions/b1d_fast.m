@@ -1,52 +1,75 @@
 function [results] = b1d_fast(dat,mask,sel,sortIndex,n,bin)
-% B1D  performs an angular average based on histogramming the intensity of
-% each pixel in a certain radial interval. B1D stands for *binning 1D* and
+% B1D_FAST  performs an angular average based on histogramming the intensity of
+% each pixel in a certain radial interval. b1d is short for one-dimensional binning and
 % is considered to be a rather simple but fast method to get accurate
-% angular averages.
+% angular averages. B1D_FAST is used in batch processing of files and based
+% on the method B1D, however, it avoids the repeated calculation of how
+% many detector pixels belong into one q-bin. Instead, this needs to be
+% calculated beforehand and passed to B1D_FAST.
 %   
-%   [RESULT] = B1D(DATA,MASK,SEL,GRID,BINS) 
+%   ``result = b1d_fast(data,mask,selection,sortIndex,n,bin)``
 %
-%   The following options are required:
+% Parameters
+% ----------
+%   data: Two-dimensional numeric array
+%       Diffraction pattern
 %
-%     DATA::
-%       The data that will be processed.
+%   mask: logical array, default = []
+%       Logical array of the size of the input data that defines which pixels are considered bad (1 = bad, 0 = valid)
 %
-%     MASK::
-%       A logical sel that sets all values that should not be taken into
-%       account to NaN
+%   selection: logical array, default = []
+%       Logical array of the size of the input data that defines which pixels should be analyzed (1 = valid, 0 = invalid)
 %
-%     SEL::
-%       A logical sel that selects all pixels that should be taken into
-%       account 
+%   sortIndex: One-dimensional numeric array
+%       Contains the indices of the q-bins for each detector pixel
 %
-%     GRID::
-%       Usually, Qr is expected to be used, however, any radial grid can be
-%       used here.
+%   n: One-dimensional numeric array
+%       Contains the number of pixels that belong to each q-bin
 %
-%   The following options are optional:
+%   bin: One-dimensional numeric array
+%       bin index
 %
-%     BINS:: (360)
-%       Number of bins.
+% Returns
+% -------
+%   result: structure
+%       Structure with the following fields:
 %
+%       - dat_1d: One-dimensional azimuthally integrated data
+%       - y: A short-hand for dat_1d
+%       - error: Propagated measurement error, calculated from the square
+%       root of the average intensity I, divided by the square root of the
+%       number of data points n averaged in each bin: sqrt(I)/sqrt(n)
+%       [point-wise division]
+%
+% Notes
+% -----
+% Example 1:
+%
+% .. code-block:: matlab
+%
+%   e = nanodiffraction();
+%   testdata = e.qr;
+%   [x,sortIndex,n,bin] = b1d_init(grid,mask,sel,bins)
+%   testavg = b1d(testdata,[],[],sortIndex,n,bin);
+%
+% See also B1D, B1D_INIT, ANALYZE_SCAN
+
 % Copyright 2017 Institute for X-ray Physics (University of Göttingen)
-
-% Permission is hereby granted, free of charge, to any person obtaining 
-% a copy of this software and associated documentation files (the "Software"), 
-% to deal in the Software without restriction, including without limitation 
-% the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-% and/or sell copies of the Software, and to permit persons to whom the 
-% Software is furnished to do so, subject to the following conditions:
-
-% The above copyright notice and this permission notice shall be included 
-% in all copies or substantial portions of the Software.
-
-% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
-% EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
-% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-% IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
-% DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
-% TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
-% OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+%
+% Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+% associated documentation files (the "Software"), to deal in the Software without restriction,
+% including without limitation the rights to use, copy, modify, merge, publish, distribute,
+% sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+% furnished to do so, subject to the following conditions:
+%
+% The above copyright notice and this permission notice shall be included in all copies or
+% substantial portions of the Software.
+%
+% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+% NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+% NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+% DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
+% OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             
     % Settings, if none are passed than default values are taken
     if isempty(sel)

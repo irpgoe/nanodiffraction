@@ -31,15 +31,23 @@ classdef talos<handle
     %   Note, that read_pilatus is an external function that is not part of the toolbox since it is currently not licensed under MIT.
     
     properties
-        c;
+        path;
+        filename;
     end
     methods
         function obj = talos(config)
-            obj.c = config;
+
+            defaults = struct('path','',...
+                'filename',@(pre,n) [pre sprintf('%04i',n) '.tif']);
+            config = update_defaults(defaults,config);
+
+            % get configuration
+            [obj.path, obj.filename] = split_struct(config,{'path','filename'});
+            
         end
         function data = read(obj,fn)
         
-            filepath = obj.c.filename(obj.c.path,fn);
+            filepath = obj.filename(obj.path,fn);
         	
             % read data
             try

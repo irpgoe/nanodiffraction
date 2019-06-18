@@ -31,15 +31,29 @@ classdef pilatus<handle
     %   Note, that read_pilatus is an external function that is not part of the toolbox since it is currently not licensed under MIT.
     
     properties
-        c;
+        filename;
+        path;
+        size;
+        Ny;
+        Nz;
     end
     methods
         function obj = pilatus(config)
-            obj.c = config;
+            
+            defaults = struct('path','',...
+                'size',[487 619],...
+                'filename',@(pre,n) [pre sprintf('%05i',n) '.cbf']);
+            config = update_defaults(defaults,config);
+
+            % get configuration
+            [obj.path, obj.size, obj.filename] = split_struct(config,{'path','size','filename'});
+            obj.Ny = obj.size(1);
+            obj.Nz = obj.size(2);
+            
         end
         function data = read(obj,fn)
         
-            filepath = obj.c.filename(obj.c.path,fn);
+            filepath = obj.filename(obj.path,fn);
         	
             % read data
             try

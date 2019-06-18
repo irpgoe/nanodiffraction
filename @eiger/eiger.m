@@ -1,46 +1,90 @@
-% Copyright 2017 Institute for X-ray Physics (University of Göttingen)
-
-% Permission is hereby granted, free of charge, to any person obtaining 
-% a copy of this software and associated documentation files (the "Software"), 
-% to deal in the Software without restriction, including without limitation 
-% the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-% and/or sell copies of the Software, and to permit persons to whom the 
-% Software is furnished to do so, subject to the following conditions:
-
-% The above copyright notice and this permission notice shall be included 
-% in all copies or substantial portions of the Software.
-
-% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
-% EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
-% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-% IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
-% DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
-% TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
-% OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 classdef eiger<handle
+    % EIGER  Class to read data from the Eiger detector.
+    %   
+    %   ``e = eiger(config)`` 
+    %
+    % Parameters
+    % ----------
+    % config: structure, default = struct('path','','size',[2070 2167],'fpf',128,'fast_comp',true)
+    %       - path: Absolute path to the data
+    %       - size: Size of the detector given as a two-element vector
+    %       [rows columns]
+    %       - fpf: Frames per data file. Usually, Eiger frames are stored
+    %       in containers with a fixed number of images per container file
+    %       - fast_comp: Using a low- or high-level implementation of the
+    %       h5 library. If set to true, a faster low-level implementation
+    %       will be used
+    %
+    % Returns
+    % -------
+    % result: class
+    %   Eiger module.
+    %
+    % Notes
+    % -----
+    % Example 1:
+    %
+    % .. code-block:: matlab
+    %
+    %       e = eiger(struct('path','/some/path/','fpf',64));
+    %       data = e.read(1);
+    %
+    % See also FILES, PILATUS, XIA, RAYONIX
+    %
+    % Copyright 2017 Institute for X-ray Physics (University of Göttingen)
+    %
+    % Permission is hereby granted, free of charge, to any person obtaining 
+    % a copy of this software and associated documentation files (the "Software"), 
+    % to deal in the Software without restriction, including without limitation 
+    % the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+    % and/or sell copies of the Software, and to permit persons to whom the 
+    % Software is furnished to do so, subject to the following conditions:
+    %
+    % The above copyright notice and this permission notice shall be included 
+    % in all copies or substantial portions of the Software.
+    %
+    % THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+    % EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+    % MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+    % IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+    % DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+    % TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
+    % OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
     properties
         eiger_read = @(str1,str2,vec1,vec2) double(h5read( str1, str2, vec1, vec2 ));
-        c;
-        fpf;
         h5config;
+        path;
+        fpf;
+        size;
+        Ny;
+        Nz;
+        fast_comp;
     end
     methods
         
-        function obj = eiger(config,fpf)
-            obj.fpf = fpf;
-            obj.c = config;
-            obj.c.fast_comp = true;
+        function obj = eiger(config)
+            
+            defaults = struct('path','',...
+                'size',[2070 2167],...
+                'fpf',128,...
+                'fast_comp',true);
+            config = update_defaults(defaults,config);
+
+            % get configuration
+            [obj.path, obj.size, obj.fpf, obj.fast_comp] = split_struct(config,{'path','size','fpf','fast_comp'});
+            obj.Ny = obj.size(1);
+            obj.Nz = obj.size(2);
             
             % default h5 configuration
-            obj.h5config.master_file = config.path;
+            obj.h5config.master_file = obj.path;
             obj.h5config.data_entry = 'data_000001';
             obj.h5config.initialized = 0;
             
             obj.repair_frames_per_file();
             
             fprintf(1,'Initialized Eiger module with the following settings:\n');
-            fprintf(1,'Data path: %s\n',obj.c.path);
+            fprintf(1,'Data path: %s\n',obj.path);
             fprintf(1,'Frames per file: %d\n',obj.fpf);
         end
         
@@ -51,13 +95,13 @@ classdef eiger<handle
             file_in_data_entry = double(remainder);
             % read data
             try
-                data = obj.eiger_read(obj.c.path,data_entry,[1 1 file_in_data_entry],[2070 2167 1]); 
+                data = obj.eiger_read(obj.path,data_entry,[1 1 file_in_data_entry],[obj.size(1) obj.size(2) 1]); 
 %                 data = flipud(permute(flip(data,2),[2 1 []]));                 
                 data = transpose(data);
             catch e
                 warning(e.message);
                 fprintf(1,'Debug information: \n');
-                fprintf(1,'Static path: %s\nData Entry:%s\nFile in data entry:%d\nFrames per file:%d\n',obj.c.path,data_entry,file_in_data_entry,obj.fpf);
+                fprintf(1,'Static path: %s\nData Entry:%s\nFile in data entry:%d\nFrames per file:%d\n',obj.path,data_entry,file_in_data_entry,obj.fpf);
                 rethrow(e)
             end
         end
@@ -87,7 +131,7 @@ classdef eiger<handle
 %                 else 
                     
                     % open an existing master file
-                    fid = H5F.open(obj.c.path,'H5F_ACC_RDONLY','H5P_DEFAULT'); % obj.c.path = /.../myfile_master.h5
+                    fid = H5F.open(obj.path,'H5F_ACC_RDONLY','H5P_DEFAULT'); % obj.c.path = /.../myfile_master.h5
                     
                     % open an existing group
                     gid = H5G.open(fid,'/entry/data','H5P_DEFAULT');
@@ -131,17 +175,17 @@ classdef eiger<handle
             catch e
                 warning(e.message);
                 fprintf(1,'Debug information: \n');
-                fprintf(1,'Static path: %s\nData Entry:%s\nFile in data entry:%d\nFrames per file:%d\n',obj.c.path,data_entry,file_in_data_entry,obj.fpf);
+                fprintf(1,'Static path: %s\nData Entry:%s\nFile in data entry:%d\nFrames per file:%d\n',obj.path,data_entry,file_in_data_entry,obj.fpf);
                 rethrow(e)
             end
         end
         
         function init_h5config(obj)
-            master_file = obj.c.path;
+            master_file = obj.path;
             data_entry = 'data_000001';
             
             % open an existing master file
-            fid = H5F.open(master_file,'H5F_ACC_RDONLY','H5P_DEFAULT'); % obj.c.path = /.../myfile_master.h5
+            fid = H5F.open(master_file,'H5F_ACC_RDONLY','H5P_DEFAULT');
             % open an existing group
             gid = H5G.open(fid,'/entry/data','H5P_DEFAULT'); 
             % open an existing dataset
@@ -214,7 +258,7 @@ classdef eiger<handle
                 % try to read
                 try 
                     data_entry = ['/entry/data/data_' sprintf('%06i',1)];
-                    obj.eiger_read(obj.c.path,data_entry,[1 1 n],[2070 2167 1]);
+                    obj.eiger_read(obj.path,data_entry,[1 1 n],[obj.size(1) obj.size(2) 1]);
                 catch
                     % we have gone out of bounds
                     n = n - m; % go back to value before

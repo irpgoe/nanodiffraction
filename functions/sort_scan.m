@@ -1,24 +1,28 @@
 function out = sort_scan(data,rows,cols,varargin)
-% SORT_SCAN  Description.
+% SORT_SCAN  Reshapes a given one-dimensional or two-dimensional numerical array or cell array into the dimensions of the scan. In the case of a two-dimensional array, each column is treated independently and the result will be output as a stack of two-dimensional numerical arrays. 
 %   
-%   result = sort_scan(data,rows,cols,scanmode)
+%   ``out_array = sort_scan(data,rows,cols,scanmode)``
 %
-% The following arguments are supported:
-%     data:: [] (required)
-%       One-dimensional or two-dimensional data array. If the data is
+% Parameters
+% ----------
+%   data: One- or two-dimensional numerical array or cell array
+%       One-dimensional or two-dimensional numerical array. If the data is
 %       two-dimensional, each column will be treated seperately and stored
 %       in the third dimension of the output array, since the first
 %       dimension of the input array will be expanded into the first two
-%       dimensions of the output array. Data can also be a cell array.
+%       dimensions of the output array. Input data can also be in form of a cell array.
 %
-%     rows:: [] (required)
-%       Number of scan rows.
+%   rows: Integer
+%       Number of scan lines
 %
-%     cols:: [] (required)
-%       Number of scan columns.
+%   cols: Integer
+%       Number of scan points per line
 %
-%     scanmode:: ['horz'] (required)
-%            Several raster scanning modes are possible:
+%   scanmode: Default = 'horz'
+%       Several raster scanning modes are possible, see ASCII art in the following code block:
+%
+%       .. code-block:: matlab
+%
 %             1 horizontal <horz>
 %                *===================>
 %                ====================>
@@ -39,24 +43,24 @@ function out = sort_scan(data,rows,cols,varargin)
 %                v   A   v   A   .
 %                v > A   v > A   .
 %
-% Example:
-%   Example missing.
+% Returns
+% -------
+%   out_array: Two- or three-dimensional numeric array
+%       Two- or three-dimensional numeric array. The first two dimensions are of the size of the scan dimensions.
 %
-% Output arguments:
-%   result:: Description.
-%
-% Copyright 2017 Institute for X-ray Physics (University of Göttingen)
 
+% Copyright 2017 Institute for X-ray Physics (University of Göttingen)
+%
 % Permission is hereby granted, free of charge, to any person obtaining 
 % a copy of this software and associated documentation files (the "Software"), 
 % to deal in the Software without restriction, including without limitation 
 % the rights to use, copy, modify, merge, publish, distribute, sublicense, 
 % and/or sell copies of the Software, and to permit persons to whom the 
 % Software is furnished to do so, subject to the following conditions:
-
+%
 % The above copyright notice and this permission notice shall be included 
 % in all copies or substantial portions of the Software.
-
+%
 % THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
 % EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
 % MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 

@@ -226,29 +226,29 @@ indicating the orientation of the scattering of the structure
 orientation.</dd>
 <dt>autoc():</dt>
 <dd>Auto-contrast based on the 5% percentile.</dd>
-<dt>autonorm(): </dt>
+<dt>autonorm():</dt>
 <dd>Normalizes a distribution (z-transform).</dd>
-<dt>azimuthal_colormap(): </dt>
+<dt>azimuthal_colormap():</dt>
 <dd>Several colormaps to plot phase angles are
 available.</dd>
-<dt>composite(): </dt>
+<dt>composite():</dt>
 <dd>displays a composite image.</dd>
-<dt>diffraction(): </dt>
+<dt>diffraction():</dt>
 <dd>shows a diffraction pattern</dd>
-<dt>imlap(): </dt>
+<dt>imlap():</dt>
 <dd>processes an image and then displays it on a log. scale.</dd>
-<dt>image_overlay(): </dt>
+<dt>image_overlay():</dt>
 <dd>Overlays an image with a transparent second image.</dd>
-<dt>saxs(): </dt>
+<dt>saxs():</dt>
 <dd>shows one or more 1d saxs curves</dd>
-<dt>scalebar(): </dt>
+<dt>scalebar():</dt>
 <dd>Adds a scalebar (in pixel units) to an image.</dd>
-<dt>show_location(): </dt>
+<dt>show_location():</dt>
 <dd>Highlights a scan point in a map based on its
 linear index.</dd>
-<dt>stxm(): </dt>
+<dt>stxm():</dt>
 <dd>displays darkfield images</dd>
-<dt>pca(): </dt>
+<dt>pca():</dt>
 <dd>shows a darkfield with arrows superimposed to indicate the
 director of the anisotropic field</dd>
 </dl>
@@ -257,20 +257,20 @@ director of the anisotropic field</dd>
 </dd>
 </dl>
 <p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
-<p>Permission is hereby granted, free of charge, to any person obtaining 
-a copy of this software and associated documentation files (the ‘’), 
-to deal in the Software without restriction, including without limitation 
-the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-and/or sell copies of the Software, and to permit persons to whom the 
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the ‘’),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
 Software is furnished to do so, subject to the following conditions:</p>
-<p>The above copyright notice and this permission notice shall be included 
+<p>The above copyright notice and this permission notice shall be included
 in all copies or substantial portions of the Software.</p>
-<p>THE SOFTWARE IS PROVIDED ‘’, WITHOUT WARRANTY OF ANY KIND, 
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
-DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
+<p>THE SOFTWARE IS PROVIDED ‘’, WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <dl class="method">
 <dt id="&#64;display.display.add_circle">
@@ -286,7 +286,7 @@ are expected in units of rec. nanometers.</p>
 <dt>qCircles: [] (required)</dt>
 <dd>One-dimensional array of circle radii in units of the
 reciprocal wavevector (inverse nanometers).</dd>
-<dt>opts: [see default values below] </dt>
+<dt>opts: [see default values below]</dt>
 <dd><p class="first">Structure that can contain the following fields. Note
 that all fields are optional. Default values that are
 otherwise used are given as usual in angle brackets
@@ -295,23 +295,24 @@ below:</p>
 <dt>circleColor:: [black]</dt>
 <dd>Color of the circles to be plotted. Any default Matlab
 color can be chosen.</dd>
-<dt>wedge:: [0 360] </dt>
+<dt>wedge:: [0 360]</dt>
 <dd>One-dimensional array of circle radii in units of the
 reciprocal wavevector (inverse nanometers).</dd>
 </dl>
 </dd>
 </dl>
 </dd>
-<dt>Example:</dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
-<span class="n">e</span> <span class="p">=</span> <span class="n">nanodiffraction</span><span class="p">();</span> 
+</dl>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+<span class="n">e</span> <span class="p">=</span> <span class="n">nanodiffraction</span><span class="p">();</span>
 <span class="n">frame</span> <span class="p">=</span> <span class="n">e</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
 <span class="n">d</span><span class="p">.</span><span class="n">diffraction</span><span class="p">(</span><span class="n">frame</span><span class="p">);</span>
 <span class="n">d</span><span class="p">.</span><span class="n">add_circle</span><span class="p">([</span><span class="mf">0.2</span> <span class="mf">0.6</span> <span class="mf">1.2</span><span class="p">],</span><span class="s">&#39;white&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
@@ -336,15 +337,14 @@ vertical line that is superimposed onto the current
 plot.</dd>
 </dl>
 </div></blockquote>
-<dl class="docutils">
-<dt>Example:</dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
 <span class="n">d</span><span class="p">.</span><span class="n">saxs</span><span class="p">(</span><span class="n">some_saxs_data</span><span class="p">);</span>
 <span class="n">d</span><span class="p">.</span><span class="n">add_line</span><span class="p">([</span><span class="mf">0.2</span> <span class="mf">0.6</span> <span class="mf">1.2</span><span class="p">]);</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
@@ -384,13 +384,14 @@ direction, respectively.</dd>
 </dd>
 </dl>
 </dd>
-<dt>Example:</dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+</dl>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
 <span class="n">d</span><span class="p">.</span><span class="n">add_quiver</span><span class="p">(</span><span class="n">orientation</span><span class="p">,</span><span class="n">struct</span><span class="p">(</span><span class="s">&#39;sampling&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="s">&#39;scale&#39;</span><span class="p">,</span><span class="mf">0.1</span><span class="p">));</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
@@ -422,14 +423,15 @@ otherwise used are as usual given in angle brackets:</p>
 </dd>
 </dl>
 </dd>
-<dt>Example:</dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+</dl>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
 <span class="n">d</span><span class="p">.</span><span class="n">stxm</span><span class="p">(</span><span class="n">some_map</span><span class="p">);</span>
 <span class="n">d</span><span class="p">.</span><span class="n">add_scalebar</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span> <span class="c">% scale bar length = 100 scan points * 2 µm steps</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
@@ -466,13 +468,14 @@ xlabel (true).</dd>
 </dd>
 </dl>
 </dd>
-<dt>Example:</dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+</dl>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
 <span class="n">d</span><span class="p">.</span><span class="n">add_title</span><span class="p">(</span><span class="n">struct</span><span class="p">(</span><span class="s">&#39;sb_len&#39;</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="s">&#39;subtitle&#39;</span><span class="p">,</span><span class="n">true</span><span class="p">));</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
@@ -491,14 +494,15 @@ xlabel (true).</dd>
 <dd>Handle to a files-module.</dd>
 </dl>
 </dd>
-<dt>Example: </dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="p">=</span> <span class="n">nanodiffraction</span><span class="p">(</span><span class="c">...);</span>
+</dl>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="p">=</span> <span class="n">nanodiffraction</span><span class="p">(</span><span class="c">...);</span>
 <span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">(</span><span class="c">...);</span>
 <span class="n">d</span><span class="p">.</span><span class="n">attach</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
@@ -536,9 +540,9 @@ Kovesi is recommended.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">‘hsv’:</th><td class="field-body">default HSV colormap</td>
 </tr>
-<tr class="field-even field"><th class="field-name">‘pmkmp’:</th><td class="field-body">based on the matlab package 
-‘Perceptually improved colormaps’ by 
-Matteo Niccoli and the adaptation by 
+<tr class="field-even field"><th class="field-name">‘pmkmp’:</th><td class="field-body">based on the matlab package
+‘Perceptually improved colormaps’ by
+Matteo Niccoli and the adaptation by
 Mike Bostock
 (<a class="reference external" href="https://bl.ocks.org/mbostock/310c99e53880faec2434">https://bl.ocks.org/mbostock/310c99e53880faec2434</a>)
 (<a class="reference external" href="https://github.com/d3/d3-scale">https://github.com/d3/d3-scale</a>)</td>
@@ -546,7 +550,7 @@ Mike Bostock
 <tr class="field-odd field"><th class="field-name">‘isoAz’:</th><td class="field-body">uses pmkmp</td>
 </tr>
 <tr class="field-even field"><th class="field-name">‘peterkovesi’:</th><td class="field-body">Based on “Peter Kovesi. Good Colour
-Maps: How to Design Them. 
+Maps: How to Design Them.
 arXiv:1509.03700 [cs.GR] 2015”</td>
 </tr>
 </tbody>
@@ -554,19 +558,20 @@ arXiv:1509.03700 [cs.GR] 2015”</td>
 </dd>
 </dl>
 </dd>
-<dt>Example:</dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+</dl>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
 <span class="n">d</span><span class="p">.</span><span class="n">stxm</span><span class="p">(</span><span class="n">some_stxm_map</span><span class="p">);</span>
 <span class="n">d</span><span class="p">.</span><span class="n">remove_axis</span><span class="p">();</span>
 <span class="n">cmap</span> <span class="p">=</span> <span class="n">d</span><span class="p">.</span><span class="n">azimuthal_colormap</span><span class="p">(</span><span class="s">&#39;pmkmp&#39;</span><span class="p">);</span>
 <span class="n">colormap</span><span class="p">(</span><span class="n">gca</span><span class="p">,</span><span class="n">cmap</span><span class="p">);</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd><dl class="first last docutils">
-<dt>new_map: </dt>
+<dt>new_map:</dt>
 <dd>Colormap based on the choice made using the
 colormap name.</dd>
 </dl>
@@ -594,10 +599,10 @@ manually. p is a structure that can contain the
 following fields:</p>
 <dl class="last docutils">
 <dt>Ny: [] (required)</dt>
-<dd>Number of pixels along the horizontal dimension of a 
+<dd>Number of pixels along the horizontal dimension of a
 single frame.</dd>
 <dt>Nz: [] (required)</dt>
-<dd>Number of pixels along the vertical dimension of a 
+<dd>Number of pixels along the vertical dimension of a
 single frame.</dd>
 <dt>imsY: [] (required)</dt>
 <dd>Number of images displayed along the horizontal
@@ -606,50 +611,51 @@ dimension of the composite image.</dd>
 <dd>Number of images displayed along the vertical
 dimension of the composite image.</dd>
 <dt>yCrop: [1 obj.scan.SNy] (optional)</dt>
-<dd>Description. This value is optional, but useful for 
+<dd>Description. This value is optional, but useful for
 future reference.</dd>
 <dt>zCrop: [1 obj.scan.SNz] (optional)</dt>
-<dd>Description. This value is optional, but useful for 
+<dd>Description. This value is optional, but useful for
 future reference.</dd>
 <dt>ySkip: [1] (optional)</dt>
-<dd>Description. This value is optional, but useful for 
+<dd>Description. This value is optional, but useful for
 future reference.</dd>
 <dt>zSkip: [1] (optional)</dt>
-<dd>Description. This value is optional, but useful for 
+<dd>Description. This value is optional, but useful for
 future reference.</dd>
 <dt>correction: [‘off’] (optional)</dt>
-<dd>Description. This value is optional, but useful for 
+<dd>Description. This value is optional, but useful for
 future reference.</dd>
 <dt>emptySub: [‘off’] (optional)</dt>
-<dd>Description. This value is optional, but useful for 
+<dd>Description. This value is optional, but useful for
 future reference.</dd>
 <dt>empty: [] (optional)</dt>
-<dd>Description. This value is optional, but useful for 
+<dd>Description. This value is optional, but useful for
 future reference.</dd>
 <dt>heal: [‘off’] (optional)</dt>
-<dd>Switch that toggled healing on or off for the 
-calculation of the composite image. This value is 
+<dd>Switch that toggled healing on or off for the
+calculation of the composite image. This value is
 optional, but useful for future reference.</dd>
 <dt>healmask: [] (optional)</dt>
 <dd>Mask that has been used for healing of the diffraction
 patterns. This value is optional, but useful for future
 reference.</dd>
 <dt>binning: [] (optional)</dt>
-<dd>Description. This value is optional, but useful for 
+<dd>Description. This value is optional, but useful for
 future reference.</dd>
 <dt>detRoiY: [] (optional)</dt>
-<dd>Description. This value is optional, but useful for 
+<dd>Description. This value is optional, but useful for
 future reference.</dd>
 <dt>detRoiZ: [] (optional)</dt>
-<dd>Description. This value is optional, but useful for 
+<dd>Description. This value is optional, but useful for
 future reference.</dd>
 </dl>
 </dd>
 </dl>
 </dd>
-<dt>Example:</dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="p">=</span> <span class="n">nanodiffraction</span><span class="p">(</span><span class="o">&lt;</span><span class="n">some</span> <span class="n">settings</span> <span class="n">here</span><span class="o">&gt;</span><span class="p">);</span>
+</dl>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="p">=</span> <span class="n">nanodiffraction</span><span class="p">(</span><span class="o">&lt;</span><span class="n">some</span> <span class="n">settings</span> <span class="n">here</span><span class="o">&gt;</span><span class="p">);</span>
 <span class="n">e</span><span class="p">.</span><span class="n">set_scan_info</span><span class="p">(</span><span class="o">&lt;</span><span class="n">some</span> <span class="n">settings</span> <span class="n">here</span><span class="o">&gt;</span><span class="p">);</span>
 <span class="p">[</span><span class="n">comp</span><span class="p">,</span><span class="n">p</span><span class="p">]</span> <span class="p">=</span> <span class="n">e</span><span class="p">.</span><span class="n">calculate_composite</span><span class="p">(</span><span class="c">...</span>
                 <span class="n">struct</span><span class="p">(</span><span class="s">&#39;ySkip&#39;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="s">&#39;zSkip&#39;</span><span class="p">,</span><span class="mi">4</span><span class="p">));</span>
@@ -657,7 +663,7 @@ future reference.</dd>
 <span class="n">d</span><span class="p">.</span><span class="n">composite</span><span class="p">(</span><span class="n">comp</span><span class="p">,</span><span class="n">p</span><span class="p">);</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
@@ -666,8 +672,8 @@ future reference.</dd>
 <dl class="method">
 <dt id="&#64;display.display.copy">
 <code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#@display.display.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>COPY  Makes a copy of a handle object. This keeps track of 
-all the given parameters so that multiple instances of a 
+<dd><p>COPY  Makes a copy of a handle object. This keeps track of
+all the given parameters so that multiple instances of a
 display module can be used.</p>
 <blockquote>
 <div><code class="docutils literal notranslate"><span class="pre">new_instance</span> <span class="pre">=</span> <span class="pre">copy(display_object)</span></code></div></blockquote>
@@ -679,18 +685,17 @@ display module can be used.</p>
 copied.</dd>
 </dl>
 </div></blockquote>
-<dl class="docutils">
-<dt>Example:</dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d_generic</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d_generic</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
 <span class="n">d_saxsdata</span> <span class="p">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">d_generic</span><span class="p">);</span>
 <span class="n">d_waxsdata</span> <span class="p">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">d_generic</span><span class="p">);</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd><dl class="first last docutils">
-<dt>new_instance: </dt>
+<dt>new_instance:</dt>
 <dd>A copy of the initial display_object.</dd>
 </dl>
 </dd>
@@ -723,22 +728,22 @@ Note, that all fields are optional. Default values
 that are otherwise used are as usual given in angle
 brackets:</p>
 <dl class="last docutils">
-<dt>process: [‘on’] </dt>
+<dt>process: [‘on’]</dt>
 <dd>Either ‘on’ or ‘off’. If activated
 (‘on’), then data of the size of a raw detector
 frame is expected and the data will be
 automatically binned and cropped based on the
 detector roi and binning settings</dd>
 <dt>qRange: [-max(max(e.qr)) max(max(e.qr))]</dt>
-<dd>Lower and upper limit for the detector q-range to 
+<dd>Lower and upper limit for the detector q-range to
 be plotted on the axis of the figure. Typically,
 the full q-range of the detector is used. The
 q-range of the currently linked nanodiffraction
 object (shorthand: e) is used for this purpose.</dd>
 <dt>qSteps: [round((2*max(max(obj.exp.qr)))) / 10]</dt>
-<dd>Distance between ticks in units of the radial 
-wavevector transfer. The q-range of the currently 
-linked nanodiffraction object (shorthand: e) is 
+<dd>Distance between ticks in units of the radial
+wavevector transfer. The q-range of the currently
+linked nanodiffraction object (shorthand: e) is
 used for this purpose.</dd>
 <dt>alpha: []</dt>
 <dd>A two-dimensional alpha map.</dd>
@@ -746,15 +751,16 @@ used for this purpose.</dd>
 </dd>
 </dl>
 </dd>
-<dt>Example:</dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+</dl>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
 <span class="n">e</span> <span class="p">=</span> <span class="n">nanodiffraction</span><span class="p">();</span>
-<span class="n">frame</span> <span class="p">=</span> <span class="n">e</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> 
+<span class="n">frame</span> <span class="p">=</span> <span class="n">e</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
 <span class="n">d</span><span class="p">.</span><span class="n">diffraction</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span><span class="n">struct</span><span class="p">(</span><span class="s">&#39;process&#39;</span><span class="p">,</span><span class="s">&#39;off&#39;</span><span class="p">,</span><span class="s">&#39;qSteps&#39;</span><span class="p">,</span><span class="mi">5</span><span class="p">);</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
@@ -763,10 +769,10 @@ used for this purpose.</dd>
 <dl class="method">
 <dt id="&#64;display.display.image_overlay">
 <code class="descname">image_overlay</code><span class="sig-paren">(</span><em>im1</em>, <em>im2</em>, <em>transp</em><span class="sig-paren">)</span><a class="headerlink" href="#@display.display.image_overlay" title="Permalink to this definition">¶</a></dt>
-<dd><p>IMAGE_OVERLAY  Overlays two images. The second image is 
-placed on top of the first image, and the transparency 
+<dd><p>IMAGE_OVERLAY  Overlays two images. The second image is
+placed on top of the first image, and the transparency
 channel of the second image can be tuned for overlay.
-Note, that the images should be given in rgb color. To create 
+Note, that the images should be given in rgb color. To create
 rgb images use e.g.:</p>
 <blockquote>
 <div>rgbimage1 = ind2rgb(round(mat2gray(data)*63 + 1),gray);</div></blockquote>
@@ -792,8 +798,10 @@ rgb images use e.g.:</p>
 the interval (0,1).</dd>
 </dl>
 </dd>
-<dt>Example:</dt>
-<dd>Example is missing.</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>Example is missing.</p>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
@@ -815,15 +823,16 @@ setting of the detector ROI and binning factors.</p>
 dimensions as the detector.</dd>
 </dl>
 </dd>
-<dt>Example:</dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+</dl>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
 <span class="n">e</span> <span class="p">=</span> <span class="n">nanodiffraction</span><span class="p">();</span>
 <span class="n">frame</span> <span class="p">=</span> <span class="n">e</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
 <span class="n">d</span><span class="p">.</span><span class="n">imlap</span><span class="p">(</span><span class="n">frame</span><span class="p">);</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
@@ -871,7 +880,7 @@ as options that indicate which eigenvector
 direction should be used.</dd>
 <dt>quiver: [‘off’]</dt>
 <dd>If set to ‘on’ quiver lines will be superimposed on
-each data point to indicate fibre or streak 
+each data point to indicate fibre or streak
 orientation.
 Note, that default quiver arguments are used. For a
 more custom quiver display, please use
@@ -885,13 +894,14 @@ automatically used.</dd>
 </dd>
 </dl>
 </dd>
-<dt>Example:</dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="p">.</span><span class="n">display</span><span class="p">();</span>
+</dl>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="p">.</span><span class="n">display</span><span class="p">();</span>
  <span class="n">d</span><span class="p">.</span><span class="n">pca</span><span class="p">(</span><span class="n">some_orientation_map</span><span class="p">,</span><span class="n">struct</span><span class="p">(</span><span class="s">&#39;quiver&#39;</span><span class="p">,</span><span class="s">&#39;on&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
@@ -905,15 +915,14 @@ figure.</p>
 <blockquote>
 <div><code class="docutils literal notranslate"><span class="pre">remove_axis()</span></code></div></blockquote>
 <p>The function does not require any arguments.</p>
-<dl class="docutils">
-<dt>Example:</dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
 <span class="n">d</span><span class="p">.</span><span class="n">stxm</span><span class="p">(</span><span class="n">some_map</span><span class="p">);</span>
 <span class="n">d</span><span class="p">.</span><span class="n">remove_axis</span><span class="p">();</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
@@ -922,7 +931,7 @@ figure.</p>
 <dl class="method">
 <dt id="&#64;display.display.round_limits">
 <code class="descname">round_limits</code><span class="sig-paren">(</span><em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#@display.display.round_limits" title="Permalink to this definition">¶</a></dt>
-<dd><p>ROUND_LIMITS  rounds the caxis limits of the current figure to 
+<dd><p>ROUND_LIMITS  rounds the caxis limits of the current figure to
 a given decimal digit level:</p>
 <div class="line-block">
 <div class="line">e.g.: round(1342,-3) =&gt; 1000</div>
@@ -938,14 +947,15 @@ a given decimal digit level:</p>
 Matlab-round function.</dd>
 </dl>
 </dd>
-<dt>Example:</dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+</dl>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
 <span class="n">d</span><span class="p">.</span><span class="n">stxm</span><span class="p">(</span><span class="n">some_map</span><span class="p">);</span>
 <span class="n">d</span><span class="p">.</span><span class="n">round_limits</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">);</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
@@ -979,7 +989,7 @@ otherwise used are as usual given in angle brackets:</p>
 to ‘’.</dd>
 <dt>pixel: [‘off’]</dt>
 <dd>If the structure factor should be plotted as a function
-of detector pixel, ‘pixel’ should be set to ‘’. In 
+of detector pixel, ‘pixel’ should be set to ‘’. In
 this case, the SF should contain a field ‘’.</dd>
 <dt>mode: [‘semilogy’]</dt>
 <dd>Either ‘semilogy’ or ‘loglog’ are accepted.</dd>
@@ -987,15 +997,16 @@ this case, the SF should contain a field ‘’.</dd>
 </dd>
 </dl>
 </dd>
-<dt>Example:</dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+</dl>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
 <span class="n">d</span><span class="p">.</span><span class="n">saxs</span><span class="p">({</span><span class="n">my_1d_averaged_data</span><span class="p">,</span><span class="c">...</span>
    <span class="n">struct</span><span class="p">(</span><span class="s">&#39;dat_1d&#39;</span><span class="p">,</span><span class="n">some_1d_data</span><span class="p">,</span><span class="s">&#39;qr&#39;</span><span class="p">,</span><span class="n">some_qr_axis</span><span class="p">)},</span><span class="c">...</span>
    <span class="n">struct</span><span class="p">(</span><span class="s">&#39;mode&#39;</span><span class="p">,</span><span class="s">&#39;loglog&#39;</span><span class="p">));</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
@@ -1016,7 +1027,7 @@ in a two-dimensional parameter map.</p>
 scan. Note, that the index starts with 1 in the
 top-left corner of the scan.</dd>
 <dt>opts: [] (optional)</dt>
-<dd><p class="first">Structure that can contain the following field. Note 
+<dd><p class="first">Structure that can contain the following field. Note
 that currently, only a single field can be set, which
 is likely to be made more flexible in the future.</p>
 <dl class="last docutils">
@@ -1027,14 +1038,15 @@ be incremented. Either ‘col’ or ‘row’ are allowed.</dd>
 </dd>
 </dl>
 </dd>
-<dt>Example: </dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+</dl>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
 <span class="n">imagesc</span><span class="p">(</span><span class="nb">rand</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span><span class="mi">21</span><span class="p">));</span>
 <span class="n">d</span><span class="p">.</span><span class="n">show_location</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span><span class="n">struct</span><span class="p">(</span><span class="s">&#39;dir&#39;</span><span class="p">,</span><span class="s">&#39;row&#39;</span><span class="p">));</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
@@ -1057,7 +1069,7 @@ that all fields are optional. Default values that are
 otherwise used are as usual given in angle brackets:</p>
 <blockquote class="last">
 <div><dl class="docutils">
-<dt>sampl: [100] </dt>
+<dt>sampl: [100]</dt>
 <dd>A tick is added to every N-th pixel/scan point.</dd>
 <dt>scale: [1]</dt>
 <dd>Length of one pixel/scan point in units ‘unit’.</dd>
@@ -1071,16 +1083,15 @@ range within (0,1).</dd>
 </dd>
 </dl>
 </div></blockquote>
-<dl class="docutils">
-<dt>Example:</dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="p">=</span> <span class="n">display</span><span class="p">();</span>
 <span class="n">d</span><span class="p">.</span><span class="n">stxm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">struct</span><span class="p">(</span><span class="s">&#39;sampl&#39;</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="c">...</span>
                    <span class="s">&#39;scale&#39;</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="c">...</span>
                    <span class="s">&#39;unit&#39;</span><span class="p">,</span><span class="s">&#39;um&#39;</span><span class="p">));</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>

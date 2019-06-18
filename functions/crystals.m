@@ -1,35 +1,40 @@
 function [result] = crystals(data,mask,sel,threshold)    
-% CRYSTAL  Calculates Signal-to-Noise Ratio and
-% summarizes reflection intensity (in between qr_min and qr_max if
-% requested)
+% CRYSTAL  Calculates the signal-to-noise ratio and calculates the integrated intensity for data above a given threshold
 %
-%   [RESULT] = GET_INDEX(DATA,MASK,SEL,THRESHOLD)
+%   ``[result] = crystals(data,mask,sel,threshold)``
 %
-%   The following arguments are required:
-%       DATA:: ()
-%           Data (2d array).
+% Parameters
+% ----------
+% data: Two-dimensional numeric array
+%   Diffraction pattern
 %
-%       MASK:: ()
-%           Bad pixels.
+% mask: logical array, default = []
+%   Logical array of the size of the input data that defines which pixels are considered bad (1 = bad, 0 = valid)
 %
-%       SEL:: ()
-%           Good pixels.
+% selection: logical array, default = []
+%   Logical array of the size of the input data that defines which pixels should be analyzed (1 = valid, 0 = invalid)
 %
-%       THRESHOLD:: ()
-%           Maximal qr value to be taken into account.
+% threshold: numeric value
+%   Data above which the scattered intensity should be integrated
 %
-% Copyright 2017 Institute for X-ray Physics (University of Göttingen)
+% Returns
+% -------
+% result: Numeric value
+%   Integrated intensity of scattered intensity of all valid data points above the given threshold 
+%   
 
+% Copyright 2017 Institute for X-ray Physics (University of Göttingen)
+%
 % Permission is hereby granted, free of charge, to any person obtaining 
 % a copy of this software and associated documentation files (the "Software"), 
 % to deal in the Software without restriction, including without limitation 
 % the rights to use, copy, modify, merge, publish, distribute, sublicense, 
 % and/or sell copies of the Software, and to permit persons to whom the 
 % Software is furnished to do so, subject to the following conditions:
-
+%
 % The above copyright notice and this permission notice shall be included 
 % in all copies or substantial portions of the Software.
-
+%
 % THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
 % EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
 % MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 

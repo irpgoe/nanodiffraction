@@ -180,104 +180,123 @@
 <dl class="function">
 <dt id="functions.pca">
 <code class="descclassname">functions.</code><code class="descname">pca</code><span class="sig-paren">(</span><em>dat</em>, <em>qy</em>, <em>qz</em>, <em>mask</em>, <em>sel</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.pca" title="Permalink to this definition">¶</a></dt>
-<dd><p>PCA  calculates the covariance of the diffraction pattern and determines the eigenvalues of the scattering distribution.</p>
+<dd><p>PCA calculates the covariance of the diffraction pattern and determines the eigenvalues of the scattering distribution</p>
 <blockquote>
-<div>result = pca(data,qy,qz,mask,selection)</div></blockquote>
-<dl class="docutils">
-<dt>The following arguments are supported:</dt>
-<dd><dl class="first last docutils">
-<dt>data:: [] (required)</dt>
-<dd>Diffraction pattern.</dd>
-<dt>qy:: [] (required)</dt>
-<dd>2d array of horizontal momentum transfer. The array has to
-match the dimensions of data.</dd>
-<dt>qz:: [] (required)</dt>
-<dd>2d array of vertical momentum transfer. The array has to match 
-the dimensions of data.</dd>
-<dt>mask:: [] (required)</dt>
-<dd>Mask that defines which pixels are considered bad. The mask can
-be an empty matrix. In this case, it is assumed that all pixels
-are valid. The array has to math the dimensions of data.</dd>
-<dt>selection:: [] (required)</dt>
-<dd>Data selection matrix. The selection can be an empty matrix. In
-this case, it is assumed that all pixels should be selected. 
-The array has to match the dimensions of data.</dd>
-</dl>
-</dd>
-<dt>Example:</dt>
-<dd>pca_result = pca(a_2d_diffraction_pattern,qy,qz,mask,[]);</dd>
-<dt>Output arguments:</dt>
-<dd><dl class="first last docutils">
-<dt>result:: A structure that contains the following fields:</dt>
-<dd><ul class="first last simple">
-<li>w:: Anisotropy of the data.</li>
-<li>angle:: Orientation angle of the largest component.</li>
-<li>lambda_1:: Eigenvalue of the largest component.</li>
-<li>lambda_2:: Eigenvalue of the smallest component.</li>
+<div><code class="docutils literal notranslate"><span class="pre">result</span> <span class="pre">=</span> <span class="pre">pca(data,</span> <span class="pre">qy,</span> <span class="pre">qz,</span> <span class="pre">mask,</span> <span class="pre">selection)</span></code></div></blockquote>
+<p>In a principal component analysis of a scattering distribution, the covariance matrix of the distribution is calculated and orthogonalized.
+The procedure is described in more detail in Bernhardt et al., 2016.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<em>numerical array</em>) – Diffraction pattern</li>
+<li><strong>qy</strong> (<em>numerical array</em>) – Numerical array of the size of the input data that contains the horizontal momentum transfer</li>
+<li><strong>qz</strong> (<em>numerical array</em>) – Numerical array of the size of the input data that contains the vertical momentum transfer</li>
+<li><strong>mask</strong> (<em>logical array, default = []</em>) – Logical array of the size of the input data that defines which pixels are considered bad (1 = bad, 0 = valid)</li>
+<li><strong>selection</strong> (<em>logical array, default = []</em>) – Logical array of the size of the input data that defines which pixels should be analyzed (1 = valid, 0 = invalid)</li>
 </ul>
-</dd>
-</dl>
-</dd>
-</dl>
-<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p><strong>result</strong> – Structure with the following fields:</p>
+<ul class="simple">
+<li>w: Anisotropy of the data</li>
+<li>angle: Orientation of the first principal component. Note that 0 degrees is along the -y axis and the angle is defined counter-clockwise</li>
+<li>lambda_1: Eigenvalue of the first principal component</li>
+<li>lambda_2: Eigenvalue of the second principal component</li>
+</ul>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">structure</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Example 1:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="p">=</span> <span class="n">nanodiffraction</span><span class="p">();</span>
+<span class="n">streak</span> <span class="p">=</span> <span class="n">e</span><span class="p">.</span><span class="n">simulate_streak</span><span class="p">();</span>
+<span class="n">QY</span> <span class="p">=</span> <span class="p">;</span>
+<span class="n">QZ</span> <span class="p">=</span> <span class="p">;</span>
+<span class="n">pca_result</span> <span class="p">=</span> <span class="n">pca</span><span class="p">(</span><span class="n">streak</span><span class="p">,</span><span class="n">QY</span><span class="p">,</span><span class="n">QZ</span><span class="p">,[],[]);</span>
+</pre></div>
+</div>
+<p>See also EIG</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="functions.stxm">
 <code class="descclassname">functions.</code><code class="descname">stxm</code><span class="sig-paren">(</span><em>data</em>, <em>mask</em>, <em>sel</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.stxm" title="Permalink to this definition">¶</a></dt>
-<dd><p>STXM  Sums a 2d array. In addition, it takes into
-account a minimum and maximum q_r value for integration</p>
+<dd><p>STXM  Integrated the intensity in a diffraction pattern or part of a diffraction pattern</p>
 <blockquote>
-<div>result = stxm(data,mask,selection)</div></blockquote>
-<dl class="docutils">
-<dt>The following arguments are supported:</dt>
-<dd><dl class="first last docutils">
-<dt>data:: [] (required) </dt>
-<dd>A two-dimensional diffraction pattern.</dd>
-<dt>mask:: [] (required)</dt>
-<dd>Mask that defines which pixels are bad and should not be taken
-into account. The mask can be an empty matrix. In this case, it
-is assumed that all pixels are valid. The dimensions of mask
-have to match the size of data.</dd>
-<dt>selection:: [] (required)</dt>
-<dd>Data selection, defines which pixels should be taken into
-account. The selection can be an empty matrix. In this case, it
-is assumed that all pixels should be selected. The dimensions
-of mask have to match the size of data.</dd>
-</dl>
-</dd>
-<dt>Example:</dt>
-<dd>stxm_result = stxm(a_2d_diffraction_pattern,mask,[]);</dd>
-<dt>Output arguments:</dt>
-<dd>result:: The integrated intensity of data.</dd>
-</dl>
-<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+<div><code class="docutils literal notranslate"><span class="pre">result</span> <span class="pre">=</span> <span class="pre">stxm(data,mask,selection)</span></code></div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<em>two-dimensional numeric array</em>) – A diffraction pattern</li>
+<li><strong>mask</strong> (<em>logical array, default = []</em>) – Logical array of the size of the input data that defines which pixels are considered bad (1 = bad, 0 = valid)</li>
+<li><strong>selection</strong> (<em>logical array, default = []</em>) – Logical array of the size of the input data that defines which pixels should be analyzed (1 = valid, 0 = invalid)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>result</strong> – The integrated intensity of data within a given selection and without masked pixels</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Double</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Example 1:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">stxm_result</span> <span class="p">=</span> <span class="n">stxm</span><span class="p">(</span><span class="n">data</span><span class="p">,[],[]);</span>
+</pre></div>
+</div>
+<p>See also PCA</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="functions.baseline">
 <code class="descclassname">functions.</code><code class="descname">baseline</code><span class="sig-paren">(</span><em>data</em>, <em>winSize</em>, <em>iterations</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.baseline" title="Permalink to this definition">¶</a></dt>
-<dd><p>BASELINE  Description.</p>
+<dd><p>BASELINE  Iterative baseline identification using the strip algorithm as used in pyMCA, see Kieffer et al., 2014.</p>
 <blockquote>
-<div>data = baseline(data, winSize, iterations)</div></blockquote>
-<p>The following arguments are supported:</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>data::</dt>
-<dd>The data that will be processed.</dd>
-<dt>winSize::</dt>
-<dd>Integer &gt; 0</dd>
-<dt>iterations::</dt>
-<dd>Integer &gt; 0</dd>
-</dl>
-</div></blockquote>
-<dl class="docutils">
-<dt>Example:</dt>
-<dd>Example missing.</dd>
-<dt>Output arguments:</dt>
-<dd>Description.</dd>
-</dl>
-<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+<div><code class="docutils literal notranslate"><span class="pre">data</span> <span class="pre">=</span> <span class="pre">baseline(data,</span> <span class="pre">winSize,</span> <span class="pre">iterations)</span></code></div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<em>One-dimensional numeric array</em>) – Input data</li>
+<li><strong>winSize</strong> (<em>integer</em>) – Integer value greater than 0, that defines the size of the filter window used for the strip algorithm.</li>
+<li><strong>iterations</strong> (<em>integer</em>) – Integer value greater than 0, that defines the number of iterations.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>data</strong> – Baseline that can be used for background subtraction</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">One-dimensional numeric array</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Example 1:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]</span>   <span class="p">=</span> <span class="n">split_struct</span><span class="p">(</span><span class="n">b1d</span><span class="p">(</span><span class="n">data</span><span class="p">,[],[],</span><span class="n">e</span><span class="p">.</span><span class="n">qr</span><span class="p">,</span><span class="mi">512</span><span class="p">),{</span><span class="s">&#39;x&#39;</span><span class="p">,</span><span class="s">&#39;y&#39;</span><span class="p">});</span>
+<span class="n">bl</span>      <span class="p">=</span> <span class="n">baseline</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1000</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Example 2:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">e</span>       <span class="p">=</span> <span class="n">nanodiffraction</span><span class="p">();</span>
+<span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]</span>   <span class="p">=</span> <span class="n">split_struct</span><span class="p">(</span><span class="n">b1d</span><span class="p">(</span><span class="n">data</span><span class="p">,[],[],</span><span class="n">e</span><span class="p">.</span><span class="n">qr</span><span class="p">,</span><span class="mi">512</span><span class="p">),{</span><span class="s">&#39;x&#39;</span><span class="p">,</span><span class="s">&#39;y&#39;</span><span class="p">});</span>
+<span class="n">bl</span>      <span class="p">=</span> <span class="n">baseline</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1000</span><span class="p">);</span>
+<span class="n">bgr_2d</span>  <span class="p">=</span> <span class="n">e</span><span class="p">.</span><span class="n">azimuthal_spread</span><span class="p">(</span><span class="c">...);</span>
+<span class="n">bgr_sub</span> <span class="p">=</span> <span class="n">data</span> <span class="o">-</span> <span class="n">bgr_2d</span><span class="p">;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -286,133 +305,174 @@ of mask have to match the size of data.</dd>
 <dd><p>AUTOC  estimates the contrast of an image to lie within the 5 and 95
 percentile of an image. Data will be clipped to the according value</p>
 <blockquote>
-<div><p>[DATA,LOW,HIGH] = AUTOC(DATA)</p>
-<dl class="docutils">
-<dt>The following arguments are required:</dt>
-<dd><dl class="first last docutils">
-<dt>DAT:: ()</dt>
-<dd>Diffraction pattern.</dd>
-<dt>LOW:: ()</dt>
-<dd>lower percentile.</dd>
-<dt>HIGH:: ()</dt>
-<dd>upper percentile.</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
-<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+<div><code class="docutils literal notranslate"><span class="pre">[DATA,LOW,HIGH]</span> <span class="pre">=</span> <span class="pre">AUTOC(DATA)</span></code></div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>Numeric array</em>) – Numeric array of any dimension</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>data</strong> (<em>Numeric array</em>) – Input data clipped at the lower and upper percentile</li>
+<li><strong>low</strong> (<em>Floating-point number</em>) – Value of the lower (5%) percentile</li>
+<li><strong>high</strong> (<em>Floating-point number</em>) – Value of the upper (95%) percentile</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Example 1:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="p">=</span> <span class="nb">magic</span><span class="p">(</span><span class="mi">256</span><span class="p">);</span>
+<span class="p">[</span><span class="n">data_clipped</span><span class="p">,</span><span class="n">low</span><span class="p">,</span><span class="n">high</span><span class="p">]</span> <span class="p">=</span> <span class="n">autoc</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="functions.binning_2d">
 <code class="descclassname">functions.</code><code class="descname">binning_2d</code><span class="sig-paren">(</span><em>image</em>, <em>binx</em>, <em>biny</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.binning_2d" title="Permalink to this definition">¶</a></dt>
-<dd><p>BINNING_2D  takes in an image and bins it according to the binning
-factors BINX and BINY.</p>
+<dd><p>BINNING_2D  bins and image according to the binning
+factors binx and biny.</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>Usage:</dt>
-<dd>BINNED_IMAGE = BINNING_2D(IMAGE, BINX, BINY)</dd>
-<dt>Arguments:</dt>
-<dd><dl class="first last docutils">
-<dt>image:: [no default]</dt>
-<dd>2d array.</dd>
-<dt>binx:: [no default]</dt>
-<dd>Integer binning factor along the horizontal dimension.</dd>
-<dt>biny:: [no default]</dt>
-<dd>Integer binning factor along the vertical dimension.</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">BINNED_IMAGE</span> <span class="pre">=</span> <span class="pre">BINNING_2D(IMAGE,</span> <span class="pre">BINX,</span> <span class="pre">BINY)</span></code></div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>image</strong> (<em>Two-dimensional numeric array</em>) – Input image</li>
+<li><strong>binx</strong> (<em>Integer</em>) – Integer binning factor along the horizontal dimension</li>
+<li><strong>biny</strong> (<em>Integer</em>) – Integer binning factor along the vertical dimension</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>binned_image</strong> – Image binned by the binning factors binx and biny</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Two-dimensional numeric array</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Example 1:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">testimage</span> <span class="p">=</span> <span class="nb">magic</span><span class="p">(</span><span class="mi">256</span><span class="p">);</span>
+<span class="n">binned_im</span> <span class="p">=</span> <span class="n">binning_2d</span><span class="p">(</span><span class="n">testimage</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="functions.dpc">
 <code class="descclassname">functions.</code><code class="descname">dpc</code><span class="sig-paren">(</span><em>Mass</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.dpc" title="Permalink to this definition">¶</a></dt>
-<dd><p>R = [Spalte,Zeile]
-calculates center of mass for an image</p>
-<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+<dd><p>DPC calculates center of mass for an image</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">[dpcx,</span> <span class="pre">dpcy]</span> <span class="pre">=</span> <span class="pre">dpc(data)</span></code></div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>numerical array</em>) – Diffraction pattern</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>dpcx</strong> (<em>Floating-point number</em>) – center of mass along the horizontal dimension</li>
+<li><strong>dpcy</strong> (<em>Floating-point number</em>) – center of mass along the vertical dimension</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="functions.get_index">
 <code class="descclassname">functions.</code><code class="descname">get_index</code><span class="sig-paren">(</span><em>y</em>, <em>val</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.get_index" title="Permalink to this definition">¶</a></dt>
-<dd><p>GET_INDEX  calculates the index whos data entry is closest to a query
-value VAL in a given array.</p>
+<dd><p>GET_INDEX  calculates the index of a data entry within the data array which is closest to a reference value</p>
 <blockquote>
-<div><p>[I,X] = GET_INDEX(Y,VAL)</p>
-<dl class="docutils">
-<dt>The following arguments are required:</dt>
-<dd><dl class="first last docutils">
-<dt>Y:: ()</dt>
-<dd>Data vector.</dd>
-<dt>VAL:: ()</dt>
-<dd>Query value.</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
-<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+<div><code class="docutils literal notranslate"><span class="pre">[I,X]</span> <span class="pre">=</span> <span class="pre">GET_INDEX(Y,VAL)</span></code></div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>Y</strong> (<em>One-dimensional numerical array</em>) – Data array</li>
+<li><strong>VAL</strong> (<em>Integer of floating-point value</em>) – Reference value</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>I</strong> (<em>Integer</em>) – Index within the search array Y</li>
+<li><strong>X</strong> (<em>Integer of floating-point value</em>)</li>
+<li><em>Value of the entry at position I in the search array Y</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Example 1:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="mi">100</span><span class="p">;</span>
+<span class="p">[</span><span class="n">I</span><span class="p">,</span><span class="n">X</span><span class="p">]</span> <span class="p">=</span> <span class="n">get_index</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="mf">22.7</span><span class="p">);</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="functions.imla">
 <code class="descclassname">functions.</code><code class="descname">imla</code><span class="sig-paren">(</span><em>dat</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.imla" title="Permalink to this definition">¶</a></dt>
-<dd><p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="functions.link">
-<code class="descclassname">functions.</code><code class="descname">link</code><span class="sig-paren">(</span><em>classA</em>, <em>classB</em>, <em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.link" title="Permalink to this definition">¶</a></dt>
-<dd><p>LINK  links class A to class B</p>
+<dd><p>IMLA Shows an intensity image on a logarithmic scale.</p>
 <blockquote>
-<div><p>LINK(CLASSA,CLASSB,VARARGIN)</p>
-<dl class="docutils">
-<dt>The following arguments are required:</dt>
-<dd><dl class="first last docutils">
-<dt>CLASSA:: ()</dt>
-<dd>Class that will be linked from.</dd>
-<dt>CLASSA:: ()</dt>
-<dd>Class that will be linked to.</dd>
-<dt>VARARGIN:: ()</dt>
-<dd>Additional class pairs can be given.</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
-<dl class="docutils">
-<dt>These combinations are possible</dt>
-<dd>fpath &gt; nanodiffraction (tells nanodiffraction where the data is)
-nanodiffraction &gt; visualization (tells visualization how the
-experiment was done)</dd>
-</dl>
-<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+<div><code class="docutils literal notranslate"><span class="pre">imla(data)</span></code></div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>numerical array</em>) – Diffraction pattern</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>imla is a short-hand notation for <code class="docutils literal notranslate"><span class="pre">imagesc(log10(abs(dat)))</span></code></p>
 </dd></dl>
 
 <dl class="function">
 <dt id="functions.split_struct">
 <code class="descclassname">functions.</code><code class="descname">split_struct</code><span class="sig-paren">(</span><em>struct_name</em>, <em>arglist</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.split_struct" title="Permalink to this definition">¶</a></dt>
-<dd><p>SPLIT_STRUCT  Description.</p>
+<dd><p>SPLIT_STRUCT  Returns each indicated field as a separate variable.</p>
 <blockquote>
-<div>result = split_struct(structure, cell_array_of_arguments)</div></blockquote>
-<dl class="docutils">
-<dt>The following arguments are supported:</dt>
-<dd><dl class="first last docutils">
-<dt>structure:: [] (required)</dt>
-<dd>A structure containing multiple fields.</dd>
-<dt>cell_array_of_arguments:: [] (required)</dt>
-<dd>A cell array of field names. If a field name was found in the
-structure, it is added to the output argument list.</dd>
-</dl>
-</dd>
-<dt>Example:</dt>
-<dd>pca_result = pca(a_2d_diffraction_pattern,qy,qz,mask,[]);
-[w,angle] = split_struct(pca_result,{‘w’,’angle’});</dd>
-<dt>Output arguments:</dt>
-<dd>This function outputs a variable number of arguments, based on the
-number of query field names.</dd>
-</dl>
-<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+<div><code class="docutils literal notranslate"><span class="pre">result</span> <span class="pre">=</span> <span class="pre">split_struct(structure,</span> <span class="pre">cell_array_of_arguments)</span></code></div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>structure</strong> (<em>Structure</em>) – A structure that contains any number of fields. It can also be a nested structure</li>
+<li><strong>cell_array_of_arguments</strong> (<em>Cell array</em>) – A cell array of field names. Each field name will be searched in the (possibly nested) structure.
+If a field name was found in the structure, it is added to the output argument list.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Variable-length output argument list. The length of the list is given by the number of fields that matched a query field name.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Example 1:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">test_structure</span> <span class="p">=</span> <span class="n">struct</span><span class="p">(</span><span class="s">&#39;w&#39;</span><span class="p">,</span><span class="nb">magic</span><span class="p">(</span><span class="mi">25</span><span class="p">),</span><span class="s">&#39;angle&#39;</span><span class="p">,</span><span class="nb">pi</span><span class="o">/</span><span class="mi">6</span><span class="p">);</span>
+<span class="p">[</span><span class="n">w</span><span class="p">,</span><span class="nb">angle</span><span class="p">]</span> <span class="p">=</span> <span class="n">split_struct</span><span class="p">(</span><span class="n">test_structure</span><span class="p">,{</span><span class="s">&#39;w&#39;</span><span class="p">,</span><span class="s">&#39;angle&#39;</span><span class="p">});</span>
+</pre></div>
+</div>
+<p>Example 2:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">test_structure</span> <span class="p">=</span> <span class="n">struct</span><span class="p">(</span><span class="s">&#39;w&#39;</span><span class="p">,</span> <span class="nb">magic</span><span class="p">(</span><span class="mi">25</span><span class="p">),</span> <span class="s">&#39;angle&#39;</span><span class="p">,</span> <span class="nb">pi</span><span class="o">/</span><span class="mi">6</span><span class="p">,</span> <span class="n">struct</span><span class="p">(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="mi">2</span>^<span class="mi">3</span><span class="p">,</span> <span class="s">&#39;prime&#39;</span><span class="p">,</span> <span class="mi">13</span><span class="p">));</span>
+<span class="p">[</span><span class="n">w</span><span class="p">,</span><span class="nb">angle</span><span class="p">,</span><span class="n">prime</span><span class="p">]</span> <span class="p">=</span> <span class="n">split_struct</span><span class="p">(</span><span class="n">test_structure</span><span class="p">,{</span><span class="s">&#39;w&#39;</span><span class="p">,</span><span class="s">&#39;angle&#39;</span><span class="p">,</span><span class="s">&#39;prime&#39;</span><span class="p">});</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -421,56 +481,144 @@ number of query field names.</dd>
 <dd><p>SYMMETRY  identifies peaks in the image and determines whether n-fold
 rotational symmetry exists.</p>
 <blockquote>
-<div><p>LN = SYMMETRY(DAT,BGR,SIGMA,NOISELEVEL,OBJ)</p>
-<dl class="docutils">
-<dt>The following arguments are required:</dt>
-<dd><dl class="first last docutils">
-<dt>DAT:: ()</dt>
-<dd>Diffraction pattern.</dd>
-<dt>BGR:: ()</dt>
-<dd>Background, that will be subtracted from diffraction pattern.</dd>
-<dt>SIGMA:: ()</dt>
-<dd>Parameter of Gaussian filter.</dd>
-<dt>NOISELEVEL:: ()</dt>
-<dd>SNR level that functions as a threshold for peak detection.</dd>
-<dt>OBJ:: ()</dt>
-<dd>Object that contains detector coordinates.</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
-<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+<div><code class="docutils literal notranslate"><span class="pre">LN</span> <span class="pre">=</span> <span class="pre">SYMMETRY(DAT,BGR,SIGMA,NOISELEVEL,OBJ)</span></code></div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<em>Two-dimensional numeric array</em>) – Diffraction pattern</li>
+<li><strong>bgr</strong> (<em>Two-dimensional numeric array</em>) – Background, that will be subtracted from diffraction pattern. bgr has to be of the same size as data</li>
+<li><strong>sigma</strong> (<em>Integer or floating-point value</em>) – Width of Gaussian filter applied onto the data</li>
+<li><strong>noiselevel</strong> (<em>Integer or floating-point value</em>) – SNR level that functions as a threshold for peak detection.</li>
+<li><strong>obj</strong> (<em>Class handle</em>) – Handle to a nanodiffraction object</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>Ln</em> – Description missing.</li>
+<li><em>binCenter</em> – Description missing.</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
-
-<dl class="function">
-<dt id="functions.prepare_averaging">
-<code class="descclassname">functions.</code><code class="descname">prepare_averaging</code><span class="sig-paren">(</span><em>grid</em>, <em>mask</em>, <em>sel</em>, <em>bins</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.prepare_averaging" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="function">
 <dt id="functions.crystals">
 <code class="descclassname">functions.</code><code class="descname">crystals</code><span class="sig-paren">(</span><em>data</em>, <em>mask</em>, <em>sel</em>, <em>threshold</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.crystals" title="Permalink to this definition">¶</a></dt>
-<dd><p>CRYSTAL  Calculates Signal-to-Noise Ratio and
-summarizes reflection intensity (in between qr_min and qr_max if
-requested)</p>
+<dd><p>CRYSTAL  Calculates the signal-to-noise ratio and calculates the integrated intensity for data above a given threshold</p>
 <blockquote>
-<div><p>[RESULT] = GET_INDEX(DATA,MASK,SEL,THRESHOLD)</p>
-<dl class="docutils">
-<dt>The following arguments are required:</dt>
-<dd><dl class="first last docutils">
-<dt>DATA:: ()</dt>
-<dd>Data (2d array).</dd>
-<dt>MASK:: ()</dt>
-<dd>Bad pixels.</dd>
-<dt>SEL:: ()</dt>
-<dd>Good pixels.</dd>
-<dt>THRESHOLD:: ()</dt>
-<dd>Maximal qr value to be taken into account.</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
-<p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
+<div><code class="docutils literal notranslate"><span class="pre">[result]</span> <span class="pre">=</span> <span class="pre">crystals(data,mask,sel,threshold)</span></code></div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<em>Two-dimensional numeric array</em>) – Diffraction pattern</li>
+<li><strong>mask</strong> (<em>logical array, default = []</em>) – Logical array of the size of the input data that defines which pixels are considered bad (1 = bad, 0 = valid)</li>
+<li><strong>selection</strong> (<em>logical array, default = []</em>) – Logical array of the size of the input data that defines which pixels should be analyzed (1 = valid, 0 = invalid)</li>
+<li><strong>threshold</strong> (<em>numeric value</em>) – Data above which the scattered intensity should be integrated</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>result</strong> – Integrated intensity of scattered intensity of all valid data points above the given threshold</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Numeric value</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="functions.sort_scan">
+<code class="descclassname">functions.</code><code class="descname">sort_scan</code><span class="sig-paren">(</span><em>data</em>, <em>rows</em>, <em>cols</em>, <em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.sort_scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>SORT_SCAN  Reshapes a given one-dimensional or two-dimensional numerical array or cell array into the dimensions of the scan. In the case of a two-dimensional array, each column is treated independently and the result will be output as a stack of two-dimensional numerical arrays.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">out_array</span> <span class="pre">=</span> <span class="pre">sort_scan(data,rows,cols,scanmode)</span></code></div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<em>One- or two-dimensional numerical array or cell array</em>) – One-dimensional or two-dimensional numerical array. If the data is
+two-dimensional, each column will be treated seperately and stored
+in the third dimension of the output array, since the first
+dimension of the input array will be expanded into the first two
+dimensions of the output array. Input data can also be in form of a cell array.</li>
+<li><strong>rows</strong> (<em>Integer</em>) – Number of scan lines</li>
+<li><strong>cols</strong> (<em>Integer</em>) – Number of scan points per line</li>
+<li><strong>scanmode</strong> (<em>Default = 'horz'</em>) – <p>Several raster scanning modes are possible, see ASCII art in the following code block:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="n">horizontal</span> <span class="o">&lt;</span><span class="n">horz</span><span class="o">&gt;</span>
+   <span class="o">*==================</span><span class="p">=</span><span class="o">&gt;</span>
+   <span class="o">====================&gt;</span>
+   <span class="o">========&gt;</span><span class="c">...</span>
+<span class="mi">2</span> <span class="n">horizontal</span><span class="p">,</span> <span class="n">alternating</span> <span class="o">&lt;</span><span class="n">horzalt</span><span class="o">&gt;</span>
+   <span class="o">*==================</span><span class="p">=</span><span class="o">&gt;</span>
+                       <span class="n">v</span>
+   <span class="o">&lt;==================</span><span class="p">=</span><span class="o">&lt;</span>
+   <span class="n">v</span>
+<span class="mi">3</span> <span class="n">vertical</span> <span class="o">&lt;</span><span class="n">vert</span><span class="o">&gt;</span>
+   <span class="o">*</span>  <span class="n">v</span>  <span class="n">v</span>  <span class="n">v</span>  <span class="n">v</span>
+   <span class="n">v</span>  <span class="n">v</span>  <span class="n">v</span>  <span class="n">v</span>  <span class="p">.</span>
+   <span class="n">v</span>  <span class="n">v</span>  <span class="n">v</span>  <span class="n">v</span>  <span class="p">.</span>
+   <span class="n">v</span>  <span class="n">v</span>  <span class="n">v</span>  <span class="n">v</span>  <span class="p">.</span>
+<span class="mi">4</span> <span class="n">vertical</span><span class="p">,</span><span class="n">alternating</span> <span class="o">&lt;</span><span class="n">vertalt</span><span class="o">&gt;</span>
+   <span class="o">*</span>   <span class="n">A</span> <span class="o">&gt;</span> <span class="n">v</span>   <span class="n">A</span> <span class="o">&gt;</span> <span class="n">v</span>
+   <span class="n">v</span>   <span class="n">A</span>   <span class="n">v</span>   <span class="n">A</span>   <span class="p">.</span>
+   <span class="n">v</span>   <span class="n">A</span>   <span class="n">v</span>   <span class="n">A</span>   <span class="p">.</span>
+   <span class="n">v</span> <span class="o">&gt;</span> <span class="n">A</span>   <span class="n">v</span> <span class="o">&gt;</span> <span class="n">A</span>   <span class="p">.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out_array</strong> – Two- or three-dimensional numeric array. The first two dimensions are of the size of the scan dimensions.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Two- or three-dimensional numeric array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="functions.update_defaults">
+<code class="descclassname">functions.</code><code class="descname">update_defaults</code><span class="sig-paren">(</span><em>defaults</em>, <em>opts</em><span class="sig-paren">)</span><a class="headerlink" href="#functions.update_defaults" title="Permalink to this definition">¶</a></dt>
+<dd><p>UPDATE_DEFAULTS  overwrites values in a structure with given values from
+a reference structure</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">config</span> <span class="pre">=</span> <span class="pre">update_defaults(defaults,opts)</span></code></div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>defaults</strong> (<em>Structure</em>) – Structure containing default entries.</li>
+<li><strong>opts</strong> (<em>Structure</em>) – Structure containing entries that should be used to overwrite
+entries in the default structure.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>config</strong> – A structure that contains all fields from the default structure</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Structure</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Example 1:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="p">=</span> <span class="n">update_defaults</span><span class="p">(</span><span class="n">struct</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">,</span><span class="s">&#39;test&#39;</span><span class="p">),</span><span class="n">struct</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">,</span><span class="s">&#39;replaced&#39;</span><span class="p">));</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </div>

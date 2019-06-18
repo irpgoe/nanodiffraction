@@ -15,8 +15,8 @@ Functions
 .. autofunction:: dpc
 .. autofunction:: get_index
 .. autofunction:: imla
-.. autofunction:: link
 .. autofunction:: split_struct
 .. autofunction:: symmetry
-.. autofunction:: prepare_averaging
 .. autofunction:: crystals
+.. autofunction:: sort_scan
+.. autofunction:: update_defaults

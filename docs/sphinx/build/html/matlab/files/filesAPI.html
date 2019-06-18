@@ -189,14 +189,14 @@ used. Once initialized properly, it should be attached to a
 nanodiffraction class so that file reading will be done
 automatically based on the scan frame number.</p>
 <blockquote>
-<div><code class="docutils literal notranslate"><span class="pre">DATA</span> <span class="pre">=</span> <span class="pre">FILES()</span></code> creates a files module, with a list of 
+<div><code class="docutils literal notranslate"><span class="pre">DATA</span> <span class="pre">=</span> <span class="pre">FILES()</span></code> creates a files module, with a list of
 key-value pairs. See further below for a
 list of keys and possible values.</div></blockquote>
 <p>The following options are supported:</p>
 <blockquote>
 <div><dl class="docutils">
-<dt>prepath: [homegroups/Labdata-Archive/AG_Salditt/Messzeiten_Rohdaten/2016/extern/ESRF_ID13_SC4304/id13/inhouse/DATA/AUTO-TRANSFER/eiger1] </dt>
-<dd>Path to folder where the data is stored. The prepath depends 
+<dt>prepath: [homegroups/Labdata-Archive/AG_Salditt/Messzeiten_Rohdaten/2016/extern/ESRF_ID13_SC4304/id13/inhouse/DATA/AUTO-TRANSFER/eiger1]</dt>
+<dd>Path to folder where the data is stored. The prepath depends
 on the beamline you choose. Check help path_by_beamline for more
 information on the default settings.</dd>
 <dt>beamline: [id13]</dt>
@@ -206,9 +206,9 @@ See the help on path_by_beamline for more information.</p>
 <blockquote class="last">
 <div>Options: ‘id13’|’p10’|’id02’|’bessy’|’none’</div></blockquote>
 </dd>
-<dt>newfile: [detdistcalib] </dt>
+<dt>newfile: [detdistcalib]</dt>
 <dd>File name prefix.</dd>
-<dt>detector: [eiger] </dt>
+<dt>detector: [eiger]</dt>
 <dd><p class="first">Type of detector used in the experiment.
 Each detector is currently contained in a separate module.</p>
 <blockquote class="last">
@@ -222,7 +222,7 @@ with 1, while others start with 0.</dd>
 given number (the fpf) of scattering patterns, this number of
 frames per container is termed ‘’. E.g. the Eiger
 detector uses the hdf5 container format. fpf can be an arbitrary
-number, but usually it is the number of scan points along the 
+number, but usually it is the number of scan points along the
 fast axis.</dd>
 <dt>scan: [210]</dt>
 <dd>Number of the scan. Be aware, that SPEC or other logging software
@@ -231,10 +231,9 @@ scan number always refers to the number that is appended to the
 filename.</dd>
 </dl>
 </div></blockquote>
+<p class="rubric">Example</p>
 <dl class="docutils">
-<dt>Example:</dt>
-<dd><dl class="first last docutils">
-<dt>See the following example for help::    </dt>
+<dt>See the following example for help::</dt>
 <dd><dl class="first last docutils">
 <dt>f = files( ‘beamline’,’id13’,…</dt>
 <dd>‘prepath’,[prepath ‘Labdata-Archive/AG_Salditt/Messzeiten_Rohdaten/2016/extern/ESRF_ID13_SC4304/id13/inhouse/DATA/AUTO-TRANSFER/eiger1’],…
@@ -244,26 +243,33 @@ filename.</dd>
 </dl>
 </dd>
 </dl>
-</dd>
-<dt>Methods:</dt>
-<dd>See seperate help for each method.</dd>
-</dl>
+<dl class="method">
+<dt>
+<code class="descname">See seperate help for each method.</code></dt>
+<dd></dd></dl>
+
 <p>Copyright 2017 Institute for X-ray Physics (University of Göttingen)</p>
-<p>Permission is hereby granted, free of charge, to any person obtaining 
-a copy of this software and associated documentation files (the ‘’), 
-to deal in the Software without restriction, including without limitation 
-the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-and/or sell copies of the Software, and to permit persons to whom the 
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the ‘’),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
 Software is furnished to do so, subject to the following conditions:</p>
-<p>The above copyright notice and this permission notice shall be included 
+<p>The above copyright notice and this permission notice shall be included
 in all copies or substantial portions of the Software.</p>
-<p>THE SOFTWARE IS PROVIDED ‘’, WITHOUT WARRANTY OF ANY KIND, 
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
-DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
+<p>THE SOFTWARE IS PROVIDED ‘’, WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+<dl class="method">
+<dt id="&#64;files.files.files">
+<code class="descname">files</code><span class="sig-paren">(</span><em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#@files.files.files" title="Permalink to this definition">¶</a></dt>
+<dd><p>prepare absolute path</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="&#64;files.files.path_by_beamline">
 <code class="descname">path_by_beamline</code><span class="sig-paren">(</span><em>beamline</em>, <em>detector</em>, <em>prepath</em>, <em>newfile</em>, <em>scannr</em><span class="sig-paren">)</span><a class="headerlink" href="#@files.files.path_by_beamline" title="Permalink to this definition">¶</a></dt>
@@ -295,11 +301,13 @@ specific needs.</p>
 <dd>Scan number.</dd>
 </dl>
 </dd>
-<dt>Example:</dt>
-<dd>This function is only used internally.</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>This function is only used internally.</p>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd><dl class="first last docutils">
-<dt>configuration: </dt>
+<dt>configuration:</dt>
 <dd>Configuration that is passed to the
 respective detector module.</dd>
 </dl>
@@ -321,20 +329,21 @@ respective detector module.</dd>
 was collected within the session identified by the
 newfile name. It is NOT the frame number. The frame
 number represents the m’th frame collected during one
-scan (however, multiple scans could have been performed 
+scan (however, multiple scans could have been performed
 during one session).</dd>
 </dl>
 </dd>
-<dt>Example:</dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="p">=</span> <span class="n">files</span><span class="p">(</span><span class="o">&lt;</span><span class="n">some</span> <span class="n">settings</span><span class="o">&gt;</span><span class="p">);</span>
+</dl>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="p">=</span> <span class="n">files</span><span class="p">(</span><span class="o">&lt;</span><span class="n">some</span> <span class="n">settings</span><span class="o">&gt;</span><span class="p">);</span>
  <span class="n">raw_data</span> <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="mi">19</span><span class="p">);</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd><dl class="first last docutils">
-<dt>data: </dt>
+<dt>data:</dt>
 <dd>Raw detector frame.</dd>
 </dl>
 </dd>
@@ -357,14 +366,15 @@ should start or end with a slash or backslash character.</p>
 <dd>Input string.</dd>
 </dl>
 </dd>
-<dt>Example:</dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="p">=</span> <span class="n">files</span><span class="p">(</span><span class="o">&lt;</span><span class="n">some</span> <span class="n">configuration</span><span class="o">&gt;</span><span class="p">);</span>
+</dl>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="p">=</span> <span class="n">files</span><span class="p">(</span><span class="o">&lt;</span><span class="n">some</span> <span class="n">configuration</span><span class="o">&gt;</span><span class="p">);</span>
 <span class="n">out_string</span> <span class="p">=</span> <span class="c">...</span>
     <span class="n">f</span><span class="p">.</span><span class="n">remove_leading_trailing_slashes</span><span class="p">(</span><span class="s">&#39;/home/testdir/raddamage1/&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
@@ -385,13 +395,14 @@ should start or end with a slash or backslash character.</p>
 <dd>Scan number.</dd>
 </dl>
 </dd>
-<dt>Example:</dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="p">=</span> <span class="n">files</span><span class="p">(</span><span class="o">&lt;</span><span class="n">some</span> <span class="n">configuration</span><span class="o">&gt;</span><span class="p">);</span>
+</dl>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="p">=</span> <span class="n">files</span><span class="p">(</span><span class="o">&lt;</span><span class="n">some</span> <span class="n">configuration</span><span class="o">&gt;</span><span class="p">);</span>
 <span class="n">f</span><span class="p">.</span><span class="n">set_eiger_scan</span><span class="p">(</span><span class="s">&#39;raddamage1&#39;</span><span class="p">,</span><span class="mi">44</span><span class="p">);</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
@@ -410,10 +421,10 @@ should start or end with a slash or backslash character.</p>
 <dd>Scan name.</dd>
 </dl>
 </div></blockquote>
+<p class="rubric">Example</p>
+<p>f = files(&lt;some configuration&gt;);
+f.set_pilatus_scan(‘raddamage1’);</p>
 <dl class="docutils">
-<dt>Example:</dt>
-<dd>f = files(&lt;some configuration&gt;);
-f.set_pilatus_scan(‘raddamage1’);</dd>
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
@@ -432,14 +443,15 @@ f.set_pilatus_scan(‘raddamage1’);</dd>
 <dd>Scan name.</dd>
 </dl>
 </dd>
-<dt>Example:</dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="p">=</span> <span class="n">files</span><span class="p">(</span><span class="o">&lt;</span><span class="n">some</span> <span class="n">configuration</span><span class="o">&gt;</span><span class="p">);</span>
+</dl>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="p">=</span> <span class="n">files</span><span class="p">(</span><span class="o">&lt;</span><span class="n">some</span> <span class="n">configuration</span><span class="o">&gt;</span><span class="p">);</span>
  <span class="n">f</span><span class="p">.</span><span class="n">set_spec_scan</span><span class="p">(</span><span class="s">&#39;raddamage1&#39;</span><span class="p">);</span>
  <span class="n">specdata</span> <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="c">% reads scan #1 from spec-file</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
@@ -463,14 +475,13 @@ f.set_pilatus_scan(‘raddamage1’);</dd>
 scan points per fast axis.</dd>
 </dl>
 </div></blockquote>
-<dl class="docutils">
-<dt>Example:</dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="p">=</span> <span class="n">files</span><span class="p">(</span><span class="o">&lt;</span><span class="n">some</span> <span class="n">configuration</span><span class="o">&gt;</span><span class="p">);</span>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="p">=</span> <span class="n">files</span><span class="p">(</span><span class="o">&lt;</span><span class="n">some</span> <span class="n">configuration</span><span class="o">&gt;</span><span class="p">);</span>
 <span class="n">f</span><span class="p">.</span><span class="n">set_xia_scan</span><span class="p">(</span><span class="s">&#39;raddamage1&#39;</span><span class="p">,</span><span class="mi">44</span><span class="p">,</span><span class="mi">201</span><span class="p">);</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
@@ -491,7 +502,7 @@ are currently implemented.</p>
 that all fields are optional. Default values that are
 otherwise used are as usual given in angle brackets:</p>
 <dl class="last docutils">
-<dt>allDefaults: [0] </dt>
+<dt>allDefaults: [0]</dt>
 <dd>Show all detectors at all beamlines that are
 currently implemented.</dd>
 <dt>useDefaults: [1]</dt>
@@ -500,13 +511,12 @@ currently implemented.</dd>
 </dd>
 </dl>
 </dd>
-<dt>Example:</dt>
-<dd><dl class="first last docutils">
-<dt>See the following example for help::</dt>
-<dd>f = files(); 
-f.show_configuration(struct(‘allDefaults’,1,’useDefaults’,1));</dd>
 </dl>
-</dd>
+<p class="rubric">Example</p>
+<dl class="docutils">
+<dt>See the following example for help::</dt>
+<dd>f = files();
+f.show_configuration(struct(‘allDefaults’,1,’useDefaults’,1));</dd>
 <dt>Output arguments:</dt>
 <dd>This function does not return any arguments.</dd>
 </dl>
@@ -515,8 +525,8 @@ f.show_configuration(struct(‘allDefaults’,1,’useDefaults’,1));</dd>
 <dl class="method">
 <dt id="&#64;files.files.which_slash">
 <code class="descname">which_slash</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="headerlink" href="#@files.files.which_slash" title="Permalink to this definition">¶</a></dt>
-<dd><p>WHICH_SLASH  checks for slashes in a string. If the string 
-contains slashes they have to conform to naming convenctions 
+<dd><p>WHICH_SLASH  checks for slashes in a string. If the string
+contains slashes they have to conform to naming convenctions
 based on the system (unix, windows) in use</p>
 <blockquote>
 <div><code class="docutils literal notranslate"><span class="pre">[string,slash]</span> <span class="pre">=</span> <span class="pre">which_slash(string)</span></code></div></blockquote>
@@ -527,22 +537,23 @@ based on the system (unix, windows) in use</p>
 <dd>This can be any string.</dd>
 </dl>
 </dd>
-<dt>Example:</dt>
-<dd><p class="first">See the following example for help:</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="p">=</span> <span class="n">files</span><span class="p">();</span>
+</dl>
+<p class="rubric">Example</p>
+<p>See the following example for help:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="p">=</span> <span class="n">files</span><span class="p">();</span>
 <span class="p">[</span><span class="n">out_string</span><span class="p">,</span><span class="n">sl</span><span class="p">]</span> <span class="p">=</span> <span class="n">f</span><span class="p">.</span><span class="n">which_slash</span><span class="p">(</span><span class="s">&#39;A test \ string /&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
-</dd>
+<dl class="docutils">
 <dt>Output arguments:</dt>
 <dd><dl class="first last docutils">
-<dt>string: </dt>
+<dt>string:</dt>
 <dd>A string where all slashes or backslashes have
 been replaced by the correct slash or backslash, based on
 the computer system used (mac, pc, unix).</dd>
-<dt>slash: </dt>
+<dt>slash:</dt>
 <dd>The slash that should be used for paths to
-directories of files, based on the computer system used 
+directories of files, based on the computer system used
 (mac, pc, unix).</dd>
 </dl>
 </dd>

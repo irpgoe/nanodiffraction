@@ -2,36 +2,47 @@ function [Ln, binCenter] = symmetry(data, bgr, sigma, noise_level, obj)
 % SYMMETRY  identifies peaks in the image and determines whether n-fold
 % rotational symmetry exists.
 %
-%   LN = SYMMETRY(DAT,BGR,SIGMA,NOISELEVEL,OBJ)
+%   ``LN = SYMMETRY(DAT,BGR,SIGMA,NOISELEVEL,OBJ)``
 %
-%   The following arguments are required:
-%       DAT:: ()
-%           Diffraction pattern.
+% Parameters
+% ----------
+% data: Two-dimensional numeric array
+%   Diffraction pattern
 %
-%       BGR:: ()
-%           Background, that will be subtracted from diffraction pattern.
+% bgr: Two-dimensional numeric array
+%   Background, that will be subtracted from diffraction pattern. bgr has to be of the same size as data
 %
-%       SIGMA:: ()
-%           Parameter of Gaussian filter.
+% sigma: Integer or floating-point value
+%   Width of Gaussian filter applied onto the data
 %
-%       NOISELEVEL:: ()
-%           SNR level that functions as a threshold for peak detection.
+% noiselevel: Integer or floating-point value
+%   SNR level that functions as a threshold for peak detection.
 %
-%       OBJ:: ()
-%           Object that contains detector coordinates.
+% obj: Class handle
+%   Handle to a nanodiffraction object
 %
-% Copyright 2017 Institute for X-ray Physics (University of Göttingen)
+% Returns
+% -------
+% Ln: 
+%   Description missing.
+%
+% binCenter: 
+%   Description missing.
+%
+%
 
+% Copyright 2017 Institute for X-ray Physics (University of Göttingen)
+%
 % Permission is hereby granted, free of charge, to any person obtaining 
 % a copy of this software and associated documentation files (the "Software"), 
 % to deal in the Software without restriction, including without limitation 
 % the rights to use, copy, modify, merge, publish, distribute, sublicense, 
 % and/or sell copies of the Software, and to permit persons to whom the 
 % Software is furnished to do so, subject to the following conditions:
-
+%
 % The above copyright notice and this permission notice shall be included 
 % in all copies or substantial portions of the Software.
-
+%
 % THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
 % EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
 % MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 

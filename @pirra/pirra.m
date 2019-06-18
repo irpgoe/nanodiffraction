@@ -19,27 +19,34 @@
 % OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 classdef pirra<handle
-    % PILATUS  Class for reading data from the pilatus detector.
+    % PIRRA  Class for reading data from the pirra detector.
     %
-    %   p = pilatus(beamline,prepath,newfile,slash)
+    %   p = pirra(beamline,prepath,newfile,slash)
     %
     %   Arguments that are accepted:
     %
     %       beamline: []
     %           Either 'p10','id13' or 'id02' are currently accepted.
     %
-    %   Note, that read_pilatus is an external function that is not part of the toolbox since it is currently not licensed under MIT.
     
     properties
-        c;
+        path;
+        filename;
     end
     methods
         function obj = pirra(config)
-            obj.c = config;
+
+            defaults = struct('path','',...
+                'filename',@(pre,n) [pre sprintf('%i',n) '.tif']);
+            config = update_defaults(defaults,config);
+
+            % get configuration
+            [obj.path, obj.filename] = split_struct(config,{'path','filename'});
+            
         end
         function data = read(obj,fn)
         
-            filepath = obj.c.filename(obj.c.path,fn);
+            filepath = obj.filename(obj.path,fn);
         	
             % read data
             try

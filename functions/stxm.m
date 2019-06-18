@@ -1,32 +1,34 @@
 function result = stxm(data,mask,sel)
-% STXM  Sums a 2d array. In addition, it takes into
-% account a minimum and maximum q_r value for integration
+% STXM  Integrated the intensity in a diffraction pattern or part of a diffraction pattern
 %
-%   result = stxm(data,mask,selection)
+%   ``result = stxm(data,mask,selection)``
 %
-% The following arguments are supported:
-%       data:: [] (required) 
-%           A two-dimensional diffraction pattern. 
+% Parameters
+% ----------
+%   data: two-dimensional numeric array 
+%       A diffraction pattern 
 %
-%       mask:: [] (required)
-%           Mask that defines which pixels are bad and should not be taken
-%           into account. The mask can be an empty matrix. In this case, it
-%           is assumed that all pixels are valid. The dimensions of mask
-%           have to match the size of data.
+%   mask: logical array, default = []
+%       Logical array of the size of the input data that defines which pixels are considered bad (1 = bad, 0 = valid)
 %
-%       selection:: [] (required)
-%           Data selection, defines which pixels should be taken into
-%           account. The selection can be an empty matrix. In this case, it
-%           is assumed that all pixels should be selected. The dimensions
-%           of mask have to match the size of data.
+%   selection: logical array, default = []
+%       Logical array of the size of the input data that defines which pixels should be analyzed (1 = valid, 0 = invalid)
 %
-% Example:
-%   stxm_result = stxm(a_2d_diffraction_pattern,mask,[]);
+% Returns
+% -------
+%   result: Double 
+%       The integrated intensity of data within a given selection and without masked pixels
 %
-% Output arguments:
-%   result:: The integrated intensity of data.
+% Notes
+% -----
+% Example 1:
+%   
+% .. code-block:: matlab
 %
+%   stxm_result = stxm(data,[],[]);
 %
+% See also PCA
+
 % Copyright 2017 Institute for X-ray Physics (University of Göttingen)
 
 % Permission is hereby granted, free of charge, to any person obtaining 

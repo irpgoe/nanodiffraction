@@ -20,19 +20,27 @@
 classdef xia<handle
     properties
         fpf;
-        c;
+        path;
+        filename;
     end
     methods
-        function obj = xia(config,fpf)
-            obj.fpf = fpf;
-            obj.c = config;
+        function obj = xia(config)
+                        
+            defaults = struct('path','',...
+                'fpf',128,...
+                'filename',@(pre,n) [pre sprintf('%04i',n) '.edf']);
+            config = update_defaults(defaults,config);
+
+            % get configuration
+            [obj.path, obj.fpf, obj.filename] = split_struct(config,{'path','fpf','filename'});
+            
         end
         
         function data = read(obj,fn)
 
 	        % file numbers start with 0
 	        remainder = mod(double(fn-1),double(obj.fpf))+1;
-	        filename = obj.c.filename(obj.c.path, floor((fn-1)/obj.fpf));
+	        filename = obj.filename(obj.path, floor((fn-1)/obj.fpf));
 
             % read data
             try

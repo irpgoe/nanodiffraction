@@ -237,6 +237,69 @@ classdef display<handle
         end
         
         
+        function add_uncertainty(obj,x_pos,y_pos,sigma,varargin)
+            % ADD_LINE  plots a vertical line at a specific location given
+            % in units of the reciprocal wavevector (inverse nanometers).
+            % This function is used to plot vertical lines in SAXS plots.
+            % The vertical lines run through the entire y-range.
+            %   
+            %   ``add_line(qr_values)``
+            %
+            % The following arguments are supported:
+            %
+            %     x_pos: [] (required)
+            %       A one-dimensional vector of values in units of inverse
+            %       nanometers. Each entry specifies the location of a
+            %       vertical line that is superimposed onto the current
+            %       plot.
+            %
+            % Example:
+            %   See the following example for help::
+            %            
+            %       d = display();
+            %       d.saxs(some_saxs_data);
+            %       d.add_line([0.2 0.6 1.2]);
+            %
+            % Output arguments:
+            %   This function does not return any arguments.
+
+            defaults = struct('dx',0.01,'lineWidth',2,'xScale','lin');
+            fields = fieldnames(defaults);
+            if nargin > 4
+                opts = varargin{1};
+                for f = 1:numel(fields)
+                    if ~isfield(opts,fields{f})
+                        opts.(fields{f}) = defaults.(fields{f});
+                    end
+                end
+            else
+                opts = defaults;
+            end
+            
+            % shorthand
+            dx = opts.dx;
+            
+            hold on;
+            for ii = 1:numel(x_pos)
+                line([x_pos(ii) x_pos(ii)]  ,[-sigma(ii) +sigma(ii)] + y_pos(ii),'color','k','LineWidth',opts.lineWidth); % vertical line
+                if strcmp(opts.xScale,'lin')
+                    line([-dx +dx] + x_pos(ii),[+sigma(ii) +sigma(ii)] + y_pos(ii),'color','k','LineWidth',opts.lineWidth); % top line
+                    line([-dx +dx] + x_pos(ii),[-sigma(ii) -sigma(ii)] + y_pos(ii),'color','k','LineWidth',opts.lineWidth); % bottom line
+                elseif strcmp(opts.xScale,'log')
+                    ldx = 10^(log10(x_pos(ii))-log10(x_pos(ii)-dx));    % lower dx
+                    udx = 10^(log10(x_pos(ii)+dx) - log10(x_pos(ii)));  % upper dx
+                    line([x_pos(ii)-ldx x_pos(ii)+udx],[+sigma(ii) +sigma(ii)] + y_pos(ii),'color','k','LineWidth',opts.lineWidth); % top line
+                    line(10.^log10([x_pos(ii)-dx x_pos(ii)+dx]),[-sigma(ii) -sigma(ii)] + y_pos(ii),'color','k','LineWidth',opts.lineWidth); % bottom line
+                else
+                    warning('no horizontal bars');
+                end
+            end
+            hold off;
+            
+            
+        end
+        
+        
         function f = figure_size(obj,varargin)
             
             pos = [0 0 10 8];
@@ -406,7 +469,7 @@ classdef display<handle
             % Output arguments:
             %   This function does not return any arguments.
 
-            defaults = struct('sampl',100,'scale',1,'unit','mm','alpha',[]);
+            defaults = struct('sampl',10,'scale',1,'unit','pixel','alpha',[]);
             fields = fieldnames(defaults);
             if nargin > 2
                 opts = varargin{1};
@@ -446,20 +509,31 @@ classdef display<handle
             % show data
             h=imagesc(data);
                 axis image;
+                
+                % colorbar
                 c = colorbar;
+                c.LineWidth = 1.5;
+                c.TickDirection = 'out';
+                ylabel(c,'intensity (counts)','Interpreter','Latex');
+                
                 % contrast and color
                 obj.autoc(data);
                 colormap(pmkmp(128));
+                set(gca,'TickDir','out');
+                set(gca,'LineWidth',1.5,'TickLength',[0.02 0.02]);
+            
                 % label
                 if strcmp(unit,'mm')
                     xlabel('y (mm)','Interpreter','Latex');
                     ylabel('z (mm)','Interpreter','Latex');
-                else
-                    % default: um
+                elseif strcmp(unit,'um')
                     xlabel('y ($\mathrm{\mu m}$)','Interpreter','Latex');
                     ylabel('z ($\mathrm{\mu m}$)','Interpreter','Latex');
+                else
+                    xlabel('y (pixel)','Interpreter','Latex');
+                    ylabel('z (pixel)','Interpreter','Latex');
                 end
-                ylabel(c,'intensity (counts)','Interpreter','Latex');
+                
                 % axis tic labels
                 xticks([1:sampl:size(data,2)]);
                 xticklabels(([1:sampl:size(data,2)] - 1)*scx);
@@ -851,7 +925,7 @@ classdef display<handle
             %       brackets:
             %
             %       process: ['on'] 
-            %           Either 'on' or 'off'. If activated
+            %           Either 'on', 'off' or 'force'. If activated
             %           ('on'), then data of the size of a raw detector
             %           frame is expected and the data will be
             %           automatically binned and cropped based on the
@@ -921,8 +995,8 @@ classdef display<handle
 
             % check whether data needs to be processed
             [dz,dy] = size(data);
-            [rz,ry] = deal(obj.exp.detRoiZ(2) - obj.exp.detRoiZ(1) + 1,...
-                obj.exp.detRoiY(2) - obj.exp.detRoiY(1) + 1);
+            [rz,ry] = deal(obj.exp.roiZ(2) - obj.exp.roiZ(1) + 1,...
+                obj.exp.roiY(2) - obj.exp.roiY(1) + 1);
             if isequal([dz,dy],[rz,ry]) && ~strcmp(opts.process,'force')
                 warning('Data appears to be already processed, processing will be turned off. To enforce processing, use "force" as an argument.')
                 opts.process = 'off';
@@ -1169,7 +1243,9 @@ classdef display<handle
             % parse input
             defaults = struct('limits',[],...
                               'pixel','off',...
-                              'mode','semilogy');
+                              'mode','semilogy',...
+                              'markerSize',2,...
+                              'colormap',@pmkmp);
             fields = fieldnames(defaults);
             if nargin > 2
                 opts = varargin{1};
@@ -1184,6 +1260,8 @@ classdef display<handle
             
             
             switch opts.mode
+                case 'lin'
+                    plot_fn = @plot;
                 case 'semilogy'
                     plot_fn = @semilogy;
                 case 'loglog'
@@ -1193,10 +1271,10 @@ classdef display<handle
             
             % pmkmp requires at least 2 colors
             if numel(saxsresult) == 1
-                cm = pmkmp(2);
+                cm = opts.colormap(2);
                 cm = cm(1,:);
             else
-                cm = pmkmp(numel(saxsresult));
+                cm = opts.colormap(numel(saxsresult));
             end
             
             for ii = 1:numel(saxsresult)
@@ -1227,14 +1305,14 @@ classdef display<handle
                 
                 % pixel option
                 if strcmp(opts.pixel,'off') 
-                    plot_fn(x,y,'o-','MarkerSize',2,'color',cm(ii,:));hold all;grid on;
+                    plot_fn(x,y,'o','color',cm(ii,:),'MarkerSize',opts.markerSize,'MarkerFaceColor',cm(ii,:),'MarkerEdgeColor',cm(ii,:));hold all;grid on;
                     xlabel('q_r (nm^{-1})');
                 elseif strcmp(opts.pixel,'on')
-                    plot_fn(tmp.pixel,y,'o-','MarkerSize',2,'color',cm(ii,:));hold all;grid on;
+                    plot_fn(tmp.pixel,y,'o','color',cm(ii,:),'MarkerSize',opts.markerSize,'MarkerFaceColor',cm(ii,:),'MarkerEdgeColor',cm(ii,:));hold all;grid on;
                     xlabel('pixel');
                 else
                 end
-                ylabel('log_{10}(intensity/counts)');
+                ylabel('intensity (counts)');
                 if isempty(opts.limits)
                     axis auto;
                 else
@@ -1369,7 +1447,10 @@ classdef display<handle
                 warning('Please provide a data set.');
             end
             
-            defaults = struct('dir','v2',...
+            defaults = struct('sampl',10,...
+                              'scale',1,...
+                              'unit','pixel',...
+                              'dir','v2',...
                               'quiver','off',...
                               'alpha',[],...
                               'axHandle',[]);
@@ -1383,6 +1464,24 @@ classdef display<handle
                 end
             else
                 opts = defaults;
+            end
+            
+            % short-hand notation
+            sampl = opts.('sampl');
+            scale = opts.('scale');
+            unit = opts.('unit');
+            
+            % isotropic or anisotropic scaling
+            if numel(scale) > 1
+                try
+                    scx = scale(1);
+                    scy = scale(2);
+                catch e
+                    error(e);
+                end
+            else 
+                scx = scale;
+                scy = scale;
             end
             
             % default direction is along the fiber axis
@@ -1415,17 +1514,14 @@ classdef display<handle
             else
                 % create new figure
                 h = imagesc(angle);
+                axis image;
             end
             
+            % colorbar            
             c = colorbar; 
-            axis image;
-            colormap(obj.azimuthal_colormap('peterkovesi'))
-            
-            % alpha mask
-            if doAlpha
-                set(h,'AlphaData',opts.alpha);
-            end
-            
+            c.LineWidth = 1.5;
+            c.TickDirection = 'out';
+             
             % real or reciprocal space direction?
             if normDir
                 caxis([-90 90]);
@@ -1434,7 +1530,35 @@ classdef display<handle
                 caxis([0 180]);
                 ylabel(c,'reflex orientation (degrees)','Interpreter','Latex');
             end
+            
+            % contrast and color
+            colormap(obj.azimuthal_colormap('peterkovesi'))
+            set(gca,'TickDir','out');
+            set(gca,'LineWidth',1.5,'TickLength',[0.02 0.02]);
+            
+            % label
+            if strcmp(unit,'mm')
+                xlabel('y (mm)','Interpreter','Latex');
+                ylabel('z (mm)','Interpreter','Latex');
+            elseif strcmp(unit,'um')
+                xlabel('y ($\mathrm{\mu m}$)','Interpreter','Latex');
+                ylabel('z ($\mathrm{\mu m}$)','Interpreter','Latex');
+            else
+                xlabel('y (pixel)','Interpreter','Latex');
+                ylabel('z (pixel)','Interpreter','Latex');
+            end
 
+            % axis tic labels
+            xticks([1:sampl:size(angle,2)]);
+            xticklabels(([1:sampl:size(angle,2)] - 1)*scx);
+            yticks([1:sampl:size(angle,1)]);
+            yticklabels(([1:sampl:size(angle,1)] - 1)*scy);
+            
+            % alpha mask
+            if doAlpha
+                set(h,'AlphaData',opts.alpha);
+            end
+            
             % add quiver lines
             if doQuiver
                 obj.add_quiver(angle,struct('sampling',1,'scale',0.3));
