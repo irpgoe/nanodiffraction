@@ -383,6 +383,9 @@ classdef display<handle
             %       margin_bottom: [0.05]
             %           bottom margin of the scalebar in figure units.
             %
+            %       color: ['k']
+            %           Scalebar color.
+            %
             % Example:
             %   See the following example for help::
             %
@@ -658,7 +661,7 @@ classdef display<handle
             if strcmp(opts.limits,'none')
                 limit_str = '';
             else
-                limit_str = sprintf('%g -> %g', opts.limits(1), opts.limits(2));
+                limit_str = sprintf('min: %g, max: %g', opts.limits(1), opts.limits(2));
             end
                 
             if ~isempty(opts.sb_len)
@@ -666,8 +669,16 @@ classdef display<handle
             else
                 sb_str = '';
             end
-            title_fun([limit_str ' : ' sb_str])
             
+            if strcmp(opts.limits,'none') && isempty(opts.sb_len)
+                title_fun('nothing to display')
+            elseif strcmp(opts.limits,'none') && ~isempty(opts.sb_len)
+                title_fun(sb_str);
+            elseif ~strcmp(opts.limits,'none') && isempty(opts.sb_len)
+                title_fun(limit_str);
+            else
+                title_fun([limit_str ' ; ' sb_str]);
+            end
         end
 
         

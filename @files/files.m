@@ -164,10 +164,6 @@ classdef files<handle
             obj.xeussConfig     = update_defaults(xeussDefaults,    obj.xeussConfig);
             
             
-            % check path
-            [obj.prepath,obj.slash] = obj.which_slash(obj.prepath);
-            obj.prepath = obj.add_leading_trailing_slashes(obj.prepath);
-            
             % get file information by beamline and detector
             config = obj.path_by_beamline(obj.beamline,obj.detector,obj.prepath,obj.newfile,obj.scan);
 
@@ -320,96 +316,52 @@ classdef files<handle
             %       respective detector module.
             %
             
-    
-            % shorthand
-            sl = obj.slash;
-
             setting = [detector '_' beamline];
             config = struct();
             switch setting
                 case 'eiger_p10'
-                    config.path = [prepath...
-                        sl 'detectors'...
-                        sl 'eiger'...
-                        sl newfile...
-                        sl newfile '_'...
-                        sprintf('%05i',scannr) '_master.h5'];
+                    config.path = fullfile(prepath,'detectors','eiger',newfile,sprintf('%s_%05i_master.h5',newfile,scannr));
                 case 'eiger_id13'
-                    config.path = [prepath...
-                        sl newfile '_'...
-                        num2str(scannr) '_master.h5'];                    
+                    config.path = fullfile(prepath,sprintf('%s_%i_master.h5',newfile,scannr));              
                 case 'eiger_none'
-                    config.path = [prepath...
-                        sl newfile '_'...
-                        sprintf('%05i',scannr) '_master.h5'];
+                    config.path = fullfile(prepath,sprintf('%s_%05i_master.h5',newfile,scannr));   
                 case 'pilatus_p10'
-                    if ~ispc
-                        prepath = [prepath];
-                    end
-                    config.path = [prepath...
-                        sl 'detectors'...
-                        sl 'p300'...
-                        sl newfile...
-                        sl newfile '_'];
+                    config.path = fullfile(prepath,'detectors','p300',newfile,sprintf('%s_',newfile));   
                     config.filename = @(pre,n) [pre sprintf('%05i',n) '.cbf'];
                 case 'xeuss_inhouse'
-                    if ~ispc
-                        prepath = [prepath];
-                    end
-                    config.path = [prepath...
-                        sl newfile...
-                        sl newfile '_0_'];
+                    % config.path = [prepath newfile sl newfile '_0_'];
+                    config.path = fullfile(prepath,newfile,sprintf('%s_0_',newfile));   
                     config.filename = @(pre,n) [pre sprintf('%05i',n) '.edf'];
                 case 'pirra_p10'
-                    if ~ispc
-                        prepath = [prepath];
-                    end
-                    config.path = [prepath...
-                        sl 'detectors'...
-                        sl 'pirra'...
-                        sl newfile...
-                        sl newfile '_'];
-                    config.filename = @(pre,n) [pre sprintf('%i',n) '.tif'];    
+                    config.path = fullfile(prepath,'detectors','pirra',newfile,sprintf('%s_',newfile));   
+                    config.filename = @(pre,n) [pre sprintf('%i',n) '.tif'];
                 case 'talos_none'
-                    if ~ispc
-                        prepath = [prepath];
-                    end                    
-                    config.path = [prepath...
-                        sl 'detectors'...
-                        sl 'talos'...
-                        sl newfile...
-                        sl newfile '_'];
-                    config.filename = @(pre,n) [pre sprintf('%04i',n) '.tif']; 
+                    config.path = fullfile(prepath,'detectors','talos',newfile,sprintf('%s_',newfile));   
+                    config.filename = @(pre,n) [pre sprintf('%04i',n) '.tif'];
                 case 'rayonix_id02'
-                    config.path = [prepath...
-                        sl newfile '_'];        
+                    config.path = [prepath newfile '_'];        
                     config.filename = @(pre,n) [pre sprintf('%05i',n) '_raw.edf'];
                     config.size = [960 960];
                 case 'rayonix_bessy'
-                    config.path = [prepath...
-                        sl newfile '_' sprintf('%05i',scannr) '_'];        
+                    % config.path = [prepath newfile '_' sprintf('%05i',scannr) '_'];      
+                    config.path = fullfile(prepath,sprintf('%s_%05i_',newfile,scannr));   
                     config.filename = @(pre,n) [pre sprintf('%05i',n) '.mccd'];
                     config.size = [3072 3072];
                 case 'spec_id13'        
-                    config.path = [prepath...
-                        sl newfile...
-                        sl newfile '.dat'];     
+                    % config.path = [prepath newfile sl newfile '.dat'];     
+                    config.path = fullfile(prepath,newfile,sprintf('%s.dat',newfile));   
                     config.beamline = 'id13';
                 case 'spec_p10'
-                    config.path = [prepath...
-                        sl newfile];   
+                    config.path = [prepath newfile];   
+                    config.path = fullfile(prepath,sprintf('%s.dat',newfile));   
                     config.beamline = 'p10';
                 case 'xia_id13'        
-                    config.path = [prepath...
-                        sl newfile...
-                        sl 'xia'...
-                        sl 'xia'...
-                        '_xia02_' sprintf('%04i',scannr) '_0000_'];     
+                    % config.path = [prepath newfile sl 'xia' sl 'xia' '_xia02_' sprintf('%04i',scannr) '_0000_'];     
+                    config.path = fullfile(prepath,newfile,'xia',sprintf('xia_xia02_%04i_0000_',scannr));  
                     config.filename = @(pre,n) [pre sprintf('%04i',n) '.edf'];
                 case 'default'
-                    config.path = [prepath...
-                        sl newfile '_'...
-                        sprintf('%05i',scannr) '_master.h5'];                    
+                    % config.path = [prepath newfile '_' sprintf('%05i',scannr) '_master.h5'];         
+                    config.path = fullfile(prepath,sprintf('%s_%05i_master.h5',newfile,scannr));   
             end            
         end          
         

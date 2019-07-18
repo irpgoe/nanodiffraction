@@ -427,6 +427,39 @@ classdef nanodiffraction < handle
             end
         end
         
+                
+        function dsize = detector_size(obj)
+            % DETECTOR_SIZE  Returns the current detector size, taking into
+            % account binning and a detector roi.
+            %
+            %   ``result = detector_size()``
+            %
+            % Parameters
+            % ----------
+            %   This function does not require any arguments
+            %
+            % Returns
+            % -------
+            % result: two-element array
+            %   The detector size is reported in a two element array with
+            %   the first element being the verticla and the second
+            %   element the horizontal direction.
+            %
+            % Notes
+            % -----
+            % Example 1:
+            %
+            % .. code-block:: matlab
+            %
+            %       e = nanodiffraction();
+            %       p = e.get_parameters()
+            %
+            % See also NANODIFFRACTION
+            
+            dsize = [obj.Nz, obj.Ny];
+            
+        end
+        
         
         function result = get_location_in_frame(obj,y,z,sn,stitch)
             % GET_LOCATION_IN_FRAME  Calculates the scan position within a
@@ -1624,7 +1657,7 @@ classdef nanodiffraction < handle
                         liveArgs.display.diffraction(dat.*~obj.mask);caxis(liveArgs.cAxis);title(num2str(index));drawnow;
                     end
                     if dataYes
-                        dataStorage{ss} = dat;
+                        dataStorage{ss} = ~mask.*dat;
                     end
                     if itotYes
                         itot(ss) = sum(sum(~mask.*dat));
@@ -1998,7 +2031,7 @@ classdef nanodiffraction < handle
             %       help display.composite for more information
             %
             
-            defaults = struct('yCrop',[1 obj.scan.SNy],'zCrop',[1 obj.scan.SNz],'ySkip',1,'zSkip',1,'correction','off','emptySub','off','empty',[],'heal','off','healmask',[]);
+            defaults = struct('yCrop',[1 obj.scan.SNy],'zCrop',[1 obj.scan.SNz],'ySkip',1,'zSkip',1,'heal','off');
             fields = fieldnames(defaults);
             if nargin > 1
                 opts = varargin{1};
@@ -2017,9 +2050,9 @@ classdef nanodiffraction < handle
 
             % get data stack
             if strcmp(opts.heal,'off')
-                result = obj.analyze_scan('method','data','yCrop',opts.yCrop,'zCrop',opts.zCrop,'ySkip',opts.ySkip,'zSkip',opts.zSkip,'emptySub',opts.emptySub,'correction',opts.correction);
+                result = obj.analyze_scan('data',opts);
             else
-                result = obj.analyze_scan('method','data+heal','yCrop',opts.yCrop,'zCrop',opts.zCrop,'ySkip',opts.ySkip,'zSkip',opts.zSkip,'emptySub',opts.emptySub,'empty',opts.empty,'correction',opts.correction,'healmask',opts.healmask);
+                result = obj.analyze_scan('data+heal',opts);
             end
             
             % yCrop and zCrop, ySkip and zSkip are the important parameters
@@ -3307,6 +3340,10 @@ classdef nanodiffraction < handle
             %       Raw detector frame.
             %
             
+            if numel(fn) > 1
+                fn = obj.sub2ind(fn(1),fn(2));
+            end
+            
             data = obj.data.read(fn);
         end
         
@@ -3338,7 +3375,7 @@ classdef nanodiffraction < handle
             %       Processed detector frame.
             %
             
-            data = obj.process(obj.data.read(fn));
+            data = obj.process(obj.read(fn));
         end
         
         function data = readm(obj,fn)
@@ -3383,7 +3420,7 @@ classdef nanodiffraction < handle
                 mask = 1 - obj.mask;
             end
             
-            data = obj.process(obj.data.read(fn)).*mask;
+            data = obj.process(obj.read(fn)).*mask;
         end
         
         
@@ -4074,7 +4111,8 @@ classdef nanodiffraction < handle
         
         function roi = around_y(obj,pixel)
             % AROUND_Y  Returns a two-element array with a lower and upper
-            % bound centered around the horizontal primary beam position.
+            % bound centered around the horizontal primary beam position
+            % (of the full detector image without roi and binning).
             %
             %   ``roi = around_y(pixel)``
             %
@@ -4095,12 +4133,13 @@ classdef nanodiffraction < handle
             %       Description.
             %
             
-            roi = round([-pixel pixel] + obj.pby);
+            roi = round([-pixel pixel] + obj.pby_orig);
         end
         
         function roi = around_z(obj,pixel)
             % AROUND_Z  Returns a two-element array with a lower and upper
-            % bound centered around the vertical primary beam position.
+            % bound centered around the vertical primary beam position
+            % (of the full detector image without roi and binning).
             %
             %   ``roi = around_z(pixel)``
             %
@@ -4122,7 +4161,7 @@ classdef nanodiffraction < handle
             %       Description.
             %
             
-            roi = round([-pixel pixel] + obj.pbz);
+            roi = round([-pixel pixel] + obj.pbz_orig);
         end
     end
 end

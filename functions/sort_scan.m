@@ -5,7 +5,7 @@ function out = sort_scan(data,rows,cols,varargin)
 %
 % Parameters
 % ----------
-%   data: One- or two-dimensional numerical array or cell array
+%   data: One-dimensional numerical array or cell array
 %       One-dimensional or two-dimensional numerical array. If the data is
 %       two-dimensional, each column will be treated seperately and stored
 %       in the third dimension of the output array, since the first
